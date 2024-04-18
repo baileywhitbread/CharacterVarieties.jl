@@ -15,4 +15,4 @@ Let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected 
 ```
 where the action is simultaneous conjugation. 
 
-The Julia script computes $|\mathbf{X}(\mathbb{F}_q)|$. 
+The Julia script computes $E(\mathbf{X};q) = |\mathbf{X}(\mathbb{F}_q)|$. 

@@ -24,36 +24,50 @@ function mob(A,B,poset)
 	if A == B
 		return 1
 	elseif subset(A,B)
-		mobvalue = 0
+		mob_value = 0
 		for element in poset
 			if subset(A,element) && subset(element,B) && element != B
-				mobvalue += mob(A,element,poset)
+				mob_value += mob(A,element,poset)
 			end
 		end
-		return (-1)*mobvalue
+		return (-1)*mob_value
 	else
 		error("First argument must be a subset of the second argument")
 	end
 end
 
-function orbit(L)
-	return 1
-end
-
 function nu(L)
-	nuvalue = 0
+	nu_value = 0
 	for iplevi in iplevis
 		if subset(L,iplevi)
-			nuvalue += mob(L,iplevi,plevis)*pi0(iplevi)
+			nu_value += mob(L,iplevi,plevis)*pi0(iplevi)
 		end
 	end
-	return nuvalue
+	return nu_value
 end
+
+function orbit_size(L)
+	return "???"
+end
+
+
+
+
+
+
+
+
+
 
 
 
 # Choose group G
-G = rootdatum(:G2);
+G = rootdatum(:so,7);
+
+
+
+
+
 
 # Gather info about G
 G_dual = rootdatum(simplecoroots(G),simpleroots(G));
@@ -65,6 +79,8 @@ Z_order = orderpol(torus(G_rank-G_ssrank));
 
 # Compute pseudo Levis and isolated pseudo Levis in G_dual
 plevis = reflection_subgroup.(Ref(G_dual),sscentralizer_reps(G_dual)); 
+
+# Compute isolated pseudo Levis in G_dual
 iplevis = [];
 for plevi in plevis
 	for iplevi in unique(map(L -> L.group, centralizer.(Ref(G_dual),quasi_isolated_reps(G_dual))))
@@ -90,17 +106,19 @@ end
 # Compute group G-types
 gptypes = Array{Any}(nothing,0,7);
 for plevi in plevis
-	order_plevi = orderpol(plevi);
-	ssrank_diff_plevi = ssrank_diff(plevi);
-	orbit_plevi = "???";
-	nu_plevi = nu(plevi);
-	uc_plevi = UnipotentCharacters(plevi);
-	name = charnames(uc_plevi,limit=true);
-	ucdegs = CycPoldegrees(uc_plevi);
-	for i in 1:length(uc_plevi)
-		if Int(ucdegs[i](1))!=0
+	plevi_order = orderpol(plevi);
+	plevi_ssrank_diff = ssrank_diff(plevi);
+	plevi_orbit_size = orbit_size(plevi);
+	plevi_nu = nu(plevi);
+	plevi_uc = UnipotentCharacters(plevi);
+	plevi_uc_names = charnames(plevi_uc,limit=true);
+	plevi_uc_degs = CycPoldegrees(plevi_uc);
+	# pick unipotent character
+	for i in 1:length(plevi_uc)
+		# check if unipotent character is principal
+		if Int(plevi_uc_degs[i](1))!=0
 			global gptypes = vcat(gptypes,
-			[(plevi,name[i]) ssrank_diff_plevi ucdegs[i] order_plevi Int(ucdegs[i](1)) orbit_plevi nu_plevi]
+			[(plevi,plevi_uc_names[i]) plevi_ssrank_diff plevi_uc_degs[i] plevi_order Int(plevi_uc_degs[i](1)) plevi_orbit_size plevi_nu]
 			);
 		end
 	end

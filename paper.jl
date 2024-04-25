@@ -20,13 +20,17 @@ function subset(L,M)
 	return issubset(inclusion(L),inclusion(M))
 end
 
+function equal(L,M)
+	return subset(L,M) && subset(M,L)
+end
+
 function mob(A,B,poset)
-	if A == B
+	if equal(A,B)
 		return 1
 	elseif subset(A,B)
 		mob_value = 0
 		for element in poset
-			if subset(A,element) && subset(element,B) && element != B
+			if subset(A,element) && subset(element,B) && !equal(element,B)
 				mob_value += mob(A,element,poset)
 			end
 		end
@@ -51,8 +55,8 @@ function orbit_size(L)
 end
 
 # Choose group G
-G = rootdatum(:G2);
-G_dual = rootdatum(:G2);
+G = rootdatum(:gl,5);
+G_dual = rootdatum(:gl,5);
 # Used to be
 # G_dual = rootdatum(simplecoroots(G),simpleroots(G));
 
@@ -74,16 +78,10 @@ for plorbit in plorbits
 end
 
 # Compute isolated pseudo Levi orbit representatives, isolated pseudo Levi orbits and all isolated pseudo Levis
-iplorbit_reps = unique(map(L -> L.group, centralizer.(Ref(G_dual),quasi_isolated_reps(G_dual))));
-iplorbits = orbits(G_dual, iplorbit_reps);
 iplevis = [];
 for plevi in plevis
-	for iplorbit in iplorbits
-		for iplevi in iplorbit
-			if sort(inclusion(plevi)) == sort(inclusion(iplevi))
-				append!(iplevis,[plevi])
-			end
-		end
+	if length(gens(plevi)) == length(gens(G))
+		append!(iplevis,[plevi])
 	end
 end
 

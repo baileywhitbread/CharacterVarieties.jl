@@ -12,7 +12,7 @@ function pi0(L)
 	return length(algebraic_center(L).AZ)
 end
 
-function ssrank_diff(L)
+function root_diff(L)
 	Int((length(roots(G)) - length(roots(L)))/2)
 end
 
@@ -47,67 +47,51 @@ function nu(L)
 end
 
 function orbit_size(L)
-	return "???"
+	return length(orbit(G_dual,L))
 end
-
-
-
-
-
-
-
-
-
-
-
 
 # Choose group G
-G = rootdatum(:so,7);
-
-
-
-
-
+G = rootdatum(:G2);
+G_dual = rootdatum(:G2);
+# Used to be
+# G_dual = rootdatum(simplecoroots(G),simpleroots(G));
 
 # Gather info about G
-G_dual = rootdatum(simplecoroots(G),simpleroots(G));
-G_rank = size(simpleroots(G),2);
-G_ssrank = size(simpleroots(G),1);
-W = rootdatum(cartan(G));
-T_order = orderpol(torus(G_rank));
-Z_order = orderpol(torus(G_rank-G_ssrank));
-
-# Compute pseudo Levis and isolated pseudo Levis in G_dual
-plevis = reflection_subgroup.(Ref(G_dual),sscentralizer_reps(G_dual)); 
-
-# Compute isolated pseudo Levis in G_dual
-iplevis = [];
-for plevi in plevis
-	for iplevi in unique(map(L -> L.group, centralizer.(Ref(G_dual),quasi_isolated_reps(G_dual))))
-		if sort(inclusion(plevi)) == sort(inclusion(iplevi))
-			append!(iplevis,[plevi])
-		end
-	end
-end
+T = torus(rank(G));
+Z = torus(rank(G)-semisimplerank(G));
 
 # Compute Levis in G_dual
 levis = map(L -> L.W, split_levis(G_dual)); 
 
-# Compute number of G-types
-number_of_gptypes = 0;
+# Compute pseudo Levi orbit representatives, pseudo Levi orbits and all pseudo Levis
+plorbit_reps = reflection_subgroup.(Ref(G_dual),sscentralizer_reps(G_dual)); 
+plorbits = orbits(G_dual,plorbit_reps);
+plevis = [];
+for plorbit in plorbits
+	for plevi in plorbit
+		append!(plevis,[plevi])
+	end
+end
+
+# Compute isolated pseudo Levi orbit representatives, isolated pseudo Levi orbits and all isolated pseudo Levis
+iplorbit_reps = unique(map(L -> L.group, centralizer.(Ref(G_dual),quasi_isolated_reps(G_dual))));
+iplorbits = orbits(G_dual, iplorbit_reps);
+iplevis = [];
 for plevi in plevis
-	for unipotent_degree in CycPoldegrees(UnipotentCharacters(plevi))
-		if Int(unipotent_degree(1)) != 0
-			global number_of_gptypes += 1;
+	for iplorbit in iplorbits
+		for iplevi in iplorbit
+			if sort(inclusion(plevi)) == sort(inclusion(iplevi))
+				append!(iplevis,[plevi])
+			end
 		end
 	end
 end
 
 # Compute group G-types
 gptypes = Array{Any}(nothing,0,7);
-for plevi in plevis
+for plevi in plorbit_reps
 	plevi_order = orderpol(plevi);
-	plevi_ssrank_diff = ssrank_diff(plevi);
+	plevi_root_diff = root_diff(plevi);
 	plevi_orbit_size = orbit_size(plevi);
 	plevi_nu = nu(plevi);
 	plevi_uc = UnipotentCharacters(plevi);
@@ -118,7 +102,7 @@ for plevi in plevis
 		# check if unipotent character is principal
 		if Int(plevi_uc_degs[i](1))!=0
 			global gptypes = vcat(gptypes,
-			[(plevi,plevi_uc_names[i]) plevi_ssrank_diff plevi_uc_degs[i] plevi_order Int(plevi_uc_degs[i](1)) plevi_orbit_size plevi_nu]
+			[(plevi,plevi_uc_names[i]) plevi_root_diff plevi_uc_degs[i] plevi_order Int(plevi_uc_degs[i](1)) plevi_orbit_size plevi_nu]
 			);
 		end
 	end

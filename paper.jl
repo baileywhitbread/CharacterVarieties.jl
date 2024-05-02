@@ -4,8 +4,8 @@
 using Chevie
 
 # Choose group G
-G = rootdatum(:so,7);
-G_dual = rootdatum(:sp,6);
+G = rootdatum(:gl,2);
+G_dual = rootdatum(:gl,2);
 # Used to be
 # G_dual = rootdatum(simplecoroots(G),simpleroots(G));
 
@@ -63,67 +63,6 @@ function nu(L)
 	return nu_value
 end
 
-#################################################################################
-#################################################################################
-#################################################################################
-
-# Testing counting functions
-function is_palindromic(f)
-	return (f(0)!= 0) && (f.c == f.c[end:-1:1])
-end
-
-#################################################################################
-#################################################################################
-#################################################################################
-
-
-# Compute pseudo Levi orbit representatives, pseudo Levi orbits, pseudo Levis and isolated pseudo Levis
-plorbit_reps = reflection_subgroup.(Ref(G_dual),sscentralizer_reps(G_dual)); 
-plorbits = orbits(G_dual,plorbit_reps); # duplicates. eg. G=SO5
-plevis = [];
-iplevis = [];
-for plorbit in plorbits
-	for plevi in plorbit
-		append!(plevis,[plevi])
-		if length(gens(plevi)) == length(gens(G))
-			append!(iplevis,[plevi])
-		end
-	end
-end
-
-# Compute group G-types
-# gptypes[i,:][1] = |Φ(L)+| of ith type
-# gptypes[i,:][2] = |L(Fq)| of ith type
-# gptypes[i,:][3] = ρ(1) (unipotent character degree) of ith type
-# gptypes[i,:][4] = χᵨ(1) (Weyl gp character degree) of ith type
-# gptypes[i,:][5] = |W(L)| of ith type
-# gptypes[i,:][6] = |[L]| of ith type
-# gptypes[i,:][7] = ν(L) of ith type
-
-# I am building this row-by-row... Should change to column-by-column
-gptypes = Array{Any}(nothing,0,8);
-for plevi in plorbit_reps
-	plevi_order = orderpol(plevi);
-	plevi_positive_root_size = Int(length(roots(plevi))/2);
-	plevi_orbit_size = length(orbit(G_dual,plevi));
-	plevi_weyl_size = length(plevi);
-	plevi_nu = nu(plevi);
-	plevi_uc = UnipotentCharacters(plevi);
-	plevi_uc_names = charnames(plevi_uc,limit=true);
-	plevi_uc_degs = degrees(plevi_uc);
-	# pick unipotent character
-	for i in 1:length(plevi_uc)
-		# check if unipotent character is principal
-		if Int(plevi_uc_degs[i](1))!=0
-			global gptypes = vcat(gptypes,
-			[(plevi,plevi_uc_names[i]) plevi_positive_root_size plevi_uc_degs[i] plevi_order Int(plevi_uc_degs[i](1)) plevi_weyl_size plevi_orbit_size plevi_nu]
-			);
-		end
-	end
-end
-sortslices(gptypes,dims=1,by=x->x[2]); # Sort according to number of positive roots of L
-
-
 
 #################################################################################
 #################################################################################
@@ -179,6 +118,67 @@ end
 
 ### Solution: Replace Pol{Int64} with Pol{Int128}
 
+#################################################################################
+#################################################################################
+#################################################################################
+
+# Testing counting functions
+function is_palindromic(f)
+	return (f(0)!= 0) && (f.c == f.c[end:-1:1])
+end
+
+#################################################################################
+#################################################################################
+#################################################################################
+
+
+# Compute pseudo Levi orbit representatives, pseudo Levi orbits, pseudo Levis and isolated pseudo Levis
+plorbit_reps = reflection_subgroup.(Ref(G_dual),sscentralizer_reps(G_dual)); 
+plorbits = orbits(G_dual,plorbit_reps); # duplicates. eg. G=SO5
+plevis = [];
+iplevis = [];
+for plorbit in plorbits
+	for plevi in plorbit
+		append!(plevis,[plevi])
+		if length(gens(plevi)) == length(gens(G))
+			append!(iplevis,[plevi])
+		end
+	end
+end
+
+# Compute group G-types
+# gptypes[i,:][1] = ith type, ie. [L,ρ]
+# gptypes[i,:][2] = |Φ(L)+| of ith type
+# gptypes[i,:][3] = ρ(1) (unipotent character degree) of ith type
+# gptypes[i,:][4] = |L(Fq)| of ith type
+# gptypes[i,:][5] = χᵨ(1) (Weyl gp character degree) of ith type
+# gptypes[i,:][6] = |W(L)| of ith type
+# gptypes[i,:][7] = |[L]| of ith type
+# gptypes[i,:][8] = ν(L) of ith type
+
+# I am building this row-by-row... Should change to column-by-column
+gptypes = Array{Any}(nothing,0,8);
+for plevi in plorbit_reps
+	plevi_order = orderpol(plevi);
+	plevi_positive_root_size = Int(length(roots(plevi))/2);
+	plevi_orbit_size = length(orbit(G_dual,plevi));
+	plevi_weyl_size = length(plevi);
+	plevi_nu = nu(plevi);
+	plevi_uc = UnipotentCharacters(plevi);
+	plevi_uc_names = charnames(plevi_uc,limit=true);
+	plevi_uc_degs = degrees(plevi_uc);
+	# pick unipotent character
+	for i in 1:length(plevi_uc)
+		# check if unipotent character is principal
+		if Int(plevi_uc_degs[i](1))!=0
+			global gptypes = vcat(gptypes,
+			[(plevi,plevi_uc_names[i]) plevi_positive_root_size plevi_uc_degs[i] plevi_order Int(plevi_uc_degs[i](1)) plevi_weyl_size plevi_orbit_size plevi_nu]
+			);
+		end
+	end
+end
+sortslices(gptypes,dims=1,by=x->x[2]); # Sort according to number of positive roots of L
+
 
 #################################################################################
 #################################################################################
@@ -195,6 +195,14 @@ for lorbit in lorbits
 end
 
 # Compute algebra G-types
+# algtypes[i,:][1] = ith type, ie. [L,O]
+# algtypes[i,:][2] = dim(ith type) of ith type
+# algtypes[i,:][3] = |O(Fq)| of ith type
+# algtypes[i,:][4] = Q_T^L(O) of ith type
+# algtypes[i,:][5] = |[L]| of ith type
+# algtypes[i,:][6] = mu(L,G) of ith type
+
+
 # I am grabbing the unipotent orbits over the algebraic closure... How do I grab the rational orbits?
 algtypes = Array{Any}(nothing,0,3);
 for levi in lorbit_reps

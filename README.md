@@ -15,7 +15,7 @@ The character variety is the GIT quotient
 ```
 where the action is simultaneous conjugation. 
 
-The Julia script computes the E-polynomial $E(\mathbf{X};q) = |\mathbf{X}(\mathbb{F}_q)|$. 
+This package allows one to compute the E-polynomial $E(\mathbf{X};q) = |\mathbf{X}(\mathbb{F}_q)|$.  
 
 Our formula for the E-polynomial is as follows:
 

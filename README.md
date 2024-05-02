@@ -1,9 +1,7 @@
 # CharacterVarieties.jl
-We have computed E-polynomials of character varieties associated to general reductive groups. 
+E-polynomials of character varieties associated to general reductive groups are computable in Julia using Jean Michel's package [Chevie](https://github.com/jmichel7/Chevie.jl). 
 
-Using Jean Michel's package [Chevie](https://github.com/jmichel7/Chevie.jl), these polynomials are computable in Julia. 
-
-This Julia script computes these E-polynomials. 
+This package computes these E-polynomials. 
 
 This works on Julia v1.10.2 using the Chevie version dated April 12th 2024. 
 

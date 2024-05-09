@@ -247,21 +247,22 @@ end
 #################################################################################
 
 
-# Display human-readable table (work in progress, many columns display poorly)
+# Display human-readable table
 function gptable(G)
 	gptype_data = gptypes(G)
 	clabels = ["|Φ(L)+|","|L(Fq)|","ρ(1)","χᵨ(1)","|W(L)|","|[L]|","ν(L)"];
-	rlabels = gptype_data[:,1];
-	alignment = "llllllll";
-	return showtable(gptype_data[:,2:size(gptype_data)[2]];col_labels=clabels,row_labels=rlabels,align=alignment)
-end
-
-function algtable(G)
-	algtype_data = algtypes(G)
-	clabels = [];
-	rlabels = algtype_data[:,1];
-	alignment = "";
-	return showtable(algtype_data[:,2:size(algtype_data)[2]];col_labels=clabels,row_labels=rlabels,align=alignment)
+	rlabels = xrepr.(Ref(rio()),gptype_data[:,1]); # xrepr(rio(),X) is a string of X printed on the REPR
+	repr_data = xrepr.(Ref(rio()),gptype_data[:,2:size(gptype_data)[2]]);
+	println("A type is a W-orbit [L,ρ] where L is an endoscopy of G and ρ is a principal unipotent of L(Fq)")
+	println("Φ(L)+ is the set of positive roots of L")
+	println("|L(Fq)| is the size of L(Fq)")
+	println("ρ(1) is the degree of the unipotent character ρ")
+	println("χᵨ(1) is the degree of the Weyl group character associated to ρ")
+	println("W(L) is the Weyl group of L")
+	println("[L] is the orbit of L under the natural W-action")
+	println("ν(L) is an integer only depending on L (see [KNWG24])")
+	println("")
+	return showtable(repr_data;col_labels=clabels,rows_label="Types [L,ρ]",row_labels=rlabels)
 end
 
 
@@ -295,23 +296,11 @@ function euler_zero(G,genus_max,puncture_max)
 	end
 end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+G = rootdatum(:gl,3)
+uc = UnipotentClasses(G)
+xt = XTable(uc;classes=true)
+gt = GreenTable(uc;classes=true)
+icct = ICCTable(uc)
 
 
 

@@ -123,8 +123,9 @@ function gptypes(G)
 	return gptypes
 end
 
+
 function gp_row_term(G,i,genus_num,puncture_num)
-	# Returns ||tau||(q)^(2g-2+n)*S_tau(q)
+	# Returns (||Z||(q)/||T||(q)^n) * ||tau||(q)^(2g-2+n) * S_tau(q)
 	# where tau is the ith type, g = genus_num and n = puncture_num
 	
 	# Grab necessary data
@@ -185,6 +186,12 @@ function algtypes(G)
 	
 	# Compute Levis in G_dual
 	lorbit_reps = map(L -> L.W, split_levis(G_dual));
+	# A problem: two lorbits reps of G iff G=GLn
+	# Therefore we kill the duplicate that occurs
+	# Probably a better way of fixing this
+	if G.TeXcallname[1:2] == "gl"
+		lorbit_reps = lorbit_reps[2:end]
+	end
 	lorbits = orbits(G_dual,lorbit_reps)
 	levis = [];
 	for lorbit in lorbits
@@ -194,18 +201,40 @@ function algtypes(G)
 	end
 	
 	# Create algtypes
-	# I am grabbing the unipotent orbits over the algebraic closure... How do I grab the rational orbits?
 	algtypes = Array{Any}(nothing,0,6);
-	for levi in lorbit_reps
+	for levi in lorbit_reps		
+		# First we compute g-types
+		# Create required dictionary objects containing the data we need
+		levi_uc = UnipotentClasses(levi); # This is a dictionary object, not the actual classes
+		levi_xt = XTable(levi_uc;classes=true) # Another dictionary object containing cardinality of centralisers and conjugacy classes
+		levi_gt = GreenTable(levi_uc;classes=true); # Another dictionary containing Greens functions
+		
+		# Grab unipotent classes over algebraic closure
+		levi_uc_classes = levi_uc.classes;
+		
+		# Grab rational unipotent classes using XTable
+		levi_rational_orbit_labels = levi_xt.classes 
+		# These keep track of rational orbits: they are pairs of integers [n,m] where 
+		# n is the nth unipotent class over algebraic closure and
+		# m is the mth component after taking Fq points
+		# eg. If G=G2 then G2(a1) is the 4th class over algebraic closure which splits into 3 after taking Fq points
+		# so the rational orbits associated to G2(a1) are represented by [4,1], [4,2] and [4,3]
+		levi_rational_orbit_TeX_names = map(label->name(TeX(rio();class=label[2]),levi_uc_classes[label[1]]),levi_rational_orbit_labels)
+		levi_rational_orbit_names = fromTeX.(Ref(rio()),levi_rational_orbit_TeX_names)
+		
+		# Now we have computed g-types, we can compute the required data
+		levi_cent_sizes = Pol{Rational{Int64}}.(Pol.(levi_xt.cardCent))
+		levi_class_sizes = Pol{Rational{Int64}}.(Pol.(levi_xt.cardClass))
+		levi_greens_functions = Pol{Rational{Int64}}.(Pol.(levi_gt.scalar[1,:]))
+		# .cardCent, .cardClass and .scalar returns multi-variable polys (specifically the "Mvp" data type) so we converted them to single-variable polys
+		
 		levi_orbit_size = length(orbit(G_dual,levi));
 		levi_mobius_value = mob(levi,G_dual,levis);
-		levi_uc = UnipotentClasses(levi);
-		levi_uc_classes = UnipotentClasses(levi).classes;
-		levi_xt = XTable(levi_uc;classes=true);
-		for class in levi_uc_classes
-			algtypes = vcat(algtypes,
-			[(levi,class) "?" "?" "?" levi_orbit_size levi_mobius_value]
-			);
+		
+		for i = 1:length(levi_rational_orbit_labels)
+				algtypes = vcat(algtypes,
+				[(levi,levi_rational_orbit_names[i]) degree(orderpol(levi))-degree(levi_cent_sizes[i]) levi_class_sizes[i] levi_greens_functions[i] levi_orbit_size levi_mobius_value]
+				);
 		end
 	end
 	return algtypes
@@ -213,20 +242,33 @@ end
 
 
 function alg_row_term(G,i,genus_num,puncture_num)
-	# Returns (formula from paper)
-	# where tau is the ith type, g = genus_num and n = puncture_num
+	# Returns (||Z||(q)/||G||(q)) * q^\xi(G) * q^(g*dim(tau)) * k_tau(q) 
 	
 	# Grab necessary data
 	algtype_data = algtypes(G)
-	# For readability:
-	# algtypes[i,:][1] = ith type, ie. [L,O]
-	# algtypes[i,:][2] = dim(ith type) of ith type
-	# algtypes[i,:][3] = |O(Fq)| of ith type
-	# algtypes[i,:][4] = Q_T^L(O) of ith type
-	# algtypes[i,:][5] = |[L]| of ith type
-	# algtypes[i,:][6] = mu(L,G) of ith type
+	G_rank = rank(G);
+	G_ssrank = semisimplerank(G);
+	T = torus(G_rank);
+	Z = torus(G_rank-G_ssrank);
+	G_root_size = length(roots(G));
+	Z_orderpol = orderpol(Z)
+	G_orderpol = orderpol(G)
+	Z_dim = degree(Z_orderpol)
+	G_dim = degree(G_orderpol)
 	
-	return 0
+	# For readability:
+	# algtype_data[i,:][1] = ith type, ie. [L,O]
+	# algtype_data[i,:][2] = dim(ith type) of ith type
+	# algtype_data[i,:][3] = |O(Fq)| of ith type
+	# algtype_data[i,:][4] = Q_T^L(O) of ith type
+	# algtype_data[i,:][5] = |[L]| of ith type
+	# algtype_data[i,:][6] = mu(L,G) of ith type
+	
+	coeff = (Z_orderpol*Pol(:q)^(G_root_size+Z_dim+(genus_num)*G_dim))//G_orderpol
+	q_dim_tau = Pol(:q)^(algtype_data[i,:][2])
+	k_tau_q = algtype_data[i,:][3]*algtype_data[i,:][4]*algtype_data[i,:][5]*algtype_data[i,:][6]
+	
+	return coeff*q_dim_tau^genus_num*k_tau_q
 end
 
 
@@ -238,7 +280,7 @@ function EY(G,genus_num,puncture_num)
 	epol = Pol([0]);
 	for row_number in 1:size(algtype_data)[1]
 		epol += alg_row_term(G,row_number,genus_num,puncture_num)
-	end
+	endal
 	return Pol{Int64}(epol)
 end
 
@@ -251,18 +293,37 @@ end
 function gptable(G)
 	gptype_data = gptypes(G)
 	clabels = ["|Φ(L)+|","|L(Fq)|","ρ(1)","χᵨ(1)","|W(L)|","|[L]|","ν(L)"];
-	rlabels = xrepr.(Ref(rio()),gptype_data[:,1]); # xrepr(rio(),X) is a string of X printed on the REPR
-	repr_data = xrepr.(Ref(rio()),gptype_data[:,2:size(gptype_data)[2]]);
-	println("A type is a W-orbit [L,ρ] where L is an endoscopy of G and ρ is a principal unipotent of L(Fq)")
+	rlabels = xrepr.(Ref(rio()),gptype_data[:,1]); 
+	# xrepr(rio(), __ ) is a string of __ when printed on the REPR
+	repr_gptype_data = xrepr.(Ref(rio()),gptype_data[:,2:size(gptype_data)[2]]);
+	println("A G-type is a W-orbit [L,ρ] where ")
+	println("L is an endoscopy of G")
+	println("ρ is a principal unipotent of L(Fq)")
 	println("Φ(L)+ is the set of positive roots of L")
-	println("|L(Fq)| is the size of L(Fq)")
 	println("ρ(1) is the degree of the unipotent character ρ")
 	println("χᵨ(1) is the degree of the Weyl group character associated to ρ")
 	println("W(L) is the Weyl group of L")
 	println("[L] is the orbit of L under the natural W-action")
-	println("ν(L) is an integer only depending on L (see [KNWG24])")
+	println("ν(L) is an integer only depending on L")
 	println("")
-	return showtable(repr_data;col_labels=clabels,rows_label="Types [L,ρ]",row_labels=rlabels)
+	return showtable(repr_gptype_data;col_labels=clabels,rows_label="Types [L,ρ]",row_labels=rlabels)
+end
+
+function algtable(G)
+	algtype_data = algtypes(G)
+	clabels = ["dim(τ)","|O(Fq)|","Qᴸ(O(Fq))","|[L]|","µ(L,G)"];
+	rlabels = xrepr.(Ref(rio()),algtype_data[:,1]); 
+	# xrepr(rio(), __ ) is a string of __ when printed on the REPR
+	repr_algtype_data = xrepr.(Ref(rio()),algtype_data[:,2:size(algtype_data)[2]]);
+	println("A g-type is a W-orbit [L,O(Fq)] where ")
+	println("L is an endoscopy of G")
+	println("O(Fq) is a rational unipotent orbit of L(Fq)")
+	println("dim(τ) is degree(Lie(L)(Fq)) - degree(O(Fq))")
+	println("Qᴸ(O(Fq)) is the Greens function associated to (L,T) at the unipotent class O(Fq)")
+	println("[L] is the orbit of L under the natural W-action")
+	println("µ(L,G) is the Mobius function of the poset of endoscopies evaluated at L and G")
+	println("")
+	return showtable(repr_algtype_data;col_labels=clabels,rows_label="Types [L,O(Fq)]",row_labels=rlabels)
 end
 
 
@@ -295,12 +356,4 @@ function euler_zero(G,genus_max,puncture_max)
 		end
 	end
 end
-
-G = rootdatum(:gl,3)
-uc = UnipotentClasses(G)
-xt = XTable(uc;classes=true)
-gt = GreenTable(uc;classes=true)
-icct = ICCTable(uc)
-
-
 

@@ -62,7 +62,7 @@ end
 # First let's create EX(G,g,n)
 function gptypes(G)
 	# This creates a matrix of data (called gptypes) required to compute E-polynomial
-	# gptypes[i,:][1] = a human-readable representation of the ith type, ie. a pair [L,ρ]
+	# gptypes[i,:][1] = ith G-type, ie. τ=[L,ρ]
 	# gptypes[i,:][2] = |Φ(L)+| of ith type
 	# gptypes[i,:][3] = ρ(1) of ith type (unipotent character degree)
 	# gptypes[i,:][4] = |L(Fq)| of ith type
@@ -78,8 +78,8 @@ function gptypes(G)
 	# Compute pseudo Levi orbit representatives and pseudo Levi orbits
 	plorbit_reps = reflection_subgroup.(Ref(G_dual),sscentralizer_reps(G_dual)); 
 	plorbits = orbits(G_dual,plorbit_reps); 
-	# A problem: |[G]| > 1 iff G=SO5
-	# Therefore we kill the duplicate that occurs
+	# A PROBLEM: |[G]| > 1 IFF G=SO5
+	# THEREFORE WE KILL THE DUPLICATE THAT OCCURS
 	# Probably a better way of fixing this
 	if G==rootdatum(:so,5)
 		plorbits[4] = [plorbits[4][1]];
@@ -110,9 +110,9 @@ function gptypes(G)
 		plevi_uc = UnipotentCharacters(plevi);
 		plevi_uc_names = charnames(plevi_uc,limit=true);
 		plevi_uc_degs = degrees(plevi_uc);
-		# pick unipotent character
+		# Pick unipotent character
 		for i in 1:length(plevi_uc)
-			# check if unipotent character is principal
+			# Check if unipotent character is principal
 			if Int(plevi_uc_degs[i](1))!=0
 				gptypes = vcat(gptypes,
 				[(plevi,plevi_uc_names[i]) plevi_positive_root_size plevi_uc_degs[i] plevi_order Int(plevi_uc_degs[i](1)) plevi_weyl_size plevi_orbit_size plevi_nu]
@@ -125,8 +125,8 @@ end
 
 
 function gp_row_term(G,i,genus_num,puncture_num)
-	# Returns (||Z||(q)/||T||(q)^n) * ||tau||(q)^(2g-2+n) * S_tau(q)
-	# where tau is the ith type, g = genus_num and n = puncture_num
+	# Returns (||Z||(q)/||T||(q)^n) * ||τ||(q)^(2g-2+n) * S_τ(q)
+	# where τ is the ith type, g = genus_num and n = puncture_num
 	
 	# Grab necessary data
 	G_rank = rank(G);
@@ -138,7 +138,7 @@ function gp_row_term(G,i,genus_num,puncture_num)
 	G_weyl_group_size = length(G);
 	gptype_data = gptypes(G)
 	# For readability:
-	# gptypes[i,:][1] = a human-readable representation of the ith type, ie. a pair [L,ρ]
+	# gptypes[i,:][1] = ith G-type, ie. τ=[L,ρ]
 	# gptypes[i,:][2] = |Φ(L)+| of ith type
 	# gptypes[i,:][3] = ρ(1) of ith type (unipotent character degree)
 	# gptypes[i,:][4] = |L(Fq)| of ith type
@@ -174,21 +174,22 @@ end
 # And now let's create EY(G,g,n)
 function algtypes(G)
 	# This creates a matrix of data (called gptypes) required to compute E-polynomial
-	# algtypes[i,:][1] = ith type, ie. [L,O]
-	# algtypes[i,:][2] = dim(ith type) of ith type
-	# algtypes[i,:][3] = |O(Fq)| of ith type
-	# algtypes[i,:][4] = Q_T^L(O) of ith type
+	# algtypes[i,:][1] = ith g-type, ie. τ=[L,Oᴸ(Fq)]
+	# algtypes[i,:][2] = dim(τ) of ith type
+	# algtypes[i,:][3] = |Oᴳ(Fq)| of ith type
+	# algtypes[i,:][4] = Qᴸ(Oᴸ(Fq)) of ith type
 	# algtypes[i,:][5] = |[L]| of ith type
-	# algtypes[i,:][6] = mu(L,G) of ith type
+	# algtypes[i,:][6] = µ(L,G) of ith type
 	
 	# Gather required info about G
+	G_orderpol = orderpol(G)
 	G_dual = rootdatum(simplecoroots(G),simpleroots(G));
 	
 	# Compute Levis in G_dual
 	lorbit_reps = map(L -> L.W, split_levis(G_dual));
-	# A problem: two lorbits reps of G iff G=GLn
-	# Therefore we kill the duplicate that occurs
-	# Probably a better way of fixing this
+	# A PROBLEM: TWO LORBITS REPS OF G IFF G = GLN
+	# THEREFORE WE KILL THE DUPLICATE THAT OCCURS
+	# Definitely a better way of fixing this
 	if G.TeXcallname[1:2] == "gl"
 		lorbit_reps = lorbit_reps[2:end]
 	end
@@ -230,10 +231,11 @@ function algtypes(G)
 		
 		levi_orbit_size = length(orbit(G_dual,levi));
 		levi_mobius_value = mob(levi,G_dual,levis);
+		levi_orderpol = orderpol(levi)
 		
 		for i = 1:length(levi_rational_orbit_labels)
 				algtypes = vcat(algtypes,
-				[(levi,levi_rational_orbit_names[i]) degree(orderpol(levi))-degree(levi_cent_sizes[i]) levi_class_sizes[i] levi_greens_functions[i] levi_orbit_size levi_mobius_value]
+				[(levi,levi_rational_orbit_names[i]) degree(orderpol(levi))-degree(levi_class_sizes[i]) Pol{Int64}((levi_class_sizes[i])*(G_orderpol//levi_orderpol)) levi_greens_functions[i] levi_orbit_size levi_mobius_value]
 				);
 		end
 	end
@@ -242,7 +244,7 @@ end
 
 
 function alg_row_term(G,i,genus_num,puncture_num)
-	# Returns (||Z||(q)/||G||(q)) * q^\xi(G) * q^(g*dim(tau)) * k_tau(q) 
+	# Returns (||Z||(q)/||G||(q)) * q^\xi(G) * q^(g*dim(τ)) * k_τ(q) 
 	
 	# Grab necessary data
 	algtype_data = algtypes(G)
@@ -257,12 +259,12 @@ function alg_row_term(G,i,genus_num,puncture_num)
 	G_dim = degree(G_orderpol)
 	
 	# For readability:
-	# algtype_data[i,:][1] = ith type, ie. [L,O]
-	# algtype_data[i,:][2] = dim(ith type) of ith type
-	# algtype_data[i,:][3] = |O(Fq)| of ith type
-	# algtype_data[i,:][4] = Q_T^L(O) of ith type
+	# algtype_data[i,:][1] = ith type, ie. τ=[L,Oᴸ(Fq)]
+	# algtype_data[i,:][2] = dim(τ) of ith type
+	# algtype_data[i,:][3] = |Oᴳ(Fq)| of ith type
+	# algtype_data[i,:][4] = Qᴸ(Oᴸ(Fq)) of ith type
 	# algtype_data[i,:][5] = |[L]| of ith type
-	# algtype_data[i,:][6] = mu(L,G) of ith type
+	# algtype_data[i,:][6] = µ(L,G) of ith type
 	
 	coeff = (Z_orderpol*Pol(:q)^(G_root_size+Z_dim+(genus_num)*G_dim))//G_orderpol
 	q_dim_tau = Pol(:q)^(algtype_data[i,:][2])
@@ -280,7 +282,7 @@ function EY(G,genus_num,puncture_num)
 	epol = Pol([0]);
 	for row_number in 1:size(algtype_data)[1]
 		epol += alg_row_term(G,row_number,genus_num,puncture_num)
-	endal
+	end
 	return Pol{Int64}(epol)
 end
 
@@ -297,13 +299,14 @@ function gptable(G)
 	# xrepr(rio(), __ ) is a string of __ when printed on the REPR
 	repr_gptype_data = xrepr.(Ref(rio()),gptype_data[:,2:size(gptype_data)[2]]);
 	println("A G-type is a W-orbit [L,ρ] where ")
-	println("L is an endoscopy of G")
-	println("ρ is a principal unipotent of L(Fq)")
+	println("L is an endoscopy group of G containing T")
+	println("ρ is a principal unipotent character of L(Fq)")
 	println("Φ(L)+ is the set of positive roots of L")
+	println("|L(Fq)| is the size of L(Fq)")
 	println("ρ(1) is the degree of the unipotent character ρ")
 	println("χᵨ(1) is the degree of the Weyl group character associated to ρ")
 	println("W(L) is the Weyl group of L")
-	println("[L] is the orbit of L under the natural W-action")
+	println("[L] is the orbit of L under the W-action")
 	println("ν(L) is an integer only depending on L")
 	println("")
 	return showtable(repr_gptype_data;col_labels=clabels,rows_label="Types [L,ρ]",row_labels=rlabels)
@@ -311,19 +314,20 @@ end
 
 function algtable(G)
 	algtype_data = algtypes(G)
-	clabels = ["dim(τ)","|O(Fq)|","Qᴸ(O(Fq))","|[L]|","µ(L,G)"];
+	clabels = ["dim(τ)","|Oᴳ(Fq)|","Qᴸ(Oᴸ(Fq))","|[L]|","µ(L,G)"];
 	rlabels = xrepr.(Ref(rio()),algtype_data[:,1]); 
 	# xrepr(rio(), __ ) is a string of __ when printed on the REPR
 	repr_algtype_data = xrepr.(Ref(rio()),algtype_data[:,2:size(algtype_data)[2]]);
-	println("A g-type is a W-orbit [L,O(Fq)] where ")
-	println("L is an endoscopy of G")
-	println("O(Fq) is a rational unipotent orbit of L(Fq)")
-	println("dim(τ) is degree(Lie(L)(Fq)) - degree(O(Fq))")
-	println("Qᴸ(O(Fq)) is the Greens function associated to (L,T) at the unipotent class O(Fq)")
-	println("[L] is the orbit of L under the natural W-action")
-	println("µ(L,G) is the Mobius function of the poset of endoscopies evaluated at L and G")
+	println("A g-type is a W-orbit τ=[L,Oᴸ(Fq)] where ")
+	println("L is a Levi subgroup of G containing T")
+	println("Oᴸ(Fq) is the rational unipotent orbit of the L(Fq)-action on Lie(L)(Fq)")
+	println("dim(τ) is dim(Lie(L)) - dim(Oᴸ(Fq)) = degree |L(Fq)| - degree |Oᴸ(Fq)|")
+	println("Oᴳ(Fq) is the rational unipotent orbit of the G(Fq)-action on Lie(G)(Fq) associated to τ")
+	println("Qᴸ(Oᴸ(Fq)) is the Greens function associated to (L,T) evaluated at Oᴸ(Fq)")
+	println("[L] is the orbit of L under the W-action")
+	println("µ(L,G) is the Mobius function of the poset of Levi subgroups of G containing T evaluated at L and G")
 	println("")
-	return showtable(repr_algtype_data;col_labels=clabels,rows_label="Types [L,O(Fq)]",row_labels=rlabels)
+	return showtable(repr_algtype_data;col_labels=clabels,rows_label="Types [L,Oᴸ(Fq)]",row_labels=rlabels)
 end
 
 
@@ -336,7 +340,7 @@ function is_palindromic(f)
 	return (f(0)!= 0) && (f.c == f.c[end:-1:1])
 end
 
-function euler_zero(G,genus_max,puncture_max)
+function euler_zero_X(G,genus_max,puncture_max)
 	# Checks if χ(X) is zero or non-zero from g=1,2,..,genus_max and n=1,2,...,puncture_max
 	for g in 1:genus_max
 		for n in 1:puncture_max

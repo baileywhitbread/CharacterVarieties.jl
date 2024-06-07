@@ -16,23 +16,3 @@ The character variety is the GIT quotient
 where the action is simultaneous conjugation. 
 
 This package allows one to compute the E-polynomial $E(\mathbf{X};q)$ via formulas for $|\mathbf{X}(\mathbb{F}_q)|$.  
-
-Our formula for the E-polynomial is as follows:
-
-Consider the collection of pairs $(L,\rho)$ where $L$ is an endoscopy group of $G$ and $\rho$ is an irreducible representation of $W(L)$, the Weyl group of $L$. Then $W$ acts on this collection of pairs. We call an orbit $[(L,\rho)]=[L,\rho]$ a type of $G$. 
-
-For each type, define:
-1. $m_\tau(q) := q^{|\Phi(G)^+|-|\Phi(L)^+|} \frac{|L(\mathbb{F}_q)|}{\tilde{\rho}(1)}$, where
-   1. $\Phi(L)^+$ is the positive roots of $L$, and
-   2. $\tilde{\rho}$ is the (principal) unipotent character of $L$ corresponding to the irreducible representation $\rho$ of $W(L)$.
-3. $\gamma_\tau = \frac{\dim(\rho)^n |W|^{n-1} |[L]|  \nu(L)}{|W(L)|^{n-1}}$, where
-   1. $|[L]|$ is the orbit of $L$ under the action of $W$ on the collection of endoscopy groups,
-   2. $\nu(L) := \sum_{L'\supseteq L} \pi_0^{L'} \mu(L,L')$, where
-      1. The sum is over all isolated endoscopy groups containing $L$,
-      2. $\pi_0^{L'}$ is the number of connected components of the centre of $L'$, and
-      3. $\mu$ is the Mobius function on the poset of endoscopy groups ordered by inclusion.
-
-Then
-```math
-E(\mathbf{X};q) = \frac{|Z(\mathbb{F}_q)|^2}{|T(\mathbb{F}_q)|^n} \sum_{\tau=[L,\rho]} \gamma_\tau m_\tau(q)^{2g-2+n}.
-```

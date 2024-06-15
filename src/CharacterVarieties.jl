@@ -30,8 +30,23 @@ end # End of struct GType
 
 # Define functions
 function dual(G::FiniteCoxeterGroup)
-	return rootdatum(simplecoroots(G),simpleroots(G))
+	# Dualise normally if G is not a torus
+	if size(simpleroots(G))[1] != 0
+		return rootdatum(simplecoroots(G),simpleroots(G))
+	else
+		return reflection_subgroup(dual(G.parent),Int64[])
+	end
 end
+
+
+
+
+
+
+
+
+
+
 
 function plorbit_reps(G::FiniteCoxeterGroup)
 	return reflection_subgroup.(Ref(G),sscentralizer_reps(G))
@@ -39,13 +54,28 @@ end
 
 function iplorbit_reps(G::FiniteCoxeterGroup)
 	iplorbit_reps = [];
-	for plorbit_rep in reflection_subgroup.(Ref(G),sscentralizer_reps(G))
+	for plorbit_rep in plorbit_reps(G)
 		if length(gens(plorbit_rep)) == length(gens(G))
 			append!(iplorbit_reps,[plorbit_rep])
 		end
 	end
 	return iplorbit_reps
 end
+
+function endoscopy_orbit_reps(G::FiniteCoxeterGroup)
+	return dual.(plorbit_reps(dual(G)))
+end
+
+function isolated_endoscopy_orbit_reps(G::FiniteCoxeterGroup)
+	return dual.(iplorbit_reps(dual(G)))
+end
+
+
+
+
+
+
+
 
 function plorbits(G::FiniteCoxeterGroup)
 	# orbits(G,plorbit_reps(G)) is the obvious solution but it creates duplicates
@@ -57,27 +87,46 @@ function iplorbits(G::FiniteCoxeterGroup)
 	return map(plorbit -> reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(plorbit))))), orbits(G,iplorbit_reps(G)))
 end
 
+function endoscopy_orbits(G::FiniteCoxeterGroup)
+	return "?"
+end
+
+function isolated_endoscopy_orbits(G::FiniteCoxeterGroup)
+	return "?"
+end
+
+
+
+
+
+
+
+
 
 function plevis(G::FiniteCoxeterGroup)
-	plevis = [];
-	iplevis = [];
-	for plorbit in plorbits(G)
-		for plevi in plorbit
-			append!(plevis,[plevi])
-		end
-	end
-	return plevis
+	return reduce(vcat,plorbits(G))
 end
 
 function iplevis(G::FiniteCoxeterGroup)
-	iplevis = [];
-	for iplorbit in iplorbits(G)
-		for iplevi in iplorbit
-			append!(iplevis,[iplevi])
-		end
-	end
-	return iplevis
+	return reduce(vcat,iplorbits(G))
+end	
+
+function endoscopies(G::FiniteCoxeterGroup)
+	return reduce(vcat,endoscopy_orbits(G))
 end
+
+function isolated_endoscopies(G::FiniteCoxeterGroup)
+	return reduce(vcat,isolated_endoscopy_orbits(G))
+end
+
+
+
+
+
+
+
+
+
 
 function orderpol(L::FiniteCoxeterGroup)
 	return PermRoot.generic_order(L,Pol(:q))
@@ -113,14 +162,27 @@ end
 
 function nu(L::FiniteCoxeterGroup)
 	nu_value = 0
-	G_plevis = plevis(L.parent)
-	G_iplevis = iplevis(L.parent)
-	for iplevi in G_iplevis
-		if subset(L,iplevi)
-			nu_value += mobius(L,iplevi,G_plevis)*pi0(iplevi)
+	try
+		L_parent = L.parent
+		G_plevis = plevis(L_parent)
+		G_iplevis = iplevis(L_parent)
+		for iplevi in G_iplevis
+			if subset(L,iplevi)
+				nu_value += mobius(L,iplevi,G_plevis)*pi0(iplevi)
+			end
 		end
+		return nu_value
+	catch err
+		L_parent = L
+		G_plevis = plevis(L_parent)
+		G_iplevis = iplevis(L_parent)
+		for iplevi in G_iplevis
+			if subset(L,iplevi)
+				nu_value += mobius(L,iplevi,G_plevis)*pi0(iplevi)
+			end
+		end
+		return nu_value
 	end
-	return nu_value
 end
 
 

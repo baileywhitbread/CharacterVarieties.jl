@@ -29,22 +29,14 @@ end # End of struct GType
 
 
 # Define functions
-function dual(G::FiniteCoxeterGroup)
-	# Dualise normally if G is not a torus
-	if size(simpleroots(G))[1] != 0
-		return rootdatum(simplecoroots(G),simpleroots(G))
-	else
-		return reflection_subgroup(dual(G.parent),Int64[])
+function dual(L::FiniteCoxeterGroup)
+	try
+		L_parent = L.parent
+		return reflection_subgroup(rootdatum(simplecoroots(L_parent),simpleroots(L_parent)),inclusiongens(L))
+	catch err
+		return rootdatum(simplecoroots(L),simpleroots(L))
 	end
 end
-
-
-
-
-
-
-
-
 
 
 
@@ -62,22 +54,6 @@ function iplorbit_reps(G::FiniteCoxeterGroup)
 	return iplorbit_reps
 end
 
-function endoscopy_orbit_reps(G::FiniteCoxeterGroup)
-	dual.(plorbit_reps(dual(G)))
-	return map(simple_roots -> reflection_subgroup(G,simple_roots), inclusiongens.(dual.(plorbit_reps(dual(G)))))
-end
-
-function isolated_endoscopy_orbit_reps(G::FiniteCoxeterGroup)
-	return dual.(iplorbit_reps(dual(G)))
-end
-
-
-
-
-
-
-
-
 function plorbits(G::FiniteCoxeterGroup)
 	# orbits(G,plorbit_reps(G)) is the obvious solution but it creates duplicates
 	# Duplicates are killed by converting the vector to a set then back to a vector
@@ -89,15 +65,12 @@ function iplorbits(G::FiniteCoxeterGroup)
 end
 
 function endoscopy_orbits(G::FiniteCoxeterGroup)
-	return "?"
+	return map(plorbit -> dual.(plorbit), plorbits(G))
 end
 
 function isolated_endoscopy_orbits(G::FiniteCoxeterGroup)
-	return "?"
+	return map(iplorbit -> dual.(iplorbit), iplorbits(G))
 end
-
-
-
 
 
 
@@ -113,11 +86,11 @@ function iplevis(G::FiniteCoxeterGroup)
 end	
 
 function endoscopies(G::FiniteCoxeterGroup)
-	return reduce(vcat,endoscopy_orbits(G))
+	return dual.(plevis(dual(G)))
 end
 
 function isolated_endoscopies(G::FiniteCoxeterGroup)
-	return reduce(vcat,isolated_endoscopy_orbits(G))
+	return dual.(iplevis(dual(G)))
 end
 
 

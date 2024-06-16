@@ -63,7 +63,8 @@ function iplorbit_reps(G::FiniteCoxeterGroup)
 end
 
 function endoscopy_orbit_reps(G::FiniteCoxeterGroup)
-	return dual.(plorbit_reps(dual(G)))
+	dual.(plorbit_reps(dual(G)))
+	return map(simple_roots -> reflection_subgroup(G,simple_roots), inclusiongens.(dual.(plorbit_reps(dual(G)))))
 end
 
 function isolated_endoscopy_orbit_reps(G::FiniteCoxeterGroup)

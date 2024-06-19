@@ -160,6 +160,10 @@ function nu(L::FiniteCoxeterGroup)
 	end
 end
 
+
+
+
+## G-type functions
 function group_types(G::FiniteCoxeterGroup)
 	# Returns a vector of GTypes, ie. the G-types of G
 	types = [];
@@ -177,12 +181,11 @@ function group_types(G::FiniteCoxeterGroup)
 	return types
 end
 
-
-
-
-
-## G-type functions
-
+function type_data(G::FiniteCoxeterGroup)
+	data = Array{Any}(nothing,0,8)
+	for gtype in group_types(G)
+		
+end
 
 
 

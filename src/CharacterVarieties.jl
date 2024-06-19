@@ -178,6 +178,10 @@ end
 
 
 
+## G-type functions
+
+
+
 
 
 

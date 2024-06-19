@@ -19,14 +19,19 @@ struct GType
 	# A G-type is a pair [L,ρ] where 
 	# L is an endoscopy group of G containing T
 	# ρ is a principal unipotent character of L(Fq)
+	
 	# To record ρ, we record a string representation and its degree
 	# eg. the Steinberg character of GL3 is recorded as 
 	# "3" (for the partition (3,0,...) of 3) and Pol(:q)^3
+	
 	endoscopy::FiniteCoxeterGroup
 	character::String
 	degree::Pol{Rational{Int64}}
+	
 end # End of struct GType
 
+# Make GTypes display nicely on the REPL
+Base.show(io::IO, tau::GType) = print(io, "[",tau.endoscopy,",",tau.character,"]")
 
 
 
@@ -36,8 +41,8 @@ end # End of struct GType
 
 
 # Define functions
-## This function is tricky to write properly...
-function dual(L::FiniteCoxeterGroup)
+function dual(L::FiniteCoxeterGroup) 
+	# Not sure what I want this function to actually do...
 	# Returns the Langlands dual group of L
 	# The output will have a parent group iff the input had one
 	try
@@ -182,9 +187,14 @@ function group_types(G::FiniteCoxeterGroup)
 end
 
 function type_data(G::FiniteCoxeterGroup)
-	data = Array{Any}(nothing,0,8)
+	data = Array{Any}(nothing,0,2)
 	for gtype in group_types(G)
-		
+		type_row = Array{Any}(nothing,1,0)
+		type_row = hcat(type_row,[gtype])
+		type_row = hcat(type_row,[gtype.degree])
+		data = vcat(data,type_row)
+	end
+	return data
 end
 
 

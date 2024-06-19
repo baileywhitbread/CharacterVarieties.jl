@@ -17,7 +17,7 @@ export iplorbit_reps, iplorbits, iplevis
 # Define structs
 struct GType
 	# A G-type is a pair [L,ρ] where 
-	# L is an endoscopy group of G containing T := maximal split torus of G
+	# L is an endoscopy group of G containing T
 	# ρ is a principal unipotent character of L(Fq)
 	# To record ρ, we record a string representation and its degree
 	# eg. the Steinberg character of GL3 is recorded as 
@@ -34,7 +34,21 @@ end # End of struct GType
 
 
 
+
 # Define functions
+## This function is tricky to write properly...
+function dual(L::FiniteCoxeterGroup)
+	# Returns the Langlands dual group of L
+	# The output will have a parent group iff the input had one
+	try
+		L_parent = L.parent
+		return reflection_subgroup(rootdatum(simplecoroots(L_parent),simpleroots(L_parent)),inclusiongens(L))
+	catch err
+		return rootdatum(simplecoroots(L),simpleroots(L))
+	end
+end
+
+
 ## Checks
 function isisolated(L::FiniteCoxeterGroup)
 	# Returns true if L is isolated in its parent
@@ -99,17 +113,6 @@ end
 function pi0(L::FiniteCoxeterGroup)
 	# Returns |pi_0(Z(L))|
 	return length(algebraic_center(L).AZ)
-end
-
-function dual(L::FiniteCoxeterGroup)
-	# Returns the Langlands dual group of L
-	# The output will have a parent group iff the input had one
-	try
-		L_parent = L.parent
-		return reflection_subgroup(rootdatum(simplecoroots(L_parent),simpleroots(L_parent)),inclusiongens(L))
-	catch err
-		return rootdatum(simplecoroots(L),simpleroots(L))
-	end
 end
 
 function mobius(A::FiniteCoxeterGroup,B::FiniteCoxeterGroup,P::Vector)

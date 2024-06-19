@@ -16,6 +16,12 @@ export iplorbit_reps, iplorbits, iplevis
 
 # Define structs
 struct GType
+	# A G-type is a pair [L,ρ] where 
+	# L is an endoscopy group of G containing T := maximal split torus of G
+	# ρ is a principal unipotent character of L(Fq)
+	# To record ρ, we record a string representation and its degree
+	# eg. the Steinberg character of GL3 is recorded as 
+	# "3" (for the partition (3,0,...) of 3) and Pol(:q)^3
 	endoscopy::FiniteCoxeterGroup
 	character::String
 	degree::Pol{Rational{Int64}}
@@ -29,7 +35,75 @@ end # End of struct GType
 
 
 # Define functions
+## Checks
+function isisolated(L::FiniteCoxeterGroup)
+	# Returns true if L is isolated in its parent
+	# If no parent, returns true
+	try
+		return length(gens(L)) == length(gens(L.parent))
+	catch err
+		return true
+	end
+end
+
+
+
+
+
+
+
+## Calculating pseudo-Levis
+function plorbit_reps(G::FiniteCoxeterGroup)
+	# Returns pseudo-Levi orbit representatives as a vector of FiniteCoxeterSubGroup's
+	return reflection_subgroup.(Ref(G),sscentralizer_reps(G))
+end
+
+function iplorbit_reps(G::FiniteCoxeterGroup)
+	# Returns isolated pseudo-Levi orbit representatives as a vector of FiniteCoxeterSubGroup's
+	return filter(isisolated,plorbit_reps(G))
+end
+
+function plorbits(G::FiniteCoxeterGroup)
+	# Returns pseudo-Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
+	# orbits(G,plorbit_reps(G)) is the obvious solution but it creates duplicates for some reason
+	# Duplicates are killed by converting the vector to a set then back to a vector
+	return map(plorbit -> reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(plorbit))))), orbits(G,plorbit_reps(G)))
+end
+
+function iplorbits(G::FiniteCoxeterGroup)
+	# Returns isolated pseudo-Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
+	return map(plorbit -> reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(plorbit))))), orbits(G,iplorbit_reps(G)))
+end
+
+function plevis(G::FiniteCoxeterGroup)
+	# Returns all pseudo-Levis as a vector of FiniteCoxeterSubGroup's
+	return reduce(vcat,plorbits(G))
+end
+
+function iplevis(G::FiniteCoxeterGroup)
+	# Returns all pseudo-Levis as a vector of FiniteCoxeterSubGroup's
+	return reduce(vcat,iplorbits(G))
+end	
+
+
+
+
+
+
+## Calculations
+function orderpol(L::FiniteCoxeterGroup)
+	# Returns ||L||(q) = |L(Fq)|
+	return PermRoot.generic_order(L,Pol(:q))
+end
+
+function pi0(L::FiniteCoxeterGroup)
+	# Returns |pi_0(Z(L))|
+	return length(algebraic_center(L).AZ)
+end
+
 function dual(L::FiniteCoxeterGroup)
+	# Returns the Langlands dual group of L
+	# The output will have a parent group iff the input had one
 	try
 		L_parent = L.parent
 		return reflection_subgroup(rootdatum(simplecoroots(L_parent),simpleroots(L_parent)),inclusiongens(L))
@@ -38,126 +112,69 @@ function dual(L::FiniteCoxeterGroup)
 	end
 end
 
-
-
-function plorbit_reps(G::FiniteCoxeterGroup)
-	return reflection_subgroup.(Ref(G),sscentralizer_reps(G))
-end
-
-function iplorbit_reps(G::FiniteCoxeterGroup)
-	iplorbit_reps = [];
-	for plorbit_rep in plorbit_reps(G)
-		if length(gens(plorbit_rep)) == length(gens(G))
-			append!(iplorbit_reps,[plorbit_rep])
-		end
-	end
-	return iplorbit_reps
-end
-
-function plorbits(G::FiniteCoxeterGroup)
-	# orbits(G,plorbit_reps(G)) is the obvious solution but it creates duplicates
-	# Duplicates are killed by converting the vector to a set then back to a vector
-	return map(plorbit -> reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(plorbit))))), orbits(G,plorbit_reps(G)))
-end
-
-function iplorbits(G::FiniteCoxeterGroup)
-	return map(plorbit -> reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(plorbit))))), orbits(G,iplorbit_reps(G)))
-end
-
-function endoscopy_orbits(G::FiniteCoxeterGroup)
-	return map(plorbit -> dual.(plorbit), plorbits(G))
-end
-
-function isolated_endoscopy_orbits(G::FiniteCoxeterGroup)
-	return map(iplorbit -> dual.(iplorbit), iplorbits(G))
-end
-
-
-
-
-
-
-function plevis(G::FiniteCoxeterGroup)
-	return reduce(vcat,plorbits(G))
-end
-
-function iplevis(G::FiniteCoxeterGroup)
-	return reduce(vcat,iplorbits(G))
-end	
-
-function endoscopies(G::FiniteCoxeterGroup)
-	return dual.(plevis(dual(G)))
-end
-
-function isolated_endoscopies(G::FiniteCoxeterGroup)
-	return dual.(iplevis(dual(G)))
-end
-
-
-
-
-
-
-
-
-
-
-function orderpol(L::FiniteCoxeterGroup)
-	return PermRoot.generic_order(L,Pol(:q))
-end
-
-function pi0(L::FiniteCoxeterGroup)
-	return length(algebraic_center(L).AZ)
-end
-
-function subset(L::FiniteCoxeterGroup,M::FiniteCoxeterGroup)
-	return issubset(inclusion(L),inclusion(M))
-end
-
-function equal(L::FiniteCoxeterGroup,M::FiniteCoxeterGroup)
-	return subset(L,M) && subset(M,L)
-end
-
-function mobius(A::FiniteCoxeterGroup,B::FiniteCoxeterGroup,poset::Vector)
-	if equal(A,B)
+function mobius(A::FiniteCoxeterGroup,B::FiniteCoxeterGroup,P::Vector)
+	# Returns the Mobius function of the poset P evaluated at (A,B) in PxP
+	# Throws ArgumentError if the interval [A,B] is empty
+	# Only intended to be used with P being a poset of pseudo-Levi subgroups
+	if isequal(A,B)
 		return 1
-	elseif subset(A,B)
+	elseif issubset(A,B)
 		mobius_value = 0
-		for element in poset
-			if subset(A,element) && subset(element,B) && !equal(element,B)
-				mobius_value += mobius(A,element,poset)
+		for element in P
+			if issubset(A,element) && issubset(element,B) && !isequal(element,B)
+				mobius_value += mobius(A,element,P)
 			end
 		end
 		return (-1)*mobius_value
 	else
-		error("First argument is not contained in the second argument")
+		ArgumentError("First argument is not contained in the second argument")
 	end
 end
 
 function nu(L::FiniteCoxeterGroup)
+	L_dual = dual(L)
 	nu_value = 0
 	try
-		L_parent = L.parent
-		G_plevis = plevis(L_parent)
-		G_iplevis = iplevis(L_parent)
+		L_dual_parent = L_dual.parent
+		G_plevis = plevis(L_dual_parent)
+		G_iplevis = iplevis(L_dual_parent)
 		for iplevi in G_iplevis
-			if subset(L,iplevi)
-				nu_value += mobius(L,iplevi,G_plevis)*pi0(iplevi)
+			if issubset(L_dual,iplevi)
+				nu_value += mobius(L_dual,iplevi,G_plevis)*pi0(iplevi)
 			end
 		end
 		return nu_value
 	catch err
-		L_parent = L
-		G_plevis = plevis(L_parent)
-		G_iplevis = iplevis(L_parent)
+		L_dual_parent = L_dual
+		G_plevis = plevis(L_dual_parent)
+		G_iplevis = iplevis(L_dual_parent)
 		for iplevi in G_iplevis
-			if subset(L,iplevi)
-				nu_value += mobius(L,iplevi,G_plevis)*pi0(iplevi)
+			if issubset(L_dual,iplevi)
+				nu_value += mobius(L_dual,iplevi,G_plevis)*pi0(iplevi)
 			end
 		end
 		return nu_value
 	end
 end
+
+function group_types(G::FiniteCoxeterGroup)
+	# Returns a vector of GTypes, ie. the G-types of G
+	types = [];
+	for plevi in plorbit_reps(G)
+		plevi_uc = UnipotentCharacters(plevi)
+		plevi_uc_names = charnames(plevi_uc,limit=true)
+		plevi_uc_degs = degrees(plevi_uc)
+		for i in 1:length(plevi_uc)
+			# Check if unipotent character is principal
+			if Int(plevi_uc_degs[i](1))!=0
+				append!(types,[GType(plevi,plevi_uc_names[i],plevi_uc_degs[i])])
+			end
+		end
+	end
+	return types
+end
+
+
 
 
 

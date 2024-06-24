@@ -30,7 +30,9 @@ struct GType
 end # End of struct GType
 
 # Make GTypes display nicely on the REPL
-Base.show(io::IO, tau::GType) = print(io, "[",tau.endoscopy,",",tau.character,"]")
+Base.show(io::IO, tau::GType) = print(io,
+"[",tau.endoscopy,",",tau.character,"]"
+)
 
 ###############################################################################
 ###############################################################################
@@ -44,7 +46,8 @@ function dual(L::FiniteCoxeterGroup)
 	# The output will have a parent group iff the input had one
 	try
 		L_parent = L.parent
-		return reflection_subgroup(rootdatum(simplecoroots(L_parent),simpleroots(L_parent)),inclusiongens(L))
+		L_parent_dual = rootdatum(simplecoroots(L_parent),simpleroots(L_parent))
+		return reflection_subgroup(L_parent_dual,inclusiongens(L))
 	catch err
 		return rootdatum(simplecoroots(L),simpleroots(L))
 	end

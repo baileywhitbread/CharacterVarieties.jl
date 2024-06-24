@@ -10,9 +10,8 @@ export dual
 export plorbit_reps, plorbits, plevis
 export iplorbit_reps, iplorbits, iplevis
 
-
-
-
+###############################################################################
+###############################################################################
 
 # Define structs
 struct GType
@@ -33,14 +32,12 @@ end # End of struct GType
 # Make GTypes display nicely on the REPL
 Base.show(io::IO, tau::GType) = print(io, "[",tau.endoscopy,",",tau.character,"]")
 
-
-
-
-
-
-
+###############################################################################
+###############################################################################
 
 # Define functions
+
+## Dualising
 function dual(L::FiniteCoxeterGroup) 
 	# Not sure what I want this function to actually do...
 	# Returns the Langlands dual group of L
@@ -53,6 +50,7 @@ function dual(L::FiniteCoxeterGroup)
 	end
 end
 
+###############################################################################
 
 ## Checks
 function isisolated(L::FiniteCoxeterGroup)
@@ -65,11 +63,7 @@ function isisolated(L::FiniteCoxeterGroup)
 	end
 end
 
-
-
-
-
-
+###############################################################################
 
 ## Calculating pseudo-Levis
 function plorbit_reps(G::FiniteCoxeterGroup)
@@ -86,12 +80,16 @@ function plorbits(G::FiniteCoxeterGroup)
 	# Returns pseudo-Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
 	# orbits(G,plorbit_reps(G)) is the obvious solution but it creates duplicates for some reason
 	# Duplicates are killed by converting the vector to a set then back to a vector
-	return map(plorbit -> reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(plorbit))))), orbits(G,plorbit_reps(G)))
+	map(orbits(G,plorbit_reps(G))) do x
+		return reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(x)))))
+	end
 end
 
 function iplorbits(G::FiniteCoxeterGroup)
 	# Returns isolated pseudo-Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
-	return map(plorbit -> reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(plorbit))))), orbits(G,iplorbit_reps(G)))
+	map(orbits(G,iplorbit_reps(G))) do x
+		return reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(x)))))
+	end
 end
 
 function plevis(G::FiniteCoxeterGroup)
@@ -104,10 +102,7 @@ function iplevis(G::FiniteCoxeterGroup)
 	return reduce(vcat,iplorbits(G))
 end	
 
-
-
-
-
+###############################################################################
 
 ## Calculations
 function orderpol(L::FiniteCoxeterGroup)
@@ -165,8 +160,7 @@ function nu(L::FiniteCoxeterGroup)
 	end
 end
 
-
-
+###############################################################################
 
 ## G-type functions
 function group_types(G::FiniteCoxeterGroup)
@@ -202,7 +196,7 @@ end
 
 
 
+
+
+
 end # End of module CharacterVarieties
-
-
-

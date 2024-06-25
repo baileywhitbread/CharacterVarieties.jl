@@ -1,4 +1,4 @@
-module CharacterVarieties
+# module CharacterVarieties
 
 using Chevie
 
@@ -51,7 +51,7 @@ function dual(L::FiniteCoxeterGroup)
 	catch err
 		return rootdatum(simplecoroots(L),simpleroots(L))
 	end
-end
+End
 
 ###############################################################################
 
@@ -138,25 +138,23 @@ function mobius(A::FiniteCoxeterGroup,B::FiniteCoxeterGroup,P::Vector)
 end
 
 function nu(L::FiniteCoxeterGroup)
-	L_dual = dual(L)
 	nu_value = 0
 	try
-		L_dual_parent = L_dual.parent
-		G_plevis = plevis(L_dual_parent)
-		G_iplevis = iplevis(L_dual_parent)
+		L_parent = L.parent
+		G_plevis = plevis(L_parent)
+		G_iplevis = iplevis(L_parent)
 		for iplevi in G_iplevis
-			if issubset(L_dual,iplevi)
-				nu_value += mobius(L_dual,iplevi,G_plevis)*pi0(iplevi)
+			if issubset(L,iplevi)
+				nu_value += mobius(L,iplevi,G_plevis)*pi0(iplevi)
 			end
 		end
 		return nu_value
 	catch err
-		L_dual_parent = L_dual
-		G_plevis = plevis(L_dual_parent)
-		G_iplevis = iplevis(L_dual_parent)
+		G_plevis = plevis(L_parent)
+		G_iplevis = iplevis(L_parent)
 		for iplevi in G_iplevis
-			if issubset(L_dual,iplevi)
-				nu_value += mobius(L_dual,iplevi,G_plevis)*pi0(iplevi)
+			if issubset(L,iplevi)
+				nu_value += mobius(L,iplevi,G_plevis)*pi0(iplevi)
 			end
 		end
 		return nu_value
@@ -184,22 +182,19 @@ function group_types(G::FiniteCoxeterGroup)
 end
 
 function type_data(G::FiniteCoxeterGroup)
-	data = Array{Any}(nothing,0,2)
+	d = Array{Any}(nothing,0,8)
 	for gtype in group_types(G)
 		type_row = Array{Any}(nothing,1,0)
 		type_row = hcat(type_row,[gtype])
+		type_row = hcat(type_row,[Int64(length(roots(gtype.endoscopy))/2)])
+		type_row = hcat(type_row,[orderpol(gtype.endoscopy)])
 		type_row = hcat(type_row,[gtype.degree])
-		data = vcat(data,type_row)
+		type_row = hcat(type_row,[Int64(gtype.degree(1))])
+		type_row = hcat(type_row,[length(gtype.endoscopy)])
+		type_row = hcat(type_row,["Orbit size"])
+		type_row = hcat(type_row,[nu(gtype.endoscopy)])		
+		d = vcat(d,type_row)
 	end
-	return data
+	return sortslices(d,dims=1,by = x -> x[2],rev=true)
 end
-
-
-
-
-
-
-
-
-
-end # End of module CharacterVarieties
+# end # End of module CharacterVarieties

@@ -51,7 +51,18 @@ function dual(L::FiniteCoxeterGroup)
 	catch err
 		return rootdatum(simplecoroots(L),simpleroots(L))
 	end
-End
+end
+
+## Orbits
+function myorbit(L::FiniteCoxeterGroup)
+	# This is a temporary fix because PermGroups.jl orbit() function creates duplicates
+	try
+		return reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(orbit(L.parent,L))))))
+	catch err
+		return [G]
+	end
+end
+
 
 ###############################################################################
 
@@ -181,7 +192,7 @@ function group_types(G::FiniteCoxeterGroup)
 	return types
 end
 
-function type_data(G::FiniteCoxeterGroup)
+function group_type_data(G::FiniteCoxeterGroup)
 	d = Array{Any}(nothing,0,8)
 	for gtype in group_types(G)
 		type_row = Array{Any}(nothing,1,0)
@@ -191,10 +202,43 @@ function type_data(G::FiniteCoxeterGroup)
 		type_row = hcat(type_row,[gtype.degree])
 		type_row = hcat(type_row,[Int64(gtype.degree(1))])
 		type_row = hcat(type_row,[length(gtype.endoscopy)])
-		type_row = hcat(type_row,["Orbit size"])
-		type_row = hcat(type_row,[nu(gtype.endoscopy)])		
+		type_row = hcat(type_row,[length(orbit(gtype.endoscopy.parent,gtype.endoscopy))])
+		type_row = hcat(type_row,[nu(dual(gtype.endoscopy))])		
 		d = vcat(d,type_row)
 	end
 	return sortslices(d,dims=1,by = x -> x[2],rev=true)
 end
+
+###############################################################################
+
+## Display human-readable tables
+function group_type_table(G)
+	d = group_type_data(G)
+	num_of_types = size(d)[1]
+	# The next two lines make the |L(Fq)| and ρ(1) columns readable
+	# By converting the entries from Pol to CycPol
+	d[2*num_of_types+1:3*num_of_types] = CycPol.(d[2*num_of_types+1:3*num_of_types])
+	d[3*num_of_types+1:4*num_of_types] = CycPol.(d[3*num_of_types+1:4*num_of_types])
+	clabels = ["|Φ(L)+|","|L(Fq)|","ρ(1)","χᵨ(1)","|W(L)|","|[L]|","ν(L)"];
+	rlabels = xrepr.(Ref(rio()),d[:,1]); 
+	# xrepr(rio(), __ ) is a string of __ when printed on the REPR
+	repr_d = xrepr.(Ref(rio()),d[:,2:size(d)[2]]);
+	println("A G-type is a W-orbit [L,ρ] where ")
+	println("L is an endoscopy group of G containing T")
+	println("ρ is a principal unipotent character of L(Fq)")
+	println("Φ(L)+ is the set of positive roots of L")
+	println("|L(Fq)| is the size of L(Fq)")
+	println("ρ(1) is the degree of the unipotent character ρ")
+	println("χᵨ(1) is the degree of the Weyl group character associated to ρ")
+	println("W(L) is the Weyl group of L")
+	println("[L] is the orbit of L under the W-action")
+	println("ν(L) is an integer only depending on L")
+	println("")
+	return showtable(repr_d;col_labels=clabels,rows_label="Types [L,ρ]",row_labels=rlabels)
+end
+
+
+
+
+
 # end # End of module CharacterVarieties

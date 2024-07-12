@@ -32,6 +32,27 @@ Base.show(io::IO, tau::GType) = print(io,
 "[",tau.endoscopy,",",tau.character,"]"
 )
 
+struct gType
+	# A g-type is a pair [L,N] where 
+	# L is a Levi subgroup of G containing T
+	# N is an L(Fq)-orbit of a nilpotent element of L(Fq)
+	
+	# To record N, we record a string representation and its size
+	# eg. the regular nilpotent orbit of GL3 is recorded as 
+	# "3" (for the partition (3,0,...) of 3) and q⁶-q⁴-q³+q
+	
+	levi::FiniteCoxeterGroup
+	orbit::String
+	size::Pol{Rational{Int64}}
+	green::Pol{Rational{Int64}}
+	
+end # End of struct GType
+
+# Make gTypes display nicely on the REPL
+Base.show(io::IO, tau::gType) = print(io,
+"[",tau.levi,",",tau.orbit,"]"
+)
+
 ###############################################################################
 ###############################################################################
 
@@ -63,6 +84,7 @@ end
 
 
 ###############################################################################
+###############################################################################
 
 ## Checks
 function isisolated(L::FiniteCoxeterGroup)
@@ -75,9 +97,30 @@ function isisolated(L::FiniteCoxeterGroup)
 	end
 end
 
+function islevi(L::FiniteCoxeterGroup)
+	# Returns true if L is a Levi subgroup of its parent
+	# If no parent, returns true
+	try
+		return issubset(inclusiongens(L),inclusiongens(L.parent))
+	catch err
+		return true
+	end
+end
+
+function ispalindromic(f::Pol{Int64})
+	# Returns true iff f palindromic
+	return ((f(0)!= 0) && (f.c == f.c[end:-1:1])) || (f(exp(1))==0)
+end
+
+function isnonnegative(f::Pol{Int64})
+	# Returns true iff f has non-negative coefficients
+	return length(filter(x -> x<0, f.c)) == 0
+end
+
+###############################################################################
 ###############################################################################
 
-## Calculating pseudo-Levis
+## Calculating Levi orbit representatives
 function plorbit_reps(G::FiniteCoxeterGroup)
 	# Returns pseudo-Levi orbit representatives as a vector of FiniteCoxeterSubGroup's
 	return reflection_subgroup.(Ref(G),sscentralizer_reps(G))
@@ -88,6 +131,12 @@ function iplorbit_reps(G::FiniteCoxeterGroup)
 	return filter(isisolated,plorbit_reps(G))
 end
 
+function lorbit_reps(G::FiniteCoxeterGroup)
+	# Returns Levi orbit representatives as a vector of FiniteCoxeterSubGroup's
+	return filter(islevi,plorbit_reps(G))
+end
+
+## Calculating Levi orbits
 function plorbits(G::FiniteCoxeterGroup)
 	# Returns pseudo-Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
 	# orbits(G,plorbit_reps(G)) is the obvious solution but it creates duplicates for some reason
@@ -104,19 +153,33 @@ function iplorbits(G::FiniteCoxeterGroup)
 	end
 end
 
+function lorbits(G::FiniteCoxeterGroup)
+	# Returns Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
+	map(orbits(G,lorbit_reps(G))) do x
+		return reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(x)))))
+	end
+end
+
+## Calculating all Levis
 function plevis(G::FiniteCoxeterGroup)
 	# Returns all pseudo-Levis as a vector of FiniteCoxeterSubGroup's
 	return reduce(vcat,plorbits(G))
 end
 
 function iplevis(G::FiniteCoxeterGroup)
-	# Returns all pseudo-Levis as a vector of FiniteCoxeterSubGroup's
+	# Returns all isolated pseudo-Levis as a vector of FiniteCoxeterSubGroup's
 	return reduce(vcat,iplorbits(G))
 end	
 
+function levis(G::FiniteCoxeterGroup)
+	# Returns all Levis as a vector of FiniteCoxeterSubGroup's
+	return reduce(vcat,lorbits(G))
+end	
+
+###############################################################################
 ###############################################################################
 
-## Calculations
+## Helper functions
 function orderpol(L::FiniteCoxeterGroup)
 	# Returns ||L||(q) = |L(Fq)|
 	return PermRoot.generic_order(L,Pol(:q))
@@ -158,6 +221,7 @@ function nu(L::FiniteCoxeterGroup)
 end
 
 ###############################################################################
+###############################################################################
 
 ## G-type functions
 function group_types(G::FiniteCoxeterGroup)
@@ -179,24 +243,69 @@ end
 
 function group_type_data(G::FiniteCoxeterGroup)
 	d = Array{Any}(nothing,0,8)
-	for gtype in group_types(G)
+	for type in group_types(G)
 		type_row = Array{Any}(nothing,1,0)
-		type_row = hcat(type_row,[gtype])
-		type_row = hcat(type_row,[Int64(length(roots(gtype.endoscopy))/2)])
-		type_row = hcat(type_row,[orderpol(gtype.endoscopy)])
-		type_row = hcat(type_row,[gtype.degree])
-		type_row = hcat(type_row,[Int64(gtype.degree(1))])
-		type_row = hcat(type_row,[length(gtype.endoscopy)])
-		type_row = hcat(type_row,[length(myorbit(gtype.endoscopy))])
-		type_row = hcat(type_row,[nu(gtype.endoscopy)])		
+		type_row = hcat(type_row,[type])
+		type_row = hcat(type_row,[Int64(length(roots(type.endoscopy))/2)])
+		type_row = hcat(type_row,[orderpol(type.endoscopy)])
+		type_row = hcat(type_row,[type.degree])
+		type_row = hcat(type_row,[Int64(type.degree(1))])
+		type_row = hcat(type_row,[length(type.endoscopy)])
+		type_row = hcat(type_row,[length(myorbit(type.endoscopy))])
+		type_row = hcat(type_row,[nu(type.endoscopy)])		
 		d = vcat(d,type_row)
 	end
 	return sortslices(d,dims=1,by = x -> x[2],rev=true)
 end
 
 ###############################################################################
+###############################################################################
 
-## Build E-polynomial
+## g-type functions
+function algebra_types(G::FiniteCoxeterGroup)
+	# Returns a vector of gTypes, ie. the g-types of G
+	types = [];
+	for levi in lorbit_reps(G)
+		levi_uc = UnipotentClasses(levi); # This is a dictionary object, not the actual classes
+		levi_xt = XTable(levi_uc;classes=true) # Another dictionary object containing cardinality of centralisers and conjugacy classes
+		levi_gt = GreenTable(levi_uc;classes=true) # Another dictionary containing Greens functions
+		levi_uc_classes = levi_uc.classes; # Grab unipotent classes over algebraic closure
+		levi_rational_orbit_labels = levi_xt.classes # Grab rational unipotent classes using XTable
+		# These keep track of rational orbits: they are pairs of integers [n,m] where 
+		# n is the nth unipotent class over algebraic closure and
+		# m is the mth component after taking Fq points
+		# eg. If G=G2 then G2(a1) is the 4th class over algebraic closure which splits into 3 after taking Fq points
+		# so the rational orbits associated to G2(a1) are represented by [4,1], [4,2] and [4,3]
+		levi_rational_orbit_TeX_names = map(label->name(TeX(rio();class=label[2]),levi_uc_classes[label[1]]),levi_rational_orbit_labels)
+		levi_rational_orbit_names = fromTeX.(Ref(rio()),levi_rational_orbit_TeX_names)
+		levi_class_sizes = Pol{Rational{Int64}}.(Pol.(levi_xt.cardClass)) # Contains "Mvp"s, we convert to single-variable polys
+		levi_greens_functions = Pol{Rational{Int64}}.(Pol.(levi_gt.scalar[1,:])) # Contains "Mvp"s, we convert to single-variable polys
+		for i in 1:length(levi_rational_orbit_labels)
+			append!(types,[gType(levi,levi_rational_orbit_names[i],levi_class_sizes[i],levi_greens_functions[i])])
+		end
+	end
+	return types
+end
+
+function algebra_type_data(G::FiniteCoxeterGroup)
+	d = Array{Any}(nothing,0,6)
+	for type in algebra_types(G)
+		type_row = Array{Any}(nothing,1,0)
+		type_row = hcat(type_row,[type]) # type_row[1] = type
+		type_row = hcat(type_row,[degree(orderpol(type.levi))-degree(type.size)]) # type_row[2] = d(tau)
+		type_row = hcat(type_row,[Pol{Rational{Int64}}(Pol{Rational{Int64}}((type.size))*(orderpol(G)//orderpol(type.levi)))]) # type_row[3] = N size
+		type_row = hcat(type_row,[type.green]) # type_row[4] = green
+		type_row = hcat(type_row,[length(myorbit(type.levi))]) # type_row[5] = |[L]|
+		type_row = hcat(type_row,[mobius(type.levi,type.levi.parent,levis(G))])	# type_row[6] = µ(L,G)
+		d = vcat(d,type_row)
+	end
+	return d
+end
+
+###############################################################################
+###############################################################################
+
+## Build E-polynomial of X
 function Mtau(G::FiniteCoxeterGroup,i::Int64)
 	# Returns Mτ(q) = q^(|Φ(G)+|-|Φ(L)+|) |L(Fq)|/ρ(1) 
 	# where τ = [L,ρ] is the ith GType
@@ -204,13 +313,12 @@ function Mtau(G::FiniteCoxeterGroup,i::Int64)
 	L_pos_root_size = row_data[2]
 	L_size = row_data[3]
 	rho_deg = row_data[4]
-	return Pol(:q)^(Int64(length(roots(G))/2)-L_pos_root_size)*L_size//rho_deg
+	return Pol{Rational{Int64}}(Pol(:q)^(Int64(length(roots(G))/2)-L_pos_root_size)*L_size//rho_deg)
 end
 
 function Stau(G::FiniteCoxeterGroup,n::Int64,i::Int64)
-	# Returns S_τ(q) = |Z(Fq)| * χᵨ(1)^n * |[L]| * (|W|/|W(L)|)^(n-1) * ν(L)
-	# where τ = [L,ρ] is the ith GType
-	# and n is the number of punctures
+	# Returns Sτ(q) = |Z(Fq)| * χᵨ(1)^n * |[L]| * (|W|/|W(L)|)^(n-1) * ν(L)
+	# where τ = [L,ρ] is the ith GType and n is the number of punctures
 	Z_size = orderpol(torus(rank(G)-semisimplerank(G)))
 	row_data = group_type_data(G)[i,:]
 	chi_rho_deg = row_data[5]
@@ -218,7 +326,7 @@ function Stau(G::FiniteCoxeterGroup,n::Int64,i::Int64)
 	L_weyl_size = row_data[6]
 	orbit_size = row_data[7]
 	nu_L = row_data[8]
-	return Z_size * chi_rho_deg^n * orbit_size * (Int64(G_weyl_size//L_weyl_size))^(n-1) * nu_L
+	return Pol{Rational{Int64}}(Z_size * chi_rho_deg^n * orbit_size * (Int64(G_weyl_size//L_weyl_size))^(n-1) * nu_L)
 end
 
 function EX(G::FiniteCoxeterGroup,g::Int64,n::Int64)
@@ -232,6 +340,46 @@ function EX(G::FiniteCoxeterGroup,g::Int64,n::Int64)
 	return Pol{Int64}((Z_size//T_size^n)*type_sum)
 end
 
+###############################################################################
+###############################################################################
+
+## Build E-polynomial of Y
+function qdtau(G::FiniteCoxeterGroup,i::Int64)
+	# Returns q^(d(τ)) where τ = [L,ρ] is the ith GType
+	row_data = algebra_type_data(G)[i,:]
+	return Pol(:q)^(row_data[2])
+end
+
+function Htau(G::FiniteCoxeterGroup,n::Int64,i::Int64)
+	# Returns Hτ(q) = q^(n|Φ(G)+| + dim(Z)) * (|G(Fq)|/|L(Fq)|) * |N| * Q_L^T(N)^n * |[L]| * (|W|/|W(L)|)^(n-1) * µ(L,G)
+	# where τ = [L,ρ] is the ith GType and n is the number of punctures
+	G_weyl_size = length(G)
+	G_pos_root_size = Int64(length(G)/2)
+	Z_dim = rank(G)-semisimplerank(G)
+	row_data = algebra_type_data(G)[i,:]
+	L_size = orderpol(row_data[1].levi)
+	N_size = row_data[1].size
+	L_green = row_data[1].green
+	orbit_size = row_data[5]
+	L_weyl_size = length(row_data[1].levi)
+	mu_L = row_data[6]
+	return Pol{Rational{Int64}}(Pol(:q)^(n*G_pos_root_size + Z_dim) * Pol{Int64}(orderpol(G)//L_size) * N_size * L_green^n * Int64(orbit_size * (G_weyl_size/L_weyl_size)^(n-1) * mu_L))
+end
+
+function EY(G::FiniteCoxeterGroup,g::Int64,n::Int64)
+	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
+	Z_size = orderpol(torus(rank(G)-semisimplerank(G)))
+	G_size = orderpol(G)
+	g_size = Pol(:q)^(degree(G_size))
+
+	type_sum = 0
+	for i in 1:length(algebra_types(G))
+		type_sum += qdtau(G,i)^(g)*Htau(G,n,i)
+	end
+	return Pol{Int64}( (Z_size//G_size) * g_size^(g-1) * type_sum ) 
+end
+
+###############################################################################
 ###############################################################################
 
 ## Display human-readable tables
@@ -300,20 +448,74 @@ function group_type_table(G::FiniteCoxeterGroup;summands=false,n=1)
 	end
 end
 
-###############################################################################
 
-
-## Testing counting functions
-function is_palindromic(f)
-	return ((f(0)!= 0) && (f.c == f.c[end:-1:1])) || (f(exp(1))==0)
+function algebra_type_table(G::FiniteCoxeterGroup;summands=false,g=1,n=1)
+	if summands == false
+		d = algebra_type_data(G)
+		num_of_types = size(d)[1]
+		# The next lines make the |N| and Q_T^L(N) columns readable
+		# By converting the entries from Pol to CycPol
+		for i in [2,3]
+			d[i*num_of_types+1:(i+1)*num_of_types] = CycPol.(d[i*num_of_types+1:(i+1)*num_of_types])
+		end
+		clabels = ["d(τ)","|N|","Q_T^L(N)","|[L]|","µ(L,G)"];
+		rlabels = xrepr.(Ref(rio()),d[:,1]); 
+		# xrepr(rio(), __ ) is a string of __ when printed on the REPR
+		repr_d = xrepr.(Ref(rio()),d[:,2:size(d)[2]]);
+		println("A g-type is a W-orbit [L,N] where ")
+		println("L is a Levi subgroup of G containing T")
+		println("N is an L(Fq)-orbit of a nilpotent element of L(Fq)")
+		println("d(τ) is ...")
+		println("Q_T^L(N) is ...")
+		println("[L] is the orbit of L under the W-action")
+		println("µ(L,G) is ...")
+		println("")
+		return showtable(repr_d;col_labels=clabels,rows_label="Types [L,N]",row_labels=rlabels)
+	elseif summands == true
+		d = algebra_type_data(G)
+		num_of_types = size(d)[1]
+		# Add qdτ and Hτ to this data
+		qdtau_column = Array{Any}(nothing,num_of_types,1)
+		Htau_column = Array{Any}(nothing,num_of_types,1)
+		for i in 1:num_of_types
+			qdtau_column[i] = qdtau(G,i)
+			Htau_column[i] = Htau(G,n,i)
+		end
+		d = hcat(d,qdtau_column)
+		d = hcat(d,Htau_column)
+		# The next lines make the |N| and Q_T^L(N) columns readable
+		# By converting the entries from Pol to CycPol
+		for i in [2,3]
+			d[i*num_of_types+1:(i+1)*num_of_types] = CycPol.(d[i*num_of_types+1:(i+1)*num_of_types])
+		end
+		clabels = ["d(τ)","|N|","Q_T^L(N)","|[L]|","µ(L,G)","qdτ","Hτ"];
+		rlabels = xrepr.(Ref(rio()),d[:,1]); 
+		# xrepr(rio(), __ ) is a string of __ when printed on the REPR
+		repr_d = xrepr.(Ref(rio()),d[:,2:size(d)[2]]);
+		println("A g-type is a W-orbit [L,N] where ")
+		println("L is a Levi subgroup of G containing T")
+		println("N is an L(Fq)-orbit of a nilpotent element of L(Fq)")
+		println("d(τ) is ...")
+		println("Q_T^L(N) is ...")
+		println("[L] is the orbit of L under the W-action")
+		println("µ(L,G) is ...")
+		println("")
+		return showtable(repr_d;col_labels=clabels,rows_label="Types [L,N]",row_labels=rlabels)
+	else 
+		ArgumentError("The optional summands argument must be true or false; default is false")
+	end
 end
 
+###############################################################################
+###############################################################################
+
+## Testing E-polynomials
 function palindrome_X(G,genus_max,puncture_max)
 	# Checks palindromicity of X with g=0,1,2,..,genus_max and n=1,2,...,puncture_max
 	for g in 0:genus_max
 		for n in 1:puncture_max
 			try 
-				if is_palindromic(EX(G,g,n))
+				if ispalindromic(EX(G,g,n))
 					println("EX palindromic when g=",g," and n=",n)
 				else
 					println("EX not palindromic when g=",g," and n=",n)
@@ -345,6 +547,25 @@ function euler_X(G,genus_max,puncture_max)
 				else
 					println(err," when g=",g," and n=",n)
 				end
+			end
+		end
+	end
+end
+
+function nonnegative_Y(G,genus,puncture_max)
+	# Checks negativity of coefficients of E(Y;q) with g=genus and n=1,2,...,puncture_max
+	for n in 1:puncture_max
+		try 
+			if isnonnegative(EY(G,genus,n))
+				println("EY does not have negative coefficients when g=",genus," and n=",n)
+			else
+				println("EY has negative coefficients when g=",genus," and n=",n)
+			end
+		catch err
+			if isa(err,OverflowError)
+				println("Overflow error when g=",genus," and n=",n)
+			else
+				println(err," when g=",genus," and n=",n)
 			end
 		end
 	end

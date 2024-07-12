@@ -464,11 +464,11 @@ function algebra_type_table(G::FiniteCoxeterGroup;summands=false,g=1,n=1)
 		repr_d = xrepr.(Ref(rio()),d[:,2:size(d)[2]]);
 		println("A g-type is a W-orbit [L,N] where ")
 		println("L is a Levi subgroup of G containing T")
-		println("N is an L(Fq)-orbit of a nilpotent element of L(Fq)")
-		println("d(τ) is ...")
-		println("Q_T^L(N) is ...")
+		println("N is an L(Fq)-orbit of a nilpotent element of Lie(L)(Fq)")
+		println("d(τ) is dim(L)-degree(|N|)")
+		println("Q_T^L(N) is the Greens function evaluated at the unipotent L(Fq)-conjugacy class associated to N")
 		println("[L] is the orbit of L under the W-action")
-		println("µ(L,G) is ...")
+		println("µ(L,G) is the Mobius function of the poset of Levi subgroups of G containing T")
 		println("")
 		return showtable(repr_d;col_labels=clabels,rows_label="Types [L,N]",row_labels=rlabels)
 	elseif summands == true
@@ -494,11 +494,13 @@ function algebra_type_table(G::FiniteCoxeterGroup;summands=false,g=1,n=1)
 		repr_d = xrepr.(Ref(rio()),d[:,2:size(d)[2]]);
 		println("A g-type is a W-orbit [L,N] where ")
 		println("L is a Levi subgroup of G containing T")
-		println("N is an L(Fq)-orbit of a nilpotent element of L(Fq)")
-		println("d(τ) is ...")
-		println("Q_T^L(N) is ...")
+		println("N is an L(Fq)-orbit of a nilpotent element of Lie(L)(Fq)")
+		println("d(τ) is dim(L)-degree(|N|)")
+		println("Q_T^L(N) is the Greens function evaluated at the unipotent L(Fq)-conjugacy class associated to N")
 		println("[L] is the orbit of L under the W-action")
-		println("µ(L,G) is ...")
+		println("µ(L,G) is the Mobius function of the poset of Levi subgroups of G containing T")
+		println("qdτ is q^d(τ)")
+		println("Hτ(q) is the character sum of τ")
 		println("")
 		return showtable(repr_d;col_labels=clabels,rows_label="Types [L,N]",row_labels=rlabels)
 	else 
@@ -552,9 +554,9 @@ function euler_X(G,genus_max,puncture_max)
 	end
 end
 
-function nonnegative_Y(G,genus,puncture_max)
-	# Checks negativity of coefficients of E(Y;q) with g=genus and n=1,2,...,puncture_max
-	for n in 1:puncture_max
+function nonnegative_Y(G,genus,puncture_min,puncture_max)
+	# Checks negativity of coefficients of E(Y;q) with g=genus and n=puncture_min,2,...,puncture_max
+	for n in puncture_min:puncture_max
 		try 
 			if isnonnegative(EY(G,genus,n))
 				println("EY does not have negative coefficients when g=",genus," and n=",n)

@@ -329,13 +329,35 @@ function Stau(G::FiniteCoxeterGroup,n::Int64,i::Int64)
 	return Pol{Rational{Int64}}(Z_size * chi_rho_deg^n * orbit_size * (Int64(G_weyl_size//L_weyl_size))^(n-1) * nu_L)
 end
 
+function fast_Mtau(G::FiniteCoxeterGroup,i::Int64,type_data)
+	# Returns Mτ(q) = q^(|Φ(G)+|-|Φ(L)+|) |L(Fq)|/ρ(1) 
+	# where τ = [L,ρ] is the ith GType
+	L_pos_root_size = type_data[i,:][2]
+	L_size = type_data[i,:][3]
+	rho_deg = type_data[i,:][4]
+	return Pol{Rational{Int64}}(Pol(:q)^(Int64(length(roots(G))/2)-L_pos_root_size)*L_size//rho_deg)
+end
+
+function fast_Stau(G::FiniteCoxeterGroup,n::Int64,i::Int64,type_data)
+	# Returns Sτ(q) = |Z(Fq)| * χᵨ(1)^n * |[L]| * (|W|/|W(L)|)^(n-1) * ν(L)
+	# where τ = [L,ρ] is the ith GType and n is the number of punctures
+	Z_size = orderpol(torus(rank(G)-semisimplerank(G)))
+	chi_rho_deg = type_data[i,:][5]
+	G_weyl_size = length(G)
+	L_weyl_size = type_data[i,:][6]
+	orbit_size = type_data[i,:][7]
+	nu_L = type_data[i,:][8]
+	return Pol{Rational{Int64}}(Z_size * chi_rho_deg^n * orbit_size * (Int64(G_weyl_size//L_weyl_size))^(n-1) * nu_L)
+end
+
 function EX(G::FiniteCoxeterGroup,g::Int64,n::Int64)
 	# Returns the E-polynomial E(X;q) associated to the group G and a genus g surface with n punctures
+	d = group_type_data(G)
 	Z_size = orderpol(torus(rank(G)-semisimplerank(G)))
 	T_size = orderpol(torus(rank(G)))
 	type_sum = 0
-	for i in 1:length(group_types(G))
-		type_sum += Mtau(G,i)^(2g-2+n)*Stau(G,n,i)
+	for i in 1:size(d)[1]
+		type_sum += fast_Mtau(G,i,d)^(2g-2+n)*fast_Stau(G,n,i,d)
 	end
 	return Pol{Int64}((Z_size//T_size^n)*type_sum)
 end
@@ -366,25 +388,6 @@ function Htau(G::FiniteCoxeterGroup,n::Int64,i::Int64)
 	return Pol{Rational{Int64}}(Pol(:q)^(n*G_pos_root_size + Z_dim) * Pol{Int64}(orderpol(G)//L_size) * N_size * L_green^n * Int64(orbit_size * (G_weyl_size/L_weyl_size)^(n-1) * mu_L))
 end
 
-function EY(G::FiniteCoxeterGroup,g::Int64,n::Int64)
-	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
-	Z_size = orderpol(torus(rank(G)-semisimplerank(G)))
-	G_size = orderpol(G)
-	g_size = Pol(:q)^(degree(G_size))
-
-	type_sum = 0
-	for i in 1:length(algebra_types(G))
-		type_sum += qdtau(G,i)^(g)*Htau(G,n,i)
-	end
-	return Pol{Int64}( (Z_size//G_size) * g_size^(g-1) * type_sum ) 
-end
-
-###############################################################################
-###############################################################################
-
-
-### FAST
-## Build E-polynomial of Y
 function fast_qdtau(G::FiniteCoxeterGroup,i::Int64,type_data)
 	# Returns q^(d(τ)) where τ = [L,ρ] is the ith GType
 	return Pol(:q)^(type_data[i,:][2])
@@ -405,7 +408,7 @@ function fast_Htau(G::FiniteCoxeterGroup,n::Int64,i::Int64,type_data)
 	return Pol{Rational{Int64}}(Pol(:q)^(n*G_pos_root_size + Z_dim) * Pol{Int64}(orderpol(G)//L_size) * N_size * L_green^n * Int64(orbit_size * (G_weyl_size/L_weyl_size)^(n-1) * mu_L))
 end
 
-function fast_EY(G::FiniteCoxeterGroup,g::Int64,n::Int64)
+function EY(G::FiniteCoxeterGroup,g::Int64,n::Int64)
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
 	d = algebra_type_data(G)
 	Z_size = orderpol(torus(rank(G)-semisimplerank(G)))
@@ -455,8 +458,8 @@ function group_type_table(G::FiniteCoxeterGroup;summands=false,n=1)
 		Mtau_column = Array{Any}(nothing,num_of_types,1)
 		Stau_column = Array{Any}(nothing,num_of_types,1)
 		for i in 1:num_of_types
-			Mtau_column[i] = Mtau(G,i)
-			Stau_column[i] = Stau(G,n,i)
+			Mtau_column[i] = fast_Mtau(G,i,d)
+			Stau_column[i] = fast_Stau(G,n,i,d)
 		end
 		d = hcat(d,Mtau_column)
 		d = hcat(d,Stau_column)
@@ -518,8 +521,8 @@ function algebra_type_table(G::FiniteCoxeterGroup;summands=false,g=1,n=1)
 		qdtau_column = Array{Any}(nothing,num_of_types,1)
 		Htau_column = Array{Any}(nothing,num_of_types,1)
 		for i in 1:num_of_types
-			qdtau_column[i] = qdtau(G,i)
-			Htau_column[i] = Htau(G,n,i)
+			qdtau_column[i] = fast_qdtau(G,i,d)
+			Htau_column[i] = fast_Htau(G,n,i,d)
 		end
 		d = hcat(d,qdtau_column)
 		d = hcat(d,Htau_column)

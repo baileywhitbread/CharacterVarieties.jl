@@ -209,13 +209,13 @@ function mobius(A::FiniteCoxeterGroup,B::FiniteCoxeterGroup,P::Vector)
 	end
 end
 
-function nu(L::FiniteCoxeterGroup)
+function nu(L::FiniteCoxeterGroup,G::FiniteCoxeterGroup)
 	nu_value = 0
 	G_dual = dual(G)
-	G_plevis = plevis(G)
-	for iplevi in iplevis(G)
-		if issubset(L,iplevi)
-			nu_value += mobius(L,iplevi,G_plevis)*pi0(iplevi)
+	G_dual_plevis = plevis(G_dual)
+	for iplevi in iplevis(G_dual)
+		if issubset(dual(L),iplevi)
+			nu_value += mobius(dual(L),iplevi,G_dual_plevis)*pi0(iplevi)
 		end
 	end
 	return nu_value
@@ -253,7 +253,7 @@ function group_type_data(G::FiniteCoxeterGroup)
 		type_row = hcat(type_row,[Int64(type.degree(1))])
 		type_row = hcat(type_row,[length(type.endoscopy)])
 		type_row = hcat(type_row,[length(myorbit(type.endoscopy))])
-		type_row = hcat(type_row,[nu(type.endoscopy)])		
+		type_row = hcat(type_row,[nu(type.endoscopy,G)])		
 		d = vcat(d,type_row)
 	end
 	return sortslices(d,dims=1,by = x -> x[2],rev=true)

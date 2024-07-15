@@ -192,8 +192,9 @@ end
 
 function mobius(A::FiniteCoxeterGroup,B::FiniteCoxeterGroup,P::Vector)
 	# Returns the Mobius function of the poset P evaluated at (A,B) in PxP
+	# Note the relation on P must be A <= B iff A is a subset of B
 	# Throws ArgumentError if the interval [A,B] is empty
-	# Only intended to be used with P being a poset of pseudo-Levi subgroups
+	# Only intended to be used with P a set of subgroups of G
 	if isequal(A,B)
 		return 1
 	elseif issubset(A,B)

@@ -107,12 +107,12 @@ function islevi(L::FiniteCoxeterGroup)
 	end
 end
 
-function ispalindromic(f::Pol{BigInt})
+function ispalindromic(f::Union{Pol{BigInt},Pol{Int64}})
 	# Returns true iff f palindromic
 	return ((f(0)!= 0) && (f.c == f.c[end:-1:1])) || (f(exp(1))==0)
 end
 
-function isnonnegative(f::Pol{BigInt})
+function isnonnegative(f::Union{Pol{BigInt},Pol{Int64}})
 	# Returns true iff f has non-negative coefficients
 	return length(filter(x -> x<0, f.c)) == 0
 end
@@ -362,6 +362,17 @@ function EX(G::FiniteCoxeterGroup,g::Int64,n::Int64)
 	return Pol{Int64}((Z_size//T_size^n)*type_sum)
 end
 
+function fast_EX(G::FiniteCoxeterGroup,g::Int64,n::Int64,type_data)
+	# Returns the E-polynomial E(X;q) associated to the group G and a genus g surface with n punctures
+	Z_size = orderpol(torus(rank(G)-semisimplerank(G)))
+	T_size = orderpol(torus(rank(G)))
+	type_sum = 0
+	for i in 1:size(type_data)[1]
+		type_sum += fast_Mtau(G,i,type_data)^(2g-2+n)*fast_Stau(G,n,i,type_data)
+	end
+	return Pol{Int64}((Z_size//T_size^n)*type_sum)
+end
+
 ###############################################################################
 ###############################################################################
 
@@ -568,64 +579,79 @@ end
 ###############################################################################
 
 ## Testing E-polynomials
-function palindrome_X(G,genus_max,puncture_max)
-	# Checks palindromicity of X with g=0,1,2,..,genus_max and n=1,2,...,puncture_max
-	for g in 0:genus_max
-		for n in 1:puncture_max
-			try 
-				if ispalindromic(EX(G,g,n))
-					println("EX palindromic when g=",g," and n=",n)
-				else
-					println("EX not palindromic when g=",g," and n=",n)
-				end
-			catch err
-				if isa(err,OverflowError)
-					println("Overflow error when g=",g," and n=",n)
-					break
-				else
-					println(err," when g=",g," and n=",n)
-				end
+function palindrome_X(G,genus,puncture_min,puncture_max)
+	# Checks palindromicity of X with g=genus and n=puncture_min,...,puncture_max
+	d=group_type_data(G)
+	for n in puncture_min:puncture_max
+		try 
+			print("Checking E(X;q) palindromic when g=",genus," and n=",n,": ")
+			if ispalindromic(fast_EX(G,genus,n,d))
+				println("Yes")
+			else
+				println("No")
+			end
+		catch err
+			if isa(err,OverflowError)
+				println("Overflow error")
+				break
+			elseif isa(err,ErrorException)
+				println("Error exception")
+				break
+			else
+				println(err)
+				break
 			end
 		end
 	end
 end
 
-function euler_X(G,genus_max,puncture_max)
-	# Checks Euler characteristic of X with g=0,1,2,..,genus_max and n=1,2,...,puncture_max
-	for g in 0:genus_max
-		for n in 1:puncture_max
-			try 
-				if EX(G,g,n)(1)==0
-					println("χ(X)=0 when g=",g," and n=",n)
-				elseif EX(G,g,n)(1)!=0
-					println("χ(X) non-zero when g=",g," and n=",n)
-				end
-			catch err
-				if isa(err,OverflowError)
-					println("Overflow error when g=",g," and n=",n)
-				else
-					println(err," when g=",g," and n=",n)
-				end
+function euler_X(G,genus,puncture_min,puncture_max)
+	# Checks Euler characteristic of X with g=genus and n=puncture_min,...,puncture_max
+	d=group_type_data(G)
+	for n in puncture_min:puncture_max
+		try 
+			print("Computing χ(X) when g=",genus," and n=",n,": ")
+			if fast_EX(G,genus,n,d)(1)==0
+				println("χ(X)=0")
+			else
+				println("χ(X)=",fast_EX(G,genus,n,d)(1))
+			end
+		catch err
+			if isa(err,OverflowError)
+				println("Overflow error")
+				break
+			elseif isa(err,ErrorException)
+				println("Error exception")
+				break
+			else
+				println(err)
+				break
 			end
 		end
 	end
 end
 
 function nonnegative_Y(G,genus,puncture_min,puncture_max)
-	# Checks negativity of coefficients of E(Y;q) with g=genus and n=puncture_min,2,...,puncture_max
+	# Checks negativity of coefficients of E(Y;q) with g=genus and n=puncture_min,...,puncture_max
 	d=algebra_type_data(G)
 	for n in puncture_min:puncture_max
 		try 
+			print("Checking coefficients of E(Y;q) when g=",genus," and n=",n,": ")
 			if isnonnegative(fast_EY(G,genus,n,d))
-				println("EY does not have negative coefficients when g=",genus," and n=",n)
+				println("All non-negative")
 			else
-				println("EY has negative coefficients when g=",genus," and n=",n)
+				println("Negative coefficients found")
 			end
 		catch err
 			if isa(err,OverflowError)
-				println("Overflow error when g=",genus," and n=",n)
+				println("Overflow error")
+				break
+			elseif isa(err,ErrorException)
+				println("Error exception")
+				break
 			else
-				println(err," when g=",genus," and n=",n)
+				println(err)
+				break
 			end
 		end
 	end

@@ -405,7 +405,7 @@ function fast_qdtau(G::FiniteCoxeterGroup,i::Int64,type_data)
 end
 
 function fast_Htau(G::FiniteCoxeterGroup,n::Int64,i::Int64,type_data)
-	# Returns Hτ(q) = q^(n|Φ(G)+| + dim(Z)) * (|G(Fq)|/|L(Fq)|) * |N| * Q_L^T(N)^n * |[L]| * EY(G,) * µ(L,G)
+	# Returns Hτ(q) = q^(n|Φ(G)+| + dim(Z)) * (|G(Fq)|/|L(Fq)|) * |N| * Q_L^T(N)^n * |[L]| * (|W|/|W(L)|)^(n-1) * µ(L,G)
 	# where τ = [L,ρ] is the ith GType and n is the number of punctures
 	G_weyl_size = BigInt(length(G))
 	G_pos_root_size = BigInt(Int64(length(G)/2))

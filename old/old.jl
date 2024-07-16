@@ -164,6 +164,8 @@ function EX(G,genus_num,puncture_num)
 	return Pol{Int64}(epol)
 end
 
+# This is wrong; EX(SO5,1,1) has leading coefficient 4 when it should be 2
+
 ### Integer overflows occur if G,g,n are big
 ### Overflow occurs when G=SO7 and g=n=2 but not when G=SO7, g=1 and n=2
 ### Overflow occurs when G=G2 and g=n=2 but not when G=G2, g=1 and n=2

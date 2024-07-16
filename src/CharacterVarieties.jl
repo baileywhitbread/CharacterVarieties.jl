@@ -377,7 +377,7 @@ function EX(G::FiniteCoxeterGroup,g::Int64,n::Int64)
 	for i in 1:size(d)[1]
 		type_sum += fast_Mtau(G,i,d)^(2g-2+n)*fast_Stau(G,n,i,d)
 	end
-	return Pol{Int64}((Z_size//T_size^n)*type_sum)
+	return (Z_size//T_size^n)*type_sum
 end
 
 function fast_EX(G::FiniteCoxeterGroup,g::Int64,n::Int64,type_data)

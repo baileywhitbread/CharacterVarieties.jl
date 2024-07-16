@@ -59,7 +59,7 @@ Base.show(io::IO, tau::gType) = print(io,
 # Define functions
 
 ## Dualising
-function dual(L::FiniteCoxeterGroup) 
+function old_dual(L::FiniteCoxeterGroup) 
 	# Not sure what I want this function to actually do...
 	# Returns the Langlands dual group of L
 	# The output will have a parent group iff the input had one
@@ -67,6 +67,19 @@ function dual(L::FiniteCoxeterGroup)
 		L_parent = L.parent
 		L_parent_dual = rootdatum(simplecoroots(L_parent),simpleroots(L_parent))
 		return reflection_subgroup(L_parent_dual,inclusiongens(L))
+	catch err
+		return rootdatum(simplecoroots(L),simpleroots(L))
+	end
+end
+
+function dual(L::FiniteCoxeterGroup) 
+	# Not sure what I want this function to actually do...
+	# Returns the Langlands dual group of L
+	# The output will have a parent group iff the input had one
+	try
+		L_parent = L.parent
+		L_parent_dual = rootdatum(simplecoroots(L_parent),simpleroots(L_parent))
+		L_parent_dual_plevis = plevis(L_parent_dual)
 	catch err
 		return rootdatum(simplecoroots(L),simpleroots(L))
 	end

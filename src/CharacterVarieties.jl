@@ -58,46 +58,9 @@ Base.show(io::IO, tau::gType) = print(io,
 
 # Define functions
 
-## Dualising
-function old_dual(L::FiniteCoxeterGroup) 
-	# Not sure what I want this function to actually do...
-	# Returns the Langlands dual group of L
-	# The output will have a parent group iff the input had one
-	try
-		L_parent = L.parent
-		L_parent_dual = rootdatum(simplecoroots(L_parent),simpleroots(L_parent))
-		return reflection_subgroup(L_parent_dual,inclusiongens(L))
-	catch err
-		return rootdatum(simplecoroots(L),simpleroots(L))
-	end
-end
-
-function dual(L::FiniteCoxeterGroup) 
-	# Not sure what I want this function to actually do...
-	# Returns the Langlands dual group of L
-	# The output will have a parent group iff the input had one
-	try
-		L_parent = L.parent
-		L_parent_dual = rootdatum(simplecoroots(L_parent),simpleroots(L_parent))
-		L_parent_dual_plevis = plevis(L_parent_dual)
-	catch err
-		return rootdatum(simplecoroots(L),simpleroots(L))
-	end
-end
-
-## Orbits
-function myorbit(L::FiniteCoxeterGroup)
-	# This is a temporary fix because PermGroups.jl orbit() function creates duplicates
-	try
-		return reflection_subgroup.(Ref(L.parent),collect(Set(sort.(inclusion.(orbit(L.parent,L))))))
-	catch err
-		return [G]
-	end
-end
 
 
-###############################################################################
-###############################################################################
+
 
 ## Checks
 function isisolated(L::FiniteCoxeterGroup)
@@ -121,17 +84,24 @@ function islevi(L::FiniteCoxeterGroup)
 end
 
 function ispalindromic(f::Union{Pol{BigInt},Pol{Int64}})
-	# Returns true iff f palindromic
-	return ((f(0)!= 0) && (f.c == f.c[end:-1:1])) || (f(exp(1))==0)
+	# Returns true <=> f palindromic
+	# The zero poly is palindromic and f=0 <=> f(e)=0
+	# A non-zero poly is palindromic <=> it has non-zero constant term and coeffs are symmetric
+	return (f(exp(1))==0) || ((f(0)!= 0) && (f.c == f.c[end:-1:1]))
 end
 
 function isnonnegative(f::Union{Pol{BigInt},Pol{Int64}})
-	# Returns true iff f has non-negative coefficients
+	# Returns true <=> f has non-negative coefficients
 	return length(filter(x -> x<0, f.c)) == 0
 end
 
-###############################################################################
-###############################################################################
+
+
+
+
+
+
+
 
 ## Calculating Levi orbit representatives
 function plorbit_reps(G::FiniteCoxeterGroup)
@@ -152,8 +122,8 @@ end
 ## Calculating Levi orbits
 function plorbits(G::FiniteCoxeterGroup)
 	# Returns pseudo-Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
-	# orbits(G,plorbit_reps(G)) is the obvious solution but it creates duplicates for some reason
-	# Duplicates are killed by converting the vector to a set then back to a vector
+	# orbits(G,plorbit_reps(G)) is obvious solution but creates duplicates for some reason
+	# Kill dupes by converting vector to set and back to vector
 	map(orbits(G,plorbit_reps(G))) do x
 		return reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(x)))))
 	end
@@ -189,18 +159,35 @@ function levis(G::FiniteCoxeterGroup)
 	return reduce(vcat,lorbits(G))
 end	
 
-###############################################################################
-###############################################################################
+
+
+
 
 ## Helper functions
+## Orbits
+function myorbit(L::FiniteCoxeterGroup)
+	# This is a temporary fix because PermGroups.jl orbit() function creates duplicates
+	try
+		return reflection_subgroup.(Ref(L.parent),collect(Set(sort.(inclusion.(orbit(L.parent,L))))))
+	catch err 
+		# I am assuming L has no parent iff L=G
+		return [G]
+	end
+end
+
+function dual(L::FiniteCoxeterGroup) 
+	try
+		L_parent = L.parent
+		L_parent_dual = rootdatum(simplecoroots(L_parent),simpleroots(L_parent))
+		return reflection_subgroup(L_parent_dual,inclusiongens(L))
+	catch err
+		return rootdatum(simplecoroots(L),simpleroots(L))
+	end
+end
+
 function orderpol(L::FiniteCoxeterGroup)
 	# Returns ||L||(q) = |L(Fq)|
 	return PermRoot.generic_order(L,Pol(:q))
-end
-
-function pi0(L::FiniteCoxeterGroup)
-	# Returns |pi_0(Z(L))|
-	return length(algebraic_center(L).AZ)
 end
 
 function mobius(A::FiniteCoxeterGroup,B::FiniteCoxeterGroup,P::Vector)
@@ -223,13 +210,21 @@ function mobius(A::FiniteCoxeterGroup,B::FiniteCoxeterGroup,P::Vector)
 	end
 end
 
+function pi0(L::FiniteCoxeterGroup)
+	# Returns |pi_0(Z(L))|
+	return length(algebraic_center(L).AZ)
+end
+
 function nu(L::FiniteCoxeterGroup,G::FiniteCoxeterGroup)
 	nu_value = 0
-	G_dual = dual(G)
-	G_dual_plevis = plevis(G_dual)
-	for iplevi in iplevis(G_dual)
-		if issubset(dual(L),iplevi)
-			nu_value += mobius(dual(L),iplevi,G_dual_plevis)*pi0(iplevi)
+	G_plevis = plevis(G)
+	for iplevi in iplevis(G)
+		if issubset(L,iplevi)
+			println("The iplevi is ",iplevi)
+			println("L lies in the iplevi")
+			println("The mobius value is ",mobius(L,iplevi,G_plevis))
+			println("The pi0 value is ",pi0(iplevi))
+			nu_value += mobius(L,iplevi,G_plevis)*pi0(dual(iplevi))
 		end
 	end
 	return nu_value
@@ -243,6 +238,9 @@ function group_types(G::FiniteCoxeterGroup)
 	# Returns a vector of GTypes, ie. the G-types of G
 	types = [];
 	for plevi in plorbit_reps(G)
+		# I am grabbing pseudo-Levis of G rather than endoscopies of G...
+		# So far this has not caused a problem because I only need data
+		# preserved by Langlands duality, eg. unipotent character degrees
 		plevi_uc = UnipotentCharacters(plevi)
 		plevi_uc_names = charnames(plevi_uc,limit=true)
 		plevi_uc_degs = degrees(plevi_uc)
@@ -308,7 +306,23 @@ function algebra_type_data(G::FiniteCoxeterGroup)
 		type_row = Array{Any}(nothing,1,0)
 		type_row = hcat(type_row,[type]) # type_row[1] = type
 		type_row = hcat(type_row,[degree(orderpol(type.levi))-degree(type.size)]) # type_row[2] = d(tau)
-		type_row = hcat(type_row,[type.size]) # type_row[3] = N size
+		type_row = hcat(type_row,[Pol{Rational{Int64}}(Pol{Rational{Int64}}((type.size))*(orderpol(G)//orderpol(type.levi)))]) # type_row[3] = N size
+		type_row = hcat(type_row,[type.green]) # type_row[4] = green
+		type_row = hcat(type_row,[length(myorbit(type.levi))]) # type_row[5] = |[L]|
+		type_row = hcat(type_row,[mobius(type.levi,type.levi.parent,levis(G))])	# type_row[6] = µ(L,G)
+		d = vcat(d,type_row)
+	end
+	return d
+end
+
+
+function fast_algebra_type_data(G::FiniteCoxeterGroup,type_data)
+	d = Array{Any}(nothing,0,6)
+	for type in type_data
+		type_row = Array{Any}(nothing,1,0)
+		type_row = hcat(type_row,[type]) # type_row[1] = type
+		type_row = hcat(type_row,[degree(orderpol(type.levi))-degree(type.size)]) # type_row[2] = d(tau)
+		type_row = hcat(type_row,[Pol{Rational{Int64}}(Pol{Rational{Int64}}((type.size))*(orderpol(G)//orderpol(type.levi)))]) # type_row[3] = N size
 		type_row = hcat(type_row,[type.green]) # type_row[4] = green
 		type_row = hcat(type_row,[length(myorbit(type.levi))]) # type_row[5] = |[L]|
 		type_row = hcat(type_row,[mobius(type.levi,type.levi.parent,levis(G))])	# type_row[6] = µ(L,G)

@@ -18,7 +18,7 @@ The multiplicative character variety is the GIT quotient
 ```
 where the action is simultaneous conjugation. 
 
-This package computes the E-polynomial $E(\mathbf{X};q)$ via our formula for $|\mathbf{X}(\mathbb{F}_q)|$.  
+This package computes the E-polynomial $E(\mathbf{X};q)$ via our formula for $\#\mathbf{X}(\mathbb{F}_q)$.  
 
 ## Additive character varieties
 Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic.' Let $O_1,\ldots,O_n$ be their adjoint orbits. 
@@ -29,25 +29,25 @@ The additive character variety is the GIT quotient
 ```
 where the action is simultaneous conjugation (i.e., the adjoint action). 
 
-This package computes the E-polynomial $E(\mathbf{Y};q)$ via our formula for $`|\mathbf{Y}(\mathbb{F}_q)|`$.  
+This package computes the E-polynomial $E(\mathbf{Y};q)$ via our formula for $\#\mathbf{Y}(\mathbb{F}_q)$.  
 
 ## Mixed Hodge polynomials
 Associated to $\mathbf{X}$ is the (compactly supported) mixed Hodge polynomial
 ```math
 H(\mathbf{X};x,y,t) = \sum_{i,j,k} h^{i,j,k} x^i y^j t^k.
 ```
-Proving that $`|\mathbf{X}(\mathbb{F}_q)|`$ is a polynomial in $q$ implies $H(\mathbf{X};x,y,t)$ depends only on the product $xy=:q$ and $t$, and that
+Proving that $\#\mathbf{X}(\mathbb{F}_q)$ is a polynomial in $q$ implies $H(\mathbf{X};x,y,t)$ depends only on the product $xy=:q$ and $t$, and that
 ```math
 H(\mathbf{X};q,-1) = E(\mathbf{X};q).
 ```
-That is, computing $`|\mathbf{X}(\mathbb{F}_q)|`$ gives us a specialisation of $H(\mathbf{X};q,t)$. 
+That is, computing $\#\mathbf{X}(\mathbb{F}_q)$ gives us a specialisation of $H(\mathbf{X};q,t)$. 
 
 ## Pure parts
 Another important specialisation of $H(\mathbf{X};q,t)$ is obtained in the following manner. Contained in the cohomology ring $H^\ast(\mathbf{X})$ is an important subring called the pure subring $H^\ast_\mathrm{pure}(\mathbf{X})$. Denote by $PH(\mathbf{X};u)$ the Poincar\'{e} polynomial of the pure subring. Then there is the specialisation $H(\mathbf{X})\mapsto PH(\mathbf{X})$ by setting all terms to zero except the monomials in $qt^2$ (for instance, if $H(\mathbf{X};q,t)=qt^2 + q^2t^4 + q + qt + 1$ then $PH(\mathbf{X};q)=q+q^2$). We say a variety's cohomology is 'pure' if $H=PH$. 
 
 
 ## Non-negative coefficients
-When $G=\mathrm{GL}_n$, it was proven in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) that the coefficients of $`|\mathbf{Y}(\mathbb{F}_q)|`$ are non-negative. This was proven by relating the additive character variety to a quiver variety (which are known to have pure cohomology due to their symplectic geometry). Moreover, it was conjectured the polynomials $\mathbf{X}$ and $\mathbf{X}$ are closely related, in the sense that
+When $G=\mathrm{GL}_n$, it was proven in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) that the coefficients of $\#\mathbf{Y}(\mathbb{F}_q)$ are non-negative. This was proven by relating the additive character variety to a quiver variety (which are known to have pure cohomology due to their symplectic geometry). Moreover, it was conjectured the polynomials $\mathbf{X}$ and $\mathbf{X}$ are closely related, in the sense that
 
 ```math
 PH(\mathbf{X};q) = E(\mathbf{Y};q).

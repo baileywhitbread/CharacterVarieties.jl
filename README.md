@@ -46,7 +46,7 @@ H(\mathbf{X};q,-1) = E(\mathbf{X};q).
 That is, computing $`\#\mathbf{X}(\mathbb{F}_q)`$ gives us a specialisation of $H(\mathbf{X};q,t)$. 
 
 ## Pure parts
-Another important specialisation of $H(\mathbf{X};q,t)$ is obtained in the following manner. Contained in the cohomology ring $H^\ast(\mathbf{X})$ is an important subring called the pure subring $H^\ast_\mathrm{pure}(\mathbf{X})$. Denote by $PH(\mathbf{X};u)$ the Poincar\'{e} polynomial of the pure subring. Then there is the specialisation $H(\mathbf{X})\mapsto PH(\mathbf{X})$ by setting all terms to zero except the monomials in $qt^2$. For instance, 
+Contained in the cohomology ring $H^\ast(\mathbf{X})$ is an important subring called the pure subring $H^\ast_\mathrm{pure}(\mathbf{X})$. Denote by $PH(\mathbf{X};u)$ the Poincar\'{e} polynomial of the pure subring. Then there is another important specialisation $H(\mathbf{X})\mapsto PH(\mathbf{X})$ defined by setting all terms to zero except the monomials in $qt^2$. For instance, 
 ```math
 H(\mathbf{X};q,t)=qt^2 + q^2t^4 + q + qt + 1 \rightsquigarrow PH(\mathbf{X};q)=q+q^2+1.
 ```
@@ -62,5 +62,5 @@ PH(\mathbf{X};q) = E(\mathbf{Y};q).
 
 The conjecture has been proven in one narrow case: $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$. An unproven conjectural formula is given for $G=\mathrm{GL}_n$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
 
-## The idea
+## An idea
 Use Julia to generate the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ and try to understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$. This could be done, for instance, via machine learning. This would require a data set to train a model for guessing mixed Hodge polynomials.

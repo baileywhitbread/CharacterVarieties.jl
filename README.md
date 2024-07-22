@@ -10,7 +10,7 @@ This package computes E-polynomials of character varieties associated to general
 This works on Julia v1.10.2 using the Chevie version dated April 12th 2024. 
 
 ## Counting points
-We access important cohomological information about varieties (defined by polynomials in $\mathbb{Z}[t]$) by counting points over finite fields (c.f. [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)). If $\mathbf{A}$ is such a variety and there exists a polynomial $p_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`$ then we call $p_\mathbf{A}$ the E-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$. Note it is not sufficient to just check $`\#\mathbf{A}(\mathbf{F}_{q})`$ is a polynomial in $q$; such polynomial must be stable under base change to finite extensions.
+We access important cohomological information about varieties (defined by polynomials in $\mathbb{Z}[t]$) by counting points over finite fields (c.f., [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)). If $\mathbf{A}$ is such a variety and there exists a polynomial $p_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`$ then we call $p_\mathbf{A}$ the E-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$. Note it is not sufficient to just check $`\#\mathbf{A}(\mathbf{F}_{q})`$ is a polynomial in $q$; such polynomial must be stable under base change to finite extensions.
 
 ## Multiplicative character varieties
 Let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. Fix integers $g\geq 0$ and $n\geq 1$, and select a strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic.' Let $C_1,\ldots,C_n$ be their conjugacy classes. 
@@ -54,7 +54,7 @@ We say a variety's cohomology is 'pure' if all terms are monomials in $qt^2$.
 
 
 ## Non-negative coefficients
-When $G=\mathrm{GL}_n$, it was proven in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) that the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative. This was proven by relating the additive character variety to a quiver variety (which are known to have pure cohomology due to their symplectic geometry). Moreover, it was conjectured the polynomials $\mathbf{X}$ and $\mathbf{X}$ are closely related, in the sense that
+When $G=\mathrm{GL}_n$, it was proven that the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative by relating the additive character variety to a quiver variety (which are known to have pure cohomology due to their symplectic geometry, c.f., [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full)). Moreover, it was conjectured the polynomials $\mathbf{X}$ and $\mathbf{X}$ are closely related, in the sense that
 
 ```math
 PH(\mathbf{X};q) = E(\mathbf{Y};q).

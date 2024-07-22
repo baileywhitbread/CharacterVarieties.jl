@@ -18,7 +18,7 @@ The multiplicative character variety is the GIT quotient
 ```
 where the action is simultaneous conjugation. 
 
-This package computes the E-polynomial $E(\mathbf{X};q)$ via our formula for $|\mathbf{X}(\mathbb{F}_q)|$.  
+This package computes the E-polynomial $E(\mathbf{X};q)$ via our formula for the size of $\mathbf{X}(\mathbb{F}_q)$.  
 
 ## Additive character varieties
 Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic.' Let $O_1,\ldots,O_n$ be their adjoint orbits. 

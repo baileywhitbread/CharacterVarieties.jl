@@ -53,7 +53,7 @@ When $G=\mathrm{GL}_n$, it was proven in [HLRV](https://projecteuclid.org/journa
 PH(\mathbf{X};q) = E(\mathbf{Y};q).
 ```
 
-This conjecture has only been proven in one narrow case: $G=\mathrm{GL}_2$, $n=1$ and $C_1=\left(\begin{smallmatrix} -1 & \\ & -1\end{smallmatrix}\right)$. An unproven conjectural formula is given for $G=\mathrm{GL}_n$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
+This conjecture has only been proven in one narrow case: $G=\mathrm{GL}_2$, $n=1$ and $C_1=\begin{pmatrix} -1 & \\ & -1\end{pmatrix}$. An unproven conjectural formula is given for $G=\mathrm{GL}_n$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
 
 ## The idea
 Use Julia to generate the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ and try to understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$. 

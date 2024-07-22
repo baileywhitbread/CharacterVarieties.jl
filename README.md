@@ -10,7 +10,7 @@ This package computes E-polynomials of character varieties associated to general
 This works on Julia v1.10.2 using the Chevie version dated April 12th 2024. 
 
 ## Counting points
-We can access important cohomological information about a variety (defined by polynomials in $\mathbb{Z}[t]$) by counting points over finite fields. If $\mathbf{A}$ is such a variety and there exists a polynomial $P_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=P_\mathbf{A}(q^m)`$ then we call $P_\mathbf{A}$ the E-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=P_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$.
+We access important cohomological information about varieties (defined by polynomials in $\mathbb{Z}[t]$) by counting points over finite fields (c.f. [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)). If $\mathbf{A}$ is such a variety and there exists a polynomial $p_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`$ then we call $p_\mathbf{A}$ the E-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$. Note it is not sufficient to just check $`\#\mathbf{A}(\mathbf{F}_{q})`$ is a polynomial in $q$; such polynomial must be stable under base change to finite extensions.
 
 ## Multiplicative character varieties
 Let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. Fix integers $g\geq 0$ and $n\geq 1$, and select a strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic.' Let $C_1,\ldots,C_n$ be their conjugacy classes. 

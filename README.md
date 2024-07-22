@@ -46,7 +46,15 @@ H(\mathbf{X};q,-1) = E(\mathbf{X};q).
 That is, computing $`\#\mathbf{X}(\mathbb{F}_q)`$ gives us a specialisation of $H(\mathbf{X};q,t)$. 
 
 ## Pure parts
-Another important specialisation of $H(\mathbf{X};q,t)$ is obtained in the following manner. Contained in the cohomology ring $H^\ast(\mathbf{X})$ is an important subring called the pure subring $H^\ast_\mathrm{pure}(\mathbf{X})$. Denote by $PH(\mathbf{X};u)$ the Poincar\'{e} polynomial of the pure subring. Then there is the specialisation $H(\mathbf{X})\mapsto PH(\mathbf{X})$ by setting all terms to zero except the monomials in $qt^2$ (for instance, if $H(\mathbf{X};q,t)=qt^2 + q^2t^4 + q + qt + 1$ then $PH(\mathbf{X};q)=q+q^2$). We say a variety's cohomology is 'pure' if $H=PH$. 
+Another important specialisation of $H(\mathbf{X};q,t)$ is obtained in the following manner. Contained in the cohomology ring $H^\ast(\mathbf{X})$ is an important subring called the pure subring $H^\ast_\mathrm{pure}(\mathbf{X})$. Denote by $PH(\mathbf{X};u)$ the Poincar\'{e} polynomial of the pure subring. Then there is the specialisation $H(\mathbf{X})\mapsto PH(\mathbf{X})$ by setting all terms to zero except the monomials in $qt^2$. For instance, if 
+```math
+H(\mathbf{X};q,t)=qt^2 + q^2t^4 + q + qt + 1
+```
+then
+```math
+PH(\mathbf{X};q)=q+q^2.
+```
+We say a variety's cohomology is 'pure' if $H=PH$. 
 
 
 ## Non-negative coefficients

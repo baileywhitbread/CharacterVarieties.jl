@@ -53,11 +53,7 @@ This package computes the $E$-polynomial $E(\mathbf{Y};q)$ via our formula for $
 
 
 ## Calculating E-polynomials
-We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. To select this group, we use the command
-```julia
-G=rootdatum(:G2)
-```
-One could have instead chosen, for instance, `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, or `rootdatum(:F4)`.
+We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. To select this group, we use the command `G=rootdatum(:G2)`. One could have instead chosen, for instance, `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, or `rootdatum(:F4)`.
 
 Suppose $g\geq 0$ is the genus number and $n\geq 1$ is the number of punctures. Then
 - The command `EX(G,g,n)` returns the $E$-polynomial $E(\mathbf{X};q)$, and

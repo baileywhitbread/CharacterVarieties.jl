@@ -60,8 +60,16 @@ G=rootdatum(:G2)
 One could have instead chosen, for instance, `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, or `rootdatum(:F4)`.
 
 Suppose $g\geq 0$ is the genus number and $n\geq 1$ is the number of punctures. Then
-- The command `EX(G,g,n)` returns the $E$-polynomial $E(\mathbf{X};q)$, and
-- The command `EY(G,g,n)` returns the $E$-polynomial $E(\mathbf{Y};q)$.
+- The command 
+```julia
+EX(G,g,n)
+```
+returns the $E$-polynomial $E(\mathbf{X};q)$, and
+- The command
+```julia
+EY(G,g,n)
+```
+returns the $E$-polynomial $E(\mathbf{Y};q)$.
 
 
 

@@ -1,5 +1,6 @@
 # module CharacterVarieties
 
+
 using Chevie
 
 # Export structs
@@ -215,16 +216,21 @@ function pi0(L::FiniteCoxeterGroup)
 	return length(algebraic_center(L).AZ)
 end
 
+function pi0dual(L::FiniteCoxeterGroup,G::FiniteCoxeterGroup)
+	# Returns |pi_0(Z(L_dual))|
+	return length(algebraic_center(rootdatum(simplecoroots(L),simpleroots(L))).AZ)
+end
+
 function nu(L::FiniteCoxeterGroup,G::FiniteCoxeterGroup)
 	nu_value = 0
 	G_plevis = plevis(G)
 	for iplevi in iplevis(G)
 		if issubset(L,iplevi)
-			#println("The iplevi is ",iplevi)
-			#println("L lies in the iplevi")
-			#println("The mobius value is ",mobius(L,iplevi,G_plevis))
-			#println("The pi0 value is ",pi0(iplevi))
-			nu_value += mobius(L,iplevi,G_plevis)*pi0(iplevi)
+			println("The iplevi is ",iplevi)
+			println("L lies in the iplevi")
+			println("The mobius value is ",mobius(L,iplevi,G_plevis))
+			println("The pi0 value is ",pi0(iplevi))
+			nu_value += mobius(L,iplevi,G_plevis)*pi0dual(iplevi)
 		end
 	end
 	return nu_value
@@ -236,6 +242,7 @@ end
 ## G-type functions
 function group_types(G::FiniteCoxeterGroup)
 	# Returns a vector of GTypes, ie. the G-types of G
+	G = rootdatum(simplecoroots(G),simpleroots(G))
 	types = [];
 	for plevi in plorbit_reps(G)
 		# I am grabbing pseudo-Levis of G rather than endoscopies of G...

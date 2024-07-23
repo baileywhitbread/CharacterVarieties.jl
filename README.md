@@ -79,7 +79,7 @@ Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 @time group_types(rootdatum(:F4))
   8.824810 seconds (11.60 M allocations: 787.033 MiB, 2.69% gc time, 99.45% compilation time)
 ```
-- Add real-time calculations of $E$-polynomials on my website [baileywhitbread.com](www.baileywhitbread.com).
+- Add real-time calculations of $E$-polynomials on my website [baileywhitbread.com](https://www.baileywhitbread.com).
 
 
 

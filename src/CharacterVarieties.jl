@@ -620,13 +620,13 @@ function palindrome_X(G,genus,puncture_min,puncture_max)
 		catch err
 			if isa(err,OverflowError)
 				println("Overflow error")
-				break
+				#break
 			elseif isa(err,ErrorException)
 				println("Error exception")
-				break
+				#break
 			else
 				println(err)
-				break
+				#break
 			end
 		end
 	end
@@ -646,13 +646,13 @@ function euler_X(G,genus,puncture_min,puncture_max)
 		catch err
 			if isa(err,OverflowError)
 				println("Overflow error")
-				break
+				#break
 			elseif isa(err,ErrorException)
 				println("Error exception")
-				break
+				#break
 			else
 				println(err)
-				break
+				#break
 			end
 		end
 	end
@@ -672,13 +672,13 @@ function nonnegative_Y(G,genus,puncture_min,puncture_max)
 		catch err
 			if isa(err,OverflowError)
 				println("Overflow error")
-				break
+				#break
 			elseif isa(err,ErrorException)
 				println("Error exception")
-				break
+				#break
 			else
 				println(err)
-				break
+				#break
 			end
 		end
 	end

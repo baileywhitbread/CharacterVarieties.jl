@@ -98,3 +98,6 @@ The conjecture has been proven in one narrow case: $G=\mathrm{GL}_2$, $n=1$ and 
 
 ### An idea
 Use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
+
+### Another idea
+If $G=\mathrm{GL}_n$ then the formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) are very different to ours. It would be interesting to implement their formulas, especially given their conjectural formula for the mixed Hodge polynomial. These formulas involve symmetric functions and inner products of complete and monomial symmetric functions. 

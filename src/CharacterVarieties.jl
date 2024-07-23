@@ -1,13 +1,17 @@
-# module CharacterVarieties
+module CharacterVarieties
 
 
 using Chevie
 
 # Export structs
+export GType, gType
 
 
 # Export functions
-
+export group_types, algebra_types
+export group_type_data, algebra_type_data
+export group_type_table, algebra_type_table
+export EX, EY
 
 ###############################################################################
 ###############################################################################
@@ -196,12 +200,12 @@ function mobius(A::FiniteCoxeterGroup,B::FiniteCoxeterGroup,P::Vector)
 	# Note the relation on P must be A <= B iff A is a subset of B
 	# Throws ArgumentError if the interval [A,B] is empty
 	# Only intended to be used with P a set of subgroups of G
-	if isequal(A,B)
+	if isequal(sort(inclusion(A)),sort(inclusion(B)))
 		return 1
-	elseif issubset(A,B)
+	elseif issubset(sort(inclusion(A)),sort(inclusion(B)))
 		mobius_value = 0
 		for element in P
-			if issubset(A,element) && issubset(element,B) && !isequal(element,B)
+			if issubset(sort(inclusion(A)),sort(inclusion(element))) && issubset(sort(inclusion(element)),sort(inclusion(B))) && !isequal(sort(inclusion(element)),sort(inclusion(B)))
 				mobius_value += mobius(A,element,P)
 			end
 		end
@@ -216,21 +220,11 @@ function pi0(L::FiniteCoxeterGroup)
 	return length(algebraic_center(L).AZ)
 end
 
-function pi0dual(L::FiniteCoxeterGroup,G::FiniteCoxeterGroup)
-	# Returns |pi_0(Z(L_dual))|
-	return length(algebraic_center(rootdatum(simplecoroots(L),simpleroots(L))).AZ)
-end
-
-function nu(L::FiniteCoxeterGroup,G::FiniteCoxeterGroup)
+function nu(L::FiniteCoxeterGroup,iso_plevis,all_plevis)
 	nu_value = 0
-	G_plevis = plevis(G)
-	for iplevi in iplevis(G)
+	for iplevi in iso_plevis
 		if issubset(L,iplevi)
-			println("The iplevi is ",iplevi)
-			println("L lies in the iplevi")
-			println("The mobius value is ",mobius(L,iplevi,G_plevis))
-			println("The pi0 value is ",pi0(iplevi))
-			nu_value += mobius(L,iplevi,G_plevis)*pi0dual(iplevi)
+			nu_value += mobius(L,iplevi,all_plevis)*pi0(iplevi)
 		end
 	end
 	return nu_value
@@ -242,9 +236,9 @@ end
 ## G-type functions
 function group_types(G::FiniteCoxeterGroup)
 	# Returns a vector of GTypes, ie. the G-types of G
-	G = rootdatum(simplecoroots(G),simpleroots(G))
-	types = [];
-	for plevi in plorbit_reps(G)
+	G_dual = rootdatum(simplecoroots(G),simpleroots(G))
+	types = []
+	for plevi in plorbit_reps(G_dual)
 		# I am grabbing pseudo-Levis of G rather than endoscopies of G...
 		# So far this has not caused a problem because I only need data
 		# preserved by Langlands duality, eg. unipotent character degrees
@@ -263,6 +257,7 @@ end
 
 function group_type_data(G::FiniteCoxeterGroup)
 	d = Array{Any}(nothing,0,8)
+	G_dual = rootdatum(simplecoroots(G),simpleroots(G))
 	for type in group_types(G)
 		type_row = Array{Any}(nothing,1,0)
 		type_row = hcat(type_row,[type])
@@ -272,7 +267,7 @@ function group_type_data(G::FiniteCoxeterGroup)
 		type_row = hcat(type_row,[Int64(type.degree(1))])
 		type_row = hcat(type_row,[length(type.endoscopy)])
 		type_row = hcat(type_row,[length(myorbit(type.endoscopy))])
-		type_row = hcat(type_row,[nu(type.endoscopy,G)])		
+		type_row = hcat(type_row,[nu(type.endoscopy,iplevis(G_dual),plevis(G_dual))])		
 		d = vcat(d,type_row)
 	end
 	return sortslices(d,dims=1,by = x -> x[2],rev=true)
@@ -629,13 +624,13 @@ function palindrome_X(G,genus,puncture_min,puncture_max)
 		catch err
 			if isa(err,OverflowError)
 				println("Overflow error")
-				break
+				#break
 			elseif isa(err,ErrorException)
 				println("Error exception")
-				break
+				#break
 			else
 				println(err)
-				break
+				#break
 			end
 		end
 	end
@@ -655,13 +650,13 @@ function euler_X(G,genus,puncture_min,puncture_max)
 		catch err
 			if isa(err,OverflowError)
 				println("Overflow error")
-				break
+				#break
 			elseif isa(err,ErrorException)
 				println("Error exception")
-				break
+				#break
 			else
 				println(err)
-				break
+				#break
 			end
 		end
 	end
@@ -681,13 +676,13 @@ function nonnegative_Y(G,genus,puncture_min,puncture_max)
 		catch err
 			if isa(err,OverflowError)
 				println("Overflow error")
-				break
+				#break
 			elseif isa(err,ErrorException)
 				println("Error exception")
-				break
+				#break
 			else
 				println(err)
-				break
+				#break
 			end
 		end
 	end
@@ -695,4 +690,4 @@ end
 
 
 
-# end # End of module CharacterVarieties
+end # End of module CharacterVarieties

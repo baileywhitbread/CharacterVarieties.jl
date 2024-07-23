@@ -59,6 +59,14 @@ Suppose $g\geq 0$ is the genus number and $n\geq 1$ is the number of punctures. 
 - The command `EX(G,g,n)` returns the $E$-polynomial $E(\mathbf{X};q)$, and
 - The command `EY(G,g,n)` returns the $E$-polynomial $E(\mathbf{Y};q)$.
 
+For instance, 
+```julia
+julia> EX(G,0,3)
+Frac{Pol{Rational{Int64}}}: q⁸+6q⁷+20q⁶+58q⁵+180q⁴+58q³+20q²+6q+1
+
+julia> EY(G,0,3)
+Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
+```
 
 
 

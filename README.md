@@ -9,6 +9,8 @@ This package computes $E$-polynomials of character varieties associated to gener
 
 This works on Julia v1.10.2 using the Chevie version dated April 12th 2024. 
 
+A supporting text is my [masters thesis](https://baileywhitbread.com/files/24_mphil_thesis.pdf).
+
 ## Getting started
 Download and install [Julia](https://julialang.org/downloads/). In the REPL (Julia's interactive command-line), copy-paste and run the below:
 

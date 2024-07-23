@@ -52,7 +52,7 @@ where the action is simultaneous conjugation (i.e., the adjoint action).
 This package computes the $E$-polynomial $E(\mathbf{Y};q)$ via our formula for $`\#\mathbf{Y}(\mathbb{F}_q)`$.  
 
 
-## Calculating $`E`$-polynomials
+## Calculating E-polynomials
 We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. To select this group, we use the command
 ```julia
 G=rootdatum(:G2)

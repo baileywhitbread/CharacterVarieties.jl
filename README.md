@@ -5,7 +5,7 @@
 [![Build Status](https://github.com/baileywhitbread/CharacterVarieties.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/baileywhitbread/CharacterVarieties.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 
 
-This package computes E-polynomials of character varieties associated to general reductive groups in Julia using Jean Michel's package [Chevie](https://github.com/jmichel7/Chevie.jl). 
+This package computes $E$-polynomials of character varieties associated to general reductive groups in Julia using Jean Michel's package [Chevie](https://github.com/jmichel7/Chevie.jl). 
 
 This works on Julia v1.10.2 using the Chevie version dated April 12th 2024. 
 
@@ -27,7 +27,7 @@ using CharacterVarieties
 
 ## Background
 ### Counting points
-We access important cohomological information about varieties (defined by polynomials in $\mathbb{Z}[t]$) by counting points over finite fields (c.f., [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)). If $\mathbf{A}$ is such a variety and there exists a polynomial $p_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`$ then we call $p_\mathbf{A}$ the E-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$. Note it is not sufficient to just check $`\#\mathbf{A}(\mathbf{F}_{q})`$ is a polynomial in $q$; such polynomial must be stable under base change to finite extensions.
+We access important cohomological information about varieties (defined by polynomials in $\mathbb{Z}[t]$) by counting points over finite fields (c.f., [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)). If $\mathbf{A}$ is such a variety and there exists a polynomial $p_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`$ then we call $p_\mathbf{A}$ the $E$-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$. Note it is not sufficient to just check $`\#\mathbf{A}(\mathbf{F}_{q})`$ is a polynomial in $q$; such polynomial must be stable under base change to finite extensions.
 
 ### Multiplicative character varieties
 Let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. Fix integers $g\geq 0$ and $n\geq 1$, and select a strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic.' Let $C_1,\ldots,C_n$ be their conjugacy classes. 
@@ -38,7 +38,7 @@ The multiplicative character variety is the GIT quotient
 ```
 where the action is simultaneous conjugation. 
 
-This package computes the E-polynomial $E(\mathbf{X};q)$ via our formula for $`\#\mathbf{X}(\mathbb{F}_q)`$.  
+This package computes the $E$-polynomial $E(\mathbf{X};q)$ via our formula for $`\#\mathbf{X}(\mathbb{F}_q)`$.  
 
 ### Additive character varieties
 Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic.' Let $O_1,\ldots,O_n$ be their adjoint orbits. 
@@ -49,7 +49,24 @@ The additive character variety is the GIT quotient
 ```
 where the action is simultaneous conjugation (i.e., the adjoint action). 
 
-This package computes the E-polynomial $E(\mathbf{Y};q)$ via our formula for $`\#\mathbf{Y}(\mathbb{F}_q)`$.  
+This package computes the $E$-polynomial $E(\mathbf{Y};q)$ via our formula for $`\#\mathbf{Y}(\mathbb{F}_q)`$.  
+
+
+## Calculating $E$-polynomials
+We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. To select this group, we use the command
+```julia
+G=rootdatum(:G2)
+```
+One could have instead chosen, for instance, `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, or `rootdatum(:F4)`.
+
+Suppose $g\geq 0$ is the genus number and $n\geq 1$ is the number of punctures. Then
+- The command `EX(G,g,n)` returns the $E$-polynomial $E(\mathbf{X};q)$, and
+- The command `EY(G,g,n)` returns the $E$-polynomial $E(\mathbf{Y};q)$.
+
+
+
+
+## Further directions
 
 ### Mixed Hodge polynomials
 Associated to $\mathbf{X}$ is the (compactly supported) mixed Hodge polynomial
@@ -69,7 +86,6 @@ H(\mathbf{X};q,t)=qt^2 + q^2t^4 + q + qt + 1 \rightsquigarrow PH(\mathbf{X};q)=q
 ```
 We say a variety's cohomology is 'pure' if all terms are monomials in $qt^2$. 
 
-
 ### Non-negative coefficients
 When $G=\mathrm{GL}_n$, it was proven that the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative by relating the additive character variety to a quiver variety (which are known to have pure cohomology due to their symplectic geometry, c.f., [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full)). Moreover, it was conjectured the polynomials $\mathbf{X}$ and $\mathbf{X}$ are closely related, in the sense that
 
@@ -79,5 +95,6 @@ PH(\mathbf{X};q) = E(\mathbf{Y};q).
 
 The conjecture has been proven in one narrow case: $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$. An unproven conjectural formula is given for $G=\mathrm{GL}_n$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
 
+
 ### An idea
-Use Julia to generate the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ and try to understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
+Use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.

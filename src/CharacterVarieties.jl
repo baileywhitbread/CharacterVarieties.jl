@@ -8,7 +8,9 @@ export GType, gType
 
 
 # Export functions
-export group_types, algebra_types, group_type_table, algebra_type_table
+export group_types, algebra_types
+export group_type_data, algebra_type_data
+export group_type_table, algebra_type_table
 export EX, EY
 
 ###############################################################################

@@ -73,7 +73,7 @@ Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 
 
 ## To do
-- Clean up polynomial types their coefficient types. I used `BigInt` to verify non-negativity of coefficients of $E(\mathbf{Y};q)$ for large $G$,.$g$ and $n$. This will probably require calculating polynomials more efficiently.
+- Clean up polynomial types their coefficient types. I used `BigInt` to verify non-negativity of coefficients of $E(\mathbf{Y};q)$ for large $G$,$g$ and $n$. This will probably require calculating polynomials more efficiently.
 - Speed up $E$-polynomial calculations. The major killer is calculating $G$-types and their associated data. For instance, just calculating the $F_4$-types takes almost 10 seconds:
 ```julia
 @time group_types(rootdatum(:F4))

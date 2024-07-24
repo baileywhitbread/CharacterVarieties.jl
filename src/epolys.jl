@@ -115,7 +115,7 @@ function bigint_Htau(G::FiniteCoxeterGroup,n::Int64,i::Int64,type_data)
 	# Returns Hτ(q) = q^(n|Φ(G)+| + dim(Z)) * (|G(Fq)|/|L(Fq)|) * |N| * Q_L^T(N)^n * |[L]| * (|W|/|W(L)|)^(n-1) * µ(L,G)
 	# where τ = [L,ρ] is the ith GType and n is the number of punctures
 	G_weyl_size = BigInt(length(G))
-	G_pos_root_size = BigInt(length(G)/2))
+	G_pos_root_size = BigInt(length(G)/2)
 	Z_dim = BigInt(rank(G)-semisimplerank(G))
 	L_size = Pol{Rational{BigInt}}(orderpol(type_data[i,:][1].levi))
 	N_size = Pol{Rational{BigInt}}(type_data[i,:][1].size)

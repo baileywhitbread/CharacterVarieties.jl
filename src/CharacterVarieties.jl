@@ -26,6 +26,7 @@ export isisolated, islevi, myorbit, orderpol, mobius, pi0, nu
 ## These are for testing
 export ispalindromic, isnonnegative
 export palindrome_X, euler_X, nonnegative_Y
+export bigint_EX, bigint_EY
 
 
 include("algebratypes.jl")

@@ -8,19 +8,23 @@ export GType, gType
 
 
 # Export functions
-export group_types, algebra_types
+## These are for users to use
 export group_type_table, algebra_type_table
 export EX, EY
 
-export group_type_data, algebra_type_data
-export Mtau, Stau, qdtau, Htau
-
-export isisolated, islevi, ispalindromic, isnonnegative
-export myorbit, orderpol, mobius, pi0, nu
+## These support the above
 export plorbit_reps, plorbits, plevis
 export iplorbit_reps, iplorbits, iplevis
 export lorbit_reps, lorbits, levis
 
+export group_types, algebra_types
+export group_type_data, algebra_type_data
+
+## These are helper functions
+export isisolated, islevi, myorbit, orderpol, mobius, pi0, nu
+
+## These are for testing
+export ispalindromic, isnonnegative
 export palindrome_X, euler_X, nonnegative_Y
 
 

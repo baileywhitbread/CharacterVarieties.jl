@@ -5,7 +5,7 @@ function palindrome_X(G,genus,puncture_min,puncture_max)
 	for n in puncture_min:puncture_max
 		try 
 			print("Checking E(X;q) palindromic when g=",genus," and n=",n,": ")
-			if ispalindromic(fast_EX(G,genus,n,d))
+			if ispalindromic(bigint_EX(G,genus,n,d))
 				println("Yes")
 			else
 				println("No")
@@ -36,7 +36,7 @@ function euler_X(G,genus,puncture_min,puncture_max)
 			if fast_EX(G,genus,n,d)(1)==0
 				println("χ(X)=0")
 			else
-				println("χ(X)=",fast_EX(G,genus,n,d)(1))
+				println("χ(X)=",bigint_EX(G,genus,n,d)(1))
 			end
 		catch err
 			if isa(err,OverflowError)
@@ -59,7 +59,7 @@ function nonnegative_Y(G,genus,puncture_min,puncture_max)
 	for n in puncture_min:puncture_max
 		try 
 			print("Checking coefficients of E(Y;q) when g=",genus," and n=",n,": ")
-			if isnonnegative(fast_EY(G,genus,n,d))
+			if isnonnegative(bigint_EY(G,genus,n,d))
 				println("All non-negative")
 			else
 				println("Negative coefficients found")

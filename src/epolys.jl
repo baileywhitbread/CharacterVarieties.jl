@@ -132,11 +132,11 @@ function bigint_EY(G::FiniteCoxeterGroup,g::Int64,n::Int64,type_data)
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
 	Z_size = Pol{Rational{BigInt}}(orderpol(torus(rank(G)-semisimplerank(G))))
 	G_size = Pol{Rational{BigInt}}(orderpol(G))
-	g_size = Pol(:q)^(BigInt(degree(G_size)))
+	g_size = Pol{Rational{BigInt}}(Pol(:q)^(BigInt(degree(G_size))))
 
 	type_sum = Pol{BigInt}(0)
 	for i in 1:size(type_data)[1]
 		type_sum += bigint_qdtau(G,i,type_data)^(g)*bigint_Htau(G,n,i,type_data)
 	end
-	return Pol{BigInt}((Z_size//G_size) * g_size^(g-1) * type_sum)
+	return Pol{BigInt}((Z_size//G_size) * (g_size^(g)//g_size) * type_sum)
 end

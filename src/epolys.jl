@@ -138,5 +138,5 @@ function bigint_EY(G::FiniteCoxeterGroup,g::Int64,n::Int64,type_data)
 	for i in 1:size(type_data)[1]
 		type_sum += bigint_qdtau(G,i,type_data)^(g)*bigint_Htau(G,n,i,type_data)
 	end
-	return Pol{Rational{BigInt}}((Z_size//G_size) * g_size^(g-1) * type_sum)
+	return Pol{BigInt}((Z_size//G_size) * g_size^(g-1) * type_sum)
 end

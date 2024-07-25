@@ -1,11 +1,14 @@
 module CharacterVarieties
 
+using Reexport
+@reexport using Chevie
 
-using .Chevie
+
+
+
 
 # Export structs
 export GType, gType
-
 
 # Export functions
 ## These are for users

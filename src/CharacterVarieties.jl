@@ -1,7 +1,7 @@
 module CharacterVarieties
 
 
-using Chevie
+using .Chevie
 
 # Export structs
 export GType, gType

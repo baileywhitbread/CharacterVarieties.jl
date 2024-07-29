@@ -78,3 +78,30 @@ function nonnegative_Y(G,genus,puncture_min,puncture_max)
 		end
 	end
 end
+
+
+function nonnegative_X(G,genus,puncture_min,puncture_max)
+	# Checks negativity of coefficients of E(X;q) with g=genus and n=puncture_min,...,puncture_max
+	d=group_type_data(G)
+	for n in puncture_min:puncture_max
+		try 
+			print("Checking coefficients of E(X;q) when g=",genus," and n=",n,": ")
+			if isnonnegative(bigint_EX(G,genus,n,d))
+				println("All non-negative")
+			else
+				println("Negative coefficients found")
+			end
+		catch err
+			if isa(err,OverflowError)
+				println("Overflow error")
+				#break
+			elseif isa(err,ErrorException)
+				println("Error exception")
+				#break
+			else
+				println(err)
+				#break
+			end
+		end
+	end
+end

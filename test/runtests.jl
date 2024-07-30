@@ -4,5 +4,5 @@ using Test
 
 
 @testset "CharacterVarieties.jl" begin
-    @test length(plorbit_reps(rootdatum(:gl,2))) == 2
+    @test EX(rootdatum(:gl,2),0,4)==Pol([1,4,1])
 end

@@ -59,7 +59,7 @@ function EY(G::FiniteCoxeterGroup,g::Int64,n::Int64)
 	Z_size = orderpol(torus(rank(G)-semisimplerank(G)))
 	G_size = orderpol(G)
 	g_size = Pol(:q)^(degree(G_size))
-	type_sum = Pol{Int64}(0)
+	type_sum = Pol{BigInt}(0)
 	for i in 1:size(d)[1]
 		type_sum += fast_qdtau(G,i,d)^(g)*fast_Htau(G,n,i,d)
 	end

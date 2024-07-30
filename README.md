@@ -71,12 +71,14 @@ Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 
 
 ## To do
-- Speed up $E$-polynomial calculations. The major killer is calculating $G$-types and their associated data. For instance, just calculating the $F_4$-types takes almost 10 seconds:
+- Speed up $E$-polynomial calculations:
 ```julia
-@time group_types(rootdatum(:F4))
-  8.824810 seconds (11.60 M allocations: 787.033 MiB, 2.69% gc time, 99.45% compilation time)
+julia> @time group_types(rootdatum(:F4))
+ 38.772694 seconds (91.92 M allocations: 6.047 GiB, 5.86% gc time, 99.80% compilation time)
+julia> @time EX(rootdatum(:F4),1,1)
+61.184813 seconds (227.91 M allocations: 18.563 GiB, 8.07% gc time, 88.52% compilation time)
 ```
-- Add real-time calculations of $E$-polynomials on my website [baileywhitbread.com](https://www.baileywhitbread.com).
+- Add real-time calculations of $E$-polynomials to [baileywhitbread.com](https://www.baileywhitbread.com).
 
 
 
@@ -88,14 +90,13 @@ Associated to $\mathbf{X}$ is the (compactly supported) mixed Hodge polynomial
 ```math
 H(\mathbf{X};x,y,t) = \sum_{i,j,k} h^{i,j,k} x^i y^j t^k.
 ```
-Proving that $`\#\mathbf{X}(\mathbb{F}_q)`$ is a polynomial in $q$ implies $H(\mathbf{X};x,y,t)$ depends only on the product $xy=:q$ and $t$, and that
+Proving $\mathbf{X}$ is polynomial count implies $H(\mathbf{X};x,y,t)$ depends only on the product $xy=:q$ and $t$, and that
 ```math
 H(\mathbf{X};q,-1) = E(\mathbf{X};q).
 ```
-That is, computing $`\#\mathbf{X}(\mathbb{F}_q)`$ gives us a specialisation of $H(\mathbf{X};q,t)$. 
 
 ### Pure parts
-Contained in the cohomology ring $H^\ast(\mathbf{X})$ is an important subring called the pure subring $H^\ast_\mathrm{pure}(\mathbf{X})$. Denote by $PH(\mathbf{X};u)$ the Poincar\'{e} polynomial of the pure subring. Then there is another important specialisation $H(\mathbf{X})\mapsto PH(\mathbf{X})$ defined by setting all terms to zero except the monomials in $qt^2$. For instance, 
+Contained in the cohomology ring $H^\ast(\mathbf{X})$ is an important subring called the pure subring $H^\ast_\mathrm{pure}(\mathbf{X})$. Denote by $PH(\mathbf{X};u)$ the Poincar\'{e} polynomial of the pure subring. There' an important specialisation $H(\mathbf{X})\mapsto PH(\mathbf{X})$ given by setting all terms to zero except monomials in $qt^2$:
 ```math
 H(\mathbf{X};q,t)=qt^2 + q^2t^4 + q + qt + 1 \rightsquigarrow PH(\mathbf{X};q)=q+q^2+1.
 ```

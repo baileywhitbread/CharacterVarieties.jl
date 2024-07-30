@@ -170,9 +170,6 @@ function EY(G::FiniteCoxeterGroup,g::Int64,n::Int64)
 	for i in 1:size(d)[1]
 		type_sum += fast_qdtau(G,i,d)^(g)*fast_Htau(G,n,i,d)
 	end
-	println(type_sum)
-	println((g_size^(g)//g_size))
-	println(Z_size//G_size)
 	return Pol{Int64}((Z_size//G_size) * (g_size^(g)//g_size) * type_sum ) 
 end
 

@@ -24,9 +24,9 @@ using CharacterVarieties
 
 ## Background
 ### Counting points
-We say a variety defined by polynomials in $\mathbb{Z}[t]$ is polynomial count if there exists a polynomial $p_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`$ for all $m\geq 1$. We call $p_\mathbf{A}$ the $E$-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$ (c.f., [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)).
+We say an algebraic variety $\mathbf{A}$ defined by polynomials in $\mathbb{Z}[t]$ is polynomial count if there exists a polynomial $p_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`$ for all $m\geq 1$. We call $p_\mathbf{A}$ the $E$-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$ (c.f., [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)).
 
-### Multiplicative character varieties
+### Multiplicative and additive character varieties
 Let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. Fix integers $g\geq 0$ and $n\geq 1$, and select a strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic.' Let $C_1,\ldots,C_n$ be their conjugacy classes. 
 
 The multiplicative character variety is the GIT quotient
@@ -35,8 +35,6 @@ The multiplicative character variety is the GIT quotient
 ```
 where the action is simultaneous conjugation. 
 
-
-### Additive character varieties
 Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic.' Let $O_1,\ldots,O_n$ be their adjoint orbits. 
 
 The additive character variety is the GIT quotient
@@ -51,9 +49,8 @@ This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)
 - The command `EX(G,g,n)` returns the $E$-polynomial $E(\mathbf{X};q)$, and
 - The command `EY(G,g,n)` returns the $E$-polynomial $E(\mathbf{Y};q)$.
 
-When $g=0$, the `Int64` data type is insufficient for polynomial division. In this case, we can use the `bigint_EX` and `bigint_EY` functions.
+When $g=0$, the `Int64` data type is insufficient for polynomial division. In this case, we can use the `bigint_EX` and `bigint_EY` functions:
 
-For instance, 
 ```julia
 julia> EX(G,0,3)
 Pol{Int64}: q⁸+6q⁷+20q⁶+58q⁵+180q⁴+58q³+20q²+6q+1

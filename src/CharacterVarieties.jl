@@ -13,6 +13,7 @@ export GType, gType
 # Export functions
 ## These are for users
 export group_type_table, algebra_type_table
+export group_types, algebra_types
 export EX, EY
 export bigint_EX, bigint_EY
 

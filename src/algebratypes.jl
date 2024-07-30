@@ -1,7 +1,29 @@
+struct gType
+	# A g-type is a pair [L,N] where 
+	# L is a Levi subgroup of G containing T
+	# N is an L(Fq)-orbit of a nilpotent element of L(Fq)
+	
+	# To record N, we record a string representation and its size
+	# eg. the regular nilpotent orbit of GL3 is recorded as 
+	# "3" (for the partition (3,0,...) of 3) and q⁶-q⁴-q³+q
+	
+	levi::FiniteCoxeterGroup
+	orbit::String
+	size::Pol{Rational{Int64}}
+	green::Pol{Rational{Int64}}
+	
+end # End of struct GType
+
+# Make gTypes display nicely on the REPL
+Base.show(io::IO, tau::gType) = print(io,
+"[",tau.levi,",",tau.orbit,"]"
+)
+
+
 ## g-type functions
 function algebra_types(G::FiniteCoxeterGroup)
 	# Returns a vector of gTypes, ie. the g-types of G
-	types = [];
+	types = gType[];
 	for levi in lorbit_reps(G)
 		levi_uc = UnipotentClasses(levi); # This is a dictionary object, not the actual classes
 		levi_xt = XTable(levi_uc;classes=true) # Another dictionary object containing cardinality of centralisers and conjugacy classes
@@ -40,7 +62,7 @@ function algebra_type_data(G::FiniteCoxeterGroup)
 end
 
 
-function fast_algebra_type_data(G::FiniteCoxeterGroup,type_data)
+function fast_algebra_type_data(G::FiniteCoxeterGroup,type_data::Any)
 	d = Array{Any}(nothing,0,6)
 	for type in type_data
 		type_row = Array{Any}(nothing,1,0)

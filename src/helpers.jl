@@ -39,7 +39,7 @@ function pi0(L::FiniteCoxeterGroup)
 	return length(algebraic_center(L).AZ)
 end
 
-function nu(L::FiniteCoxeterGroup,iso_plevis,all_plevis)
+function nu(L::FiniteCoxeterGroup,iso_plevis::Vector,all_plevis::Vector)
 	nu_value = 0
 	for iplevi in iso_plevis
 		if issubset(L,iplevi)

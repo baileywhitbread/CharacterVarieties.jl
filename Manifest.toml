@@ -2,7 +2,7 @@
 
 julia_version = "1.10.2"
 manifest_format = "2.0"
-project_hash = "2a1280e817491efc4abdd806d463a2f3c95bc82b"
+project_hash = "5790ff2f32dae2169dd6a1a8b86afcbdea0c487d"
 
 [[deps.AbstractPermutations]]
 deps = ["GroupsCore"]
@@ -299,6 +299,10 @@ version = "1.0.3"
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
 version = "1.10.0"
+
+[[deps.Test]]
+deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
+uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [[deps.UUIDs]]
 deps = ["Random", "SHA"]

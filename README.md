@@ -1,15 +1,10 @@
 # CharacterVarieties.jl
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://baileywhitbread.github.io/CharacterVarieties.jl/stable/)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://baileywhitbread.github.io/CharacterVarieties.jl/dev/)
-[![Build Status](https://github.com/baileywhitbread/CharacterVarieties.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/baileywhitbread/CharacterVarieties.jl/actions/workflows/CI.yml?query=branch%3Amaster)
+This package computes $E$-polynomials of character varieties associated to general reductive groups in Julia using Jean Michel's package [Chevie](https://github.com/jmichel7/Chevie.jl). A supporting text is my [masters thesis](https://baileywhitbread.com/files/24_mphil_thesis.pdf).
 
 
-This package computes $E$-polynomials of character varieties associated to general reductive groups in Julia using Jean Michel's package [Chevie](https://github.com/jmichel7/Chevie.jl). 
 
-This works on Julia v1.10.2 using the Chevie version dated April 12th 2024. 
 
-A supporting text is my [masters thesis](https://baileywhitbread.com/files/24_mphil_thesis.pdf).
 
 ## Getting started
 Download and install [Julia](https://julialang.org/downloads/). In the REPL (Julia's interactive command-line), copy-paste and run the below:
@@ -29,7 +24,7 @@ using CharacterVarieties
 
 ## Background
 ### Counting points
-We access important cohomological information about varieties (defined by polynomials in $\mathbb{Z}[t]$) by counting points over finite fields (c.f., [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)). If $\mathbf{A}$ is such a variety and there exists a polynomial $p_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`$ then we call $p_\mathbf{A}$ the $E$-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$. Note it is not sufficient to just check $`\#\mathbf{A}(\mathbf{F}_{q})`$ is a polynomial in $q$; such polynomial must be stable under base change to finite extensions.
+We say a variety defined by polynomials in $\mathbb{Z}[t]$ is polynomial count if there exists a polynomial $p_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`$ for all $m\geq 1$. We call $p_\mathbf{A}$ the $E$-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$ (c.f., [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)).
 
 ### Multiplicative character varieties
 Let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. Fix integers $g\geq 0$ and $n\geq 1$, and select a strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic.' Let $C_1,\ldots,C_n$ be their conjugacy classes. 
@@ -40,7 +35,6 @@ The multiplicative character variety is the GIT quotient
 ```
 where the action is simultaneous conjugation. 
 
-This package computes the $E$-polynomial $E(\mathbf{X};q)$ via our formula for $`\#\mathbf{X}(\mathbb{F}_q)`$.  
 
 ### Additive character varieties
 Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic.' Let $O_1,\ldots,O_n$ be their adjoint orbits. 
@@ -51,24 +45,31 @@ The additive character variety is the GIT quotient
 ```
 where the action is simultaneous conjugation (i.e., the adjoint action). 
 
-This package computes the $E$-polynomial $E(\mathbf{Y};q)$ via our formula for $`\#\mathbf{Y}(\mathbb{F}_q)`$.  
-
-
 ## Calculating E-polynomials
-We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. To select this group, we use the command `G=rootdatum(:G2)`. One could have instead chosen, for instance, `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, or `rootdatum(:F4)`.
+This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ via our formulas for $`\#\mathbf{X}(\mathbb{F}_q)`$ and $`\#\mathbf{Y}(\mathbb{F}_q)`$. We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. To select this group, we use the command `G=rootdatum(:G2)`. One can instead choose `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, `rootdatum(:F4)`, etc.
 
-Suppose $g\geq 0$ is the genus number and $n\geq 1$ is the number of punctures. Then
 - The command `EX(G,g,n)` returns the $E$-polynomial $E(\mathbf{X};q)$, and
 - The command `EY(G,g,n)` returns the $E$-polynomial $E(\mathbf{Y};q)$.
+
+When $g=0$, the `Int64` data type is insufficient for polynomial division. In this case, we can use the `bigint_EX` and `bigint_EY` functions.
 
 For instance, 
 ```julia
 julia> EX(G,0,3)
-Frac{Pol{Rational{Int64}}}: q⁸+6q⁷+20q⁶+58q⁵+180q⁴+58q³+20q²+6q+1
+Pol{Int64}: q⁸+6q⁷+20q⁶+58q⁵+180q⁴+58q³+20q²+6q+1
+
+julia> bigint_EX(G,0,3)
+Pol{BigInt}: q⁸+6q⁷+20q⁶+58q⁵+180q⁴+58q³+20q²+6q+1
 
 julia> EY(G,0,3)
+ERROR: cannot convert Frac(Pol(BigFloat[2.77555756156289135105907917022705078125e-17, 0.0, 3.3306690738754696212708950042724609375e-16, 5.5511151231257827021181583404541015625e-16, -99.0, -45.000000000000000610622663543836097232997417449951171875, 80.0, 39.0, 18.0, 6.0, 1.0]),Pol(BigFloat[-1.0, 0.0, 1.0])) to Pol
+
+julia> bigint_EY(G,0,3)
 Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 ```
+
+
+
 
 
 

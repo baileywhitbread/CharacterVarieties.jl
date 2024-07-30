@@ -1,3 +1,26 @@
+struct GType
+	# A G-type is a pair [L,ρ] where 
+	# L is an endoscopy group of G containing T
+	# ρ is a principal unipotent character of L(Fq)
+	
+	# To record ρ, we record a string representation and its degree
+	# eg. the Steinberg character of GL3 is recorded as 
+	# "3" (for the partition (3,0,...) of 3) and Pol(:q)^3
+	
+	endoscopy::FiniteCoxeterGroup
+	character::String
+	degree::Pol{Rational{Int64}}
+	
+end # End of struct GType
+
+# Make GTypes display nicely on the REPL
+Base.show(io::IO, tau::GType) = print(io,
+"[",tau.endoscopy,",",tau.character,"]"
+)
+
+
+
+
 ## G-type functions
 function group_types(G::FiniteCoxeterGroup)
 	# Returns a vector of GTypes, ie. the G-types of G

@@ -94,29 +94,24 @@ Proving $\mathbf{X}$ is polynomial count implies $H(\mathbf{X};x,y,t)$ depends o
 ```math
 H(\mathbf{X};q,-1) = E(\mathbf{X};q).
 ```
-
-### Pure parts
-Contained in the cohomology ring $H^\ast(\mathbf{X})$ is an important subring called the pure subring $H^\ast_\mathrm{pure}(\mathbf{X})$. Denote by $PH(\mathbf{X};u)$ the Poincar\'{e} polynomial of the pure subring. There' an important specialisation $H(\mathbf{X})\mapsto PH(\mathbf{X})$ given by setting all terms to zero except monomials in $qt^2$:
+There's another specialisation of $H(\mathbf{X};q,t)$ given by setting all terms to zero except monomials in $u:=qt^2$:
 ```math
-H(\mathbf{X};q,t)=qt^2 + q^2t^4 + q + qt + 1 \rightsquigarrow PH(\mathbf{X};q)=q+q^2+1.
+H(\mathbf{X};q,t)=qt^2 + q^2t^4 + q + qt + 1 \rightsquigarrow PH(\mathbf{X};u):=u+u^2+1.
 ```
-We say a variety's cohomology is 'pure' if all terms are monomials in $qt^2$. 
-
-### Non-negative coefficients
-When $G=\mathrm{GL}_n$, it was proven that the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative by relating the additive character variety to a quiver variety (which are known to have pure cohomology due to their symplectic geometry, c.f., [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full)). Moreover, it was conjectured the polynomials $\mathbf{X}$ and $\mathbf{X}$ are closely related, in the sense that
-
+It is conjectured the polynomials $H(\mathbf{X};q,t)$ and $E(\mathbf{Y};u)$ are closely related, in the sense that
 ```math
 PH(\mathbf{X};q) = E(\mathbf{Y};q).
 ```
+The conjecture has been proven in one narrow case: $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$. This was possible because $H(\mathbf{X};q,t)$ is explicitly known. When $G=\mathrm{GL}_d$ and the $C_i$ are semisimple, an unproven formula for $H(\mathbf{X};q,t)$ was given in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
 
-The conjecture has been proven in one narrow case: $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$. An unproven conjectural formula is given for $G=\mathrm{GL}_n$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
 
+Idea: Use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$ for general reductive $G$.
 
-### An idea
-Use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
+The formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) are very different to ours. 
 
-### Another idea
-Use the `CharacterVarieties.jl` to search for $E$-polynomials of additive character varieties with negative coefficients.
+It would be interesting to implement their formulas, especially given their conjectural formula for the mixed Hodge polynomial, which involve symmetric functions and inner products of complete and monomial symmetric functions.  
 
-### Another another idea
-If $G=\mathrm{GL}_n$ then the formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) are very different to ours. It would be interesting to implement their formulas, especially given their conjectural formula for the mixed Hodge polynomial. These formulas involve symmetric functions and inner products of complete and monomial symmetric functions.  
+### Non-negative coefficients
+When $G=\mathrm{GL}_d$, the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative by the work of [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full)).
+
+Idea: Use the `CharacterVarieties.jl` to search for $E(\mathbf{Y};q)$ with negative coefficients.

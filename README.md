@@ -44,12 +44,16 @@ The additive character variety is the GIT quotient
 where the action is simultaneous conjugation (i.e., the adjoint action). 
 
 ## Calculating E-polynomials
-This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ via our formulas for $`\#\mathbf{X}(\mathbb{F}_q)`$ and $`\#\mathbf{Y}(\mathbb{F}_q)`$. We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. To select this group, we use the command `G=rootdatum(:G2)`. One can instead choose `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, `rootdatum(:F4)`, etc.
+This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ via our formulas for $`\#\mathbf{X}(\mathbb{F}_q)`$ and $`\#\mathbf{Y}(\mathbb{F}_q)`$. 
 
-- The command `EX(G,g,n)` returns the $E$-polynomial $E(\mathbf{X};q)$, and
-- The command `EY(G,g,n)` returns the $E$-polynomial $E(\mathbf{Y};q)$.
+We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. 
 
-When $g=0$, the `Int64` data type is insufficient for polynomial division. In this case, we can use the `bigint_EX` and `bigint_EY` functions:
+To select this group, we use the command `G=rootdatum(:G2)`. One can instead choose `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, `rootdatum(:F4)`, etc.
+
+- `EX(G,g,n)` returns $E(\mathbf{X};q)$, and
+- `EY(G,g,n)` returns $E(\mathbf{Y};q)$.
+
+When $g=0$, the `Int64` data type is insufficient for polynomial division, but we can use `bigint_EX` and `bigint_EY` instead:
 
 ```julia
 julia> EX(G,0,3)

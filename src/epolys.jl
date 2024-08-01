@@ -190,9 +190,9 @@ end
 function bigint_EY(G::FiniteCoxeterGroup,g::Int64,n::Int64)
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
 	type_data = algebra_type_data(G)
-	Z_size = Pol{Rational{BigInt}}(orderpol(torus(rank(G)-semisimplerank(G))))
-	G_size = Pol{Rational{BigInt}}(orderpol(G))
-	g_size = Pol{Rational{BigInt}}(Pol(:q)^(BigInt(degree(G_size))))
+	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
+	G_size = Pol{BigInt}(orderpol(G))
+	g_size = Pol{BigInt}(Pol(:q)^(BigInt(degree(G_size))))
 
 	type_sum = Pol{BigInt}(0)
 	for i in 1:size(type_data)[1]
@@ -211,14 +211,14 @@ function fast_bigint_EX(G::FiniteCoxeterGroup,g::Int64,n::Int64,type_data)
 	for i in 1:size(type_data)[1]
 		type_sum += fast_bigint_Mtau(G,i,type_data)^(2g-2+n)*fast_bigint_Stau(G,n,i,type_data)
 	end
-	return Pol{BigInt}(Pol{Rational{BigInt}}((Z_size//T_size^n))*type_sum)
+	return Pol{BigInt}((Z_size//T_size^n)*type_sum)
 end
 
 function fast_bigint_EY(G::FiniteCoxeterGroup,g::Int64,n::Int64,type_data)
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
-	Z_size = Pol{Rational{BigInt}}(orderpol(torus(rank(G)-semisimplerank(G))))
-	G_size = Pol{Rational{BigInt}}(orderpol(G))
-	g_size = Pol{Rational{BigInt}}(Pol(:q)^(BigInt(degree(G_size))))
+	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
+	G_size = Pol{BigInt}(orderpol(G))
+	g_size = Pol{BigInt}(Pol(:q)^(BigInt(degree(G_size))))
 	type_sum = Pol{BigInt}(0)
 	for i in 1:size(type_data)[1]
 		type_sum += fast_bigint_qdtau(G,i,type_data)^(g)*fast_bigint_Htau(G,n,i,type_data)

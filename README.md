@@ -24,18 +24,16 @@ using CharacterVarieties
 
 ## Background
 ### Counting points
-We say an algebraic variety $\mathbf{A}$ defined by polynomials in $\mathbb{Z}[t]$ is polynomial count if there exists a polynomial $p_\mathbf{A}$ such that 
+We say an algebraic variety $\mathbf{A}$ defined by polynomials in $\mathbb{Z}[t]$ is polynomial count if there exists $p_\mathbf{A}\in \mathbb{C}[t]$ with 
 ```math
-\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`
+\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)
 ```
-for all $m\geq 1$. We call $p_\mathbf{A}$ the $E$-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$ (c.f., [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)).
+for all $m\geq 1$. We call $p_\mathbf{A}$ the $E$-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$ (c.f. [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)).
 
 ### Multiplicative and additive character varieties
-Let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. 
+Fix integers $g\geq 0$ and $n\geq 1$ and let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. 
 
-Fix integers $g\geq 0$ and $n\geq 1$, and select a strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic.' 
-
-Let $C_1,\ldots,C_n$ be their conjugacy classes. 
+Select strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic' and let $C_1,\ldots,C_n$ be their conjugacy classes.
 
 The multiplicative character variety is the GIT quotient
 ```math

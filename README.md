@@ -24,10 +24,18 @@ using CharacterVarieties
 
 ## Background
 ### Counting points
-We say an algebraic variety $\mathbf{A}$ defined by polynomials in $\mathbb{Z}[t]$ is polynomial count if there exists a polynomial $p_\mathbf{A}$ such that $`\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`$ for all $m\geq 1$. We call $p_\mathbf{A}$ the $E$-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$ (c.f., [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)).
+We say an algebraic variety $\mathbf{A}$ defined by polynomials in $\mathbb{Z}[t]$ is polynomial count if there exists a polynomial $p_\mathbf{A}$ such that 
+```math
+\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)`
+```
+for all $m\geq 1$. We call $p_\mathbf{A}$ the $E$-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$ (c.f., [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)).
 
 ### Multiplicative and additive character varieties
-Let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. Fix integers $g\geq 0$ and $n\geq 1$, and select a strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic.' Let $C_1,\ldots,C_n$ be their conjugacy classes. 
+Let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. 
+
+Fix integers $g\geq 0$ and $n\geq 1$, and select a strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic.' 
+
+Let $C_1,\ldots,C_n$ be their conjugacy classes. 
 
 The multiplicative character variety is the GIT quotient
 ```math
@@ -35,7 +43,9 @@ The multiplicative character variety is the GIT quotient
 ```
 where the action is simultaneous conjugation. 
 
-Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic.' Let $O_1,\ldots,O_n$ be their adjoint orbits. 
+Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. 
+
+Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic' and let $O_1,\ldots,O_n$ be their adjoint orbits. 
 
 The additive character variety is the GIT quotient
 ```math
@@ -53,7 +63,7 @@ To select this group, we use the command `G=rootdatum(:G2)`. One can instead cho
 - `EX(G,g,n)` returns $E(\mathbf{X};q)$, and
 - `EY(G,g,n)` returns $E(\mathbf{Y};q)$.
 
-When $g=0$, the `Int64` data type is insufficient for polynomial division, but we can use `bigint_EX` and `bigint_EY` instead:
+When $g=0$, the `Int64` data type produces rounding errors; we use `bigint_EX` and `bigint_EY` instead:
 
 ```julia
 julia> EX(G,0,3)

@@ -6,10 +6,17 @@ struct GType
 	# To record ρ, we record a string representation and its degree
 	# eg. the Steinberg character of GL3 is recorded as 
 	# "3" (for the partition (3,0,...) of 3) and Pol(:q)^3
+
+	# I also force the computation of |[L]| and nu(L) 
+	# at the creation of a type so I don't have to 
+	# compute them many times
 	
 	endoscopy::FiniteCoxeterGroup
 	character::String
 	degree::Pol{Rational{Int64}}
+	orbit_size::Union{Int64,String}
+	nu::Union{Int64,String}
+
 	
 end # End of struct GType
 
@@ -24,6 +31,32 @@ Base.show(io::IO, tau::GType) = print(io,
 ## G-type functions
 function group_types(G::FiniteCoxeterGroup)
 	# Returns a vector of GTypes, ie. the G-types of G
+	types = []
+	G_dual = rootdatum(simplecoroots(G),simpleroots(G))
+	G_dual_iplevis = iplevis(G_dual)
+	G_dual_plevis = plevis(G_dual)
+	for plevi in plorbit_reps(G_dual)
+		# I am grabbing pseudo-Levis of G rather than endoscopies of G...
+		# So far this has not caused a problem because I only need data
+		# preserved by Langlands duality, eg. unipotent character degrees
+		plevi_uc = UnipotentCharacters(plevi)
+		plevi_uc_names = charnames(plevi_uc,limit=true)
+		plevi_uc_degs = degrees(plevi_uc)
+		plevi_orbit_size = length(myorbit(plevi))
+		plevi_nu = nu(plevi,G_dual_iplevis,G_dual_plevis)
+		for i in 1:length(plevi_uc)
+			# Check if unipotent character is principal
+			if Int(plevi_uc_degs[i](1))!=0
+				append!(types,[GType(plevi,plevi_uc_names[i],plevi_uc_degs[i],plevi_orbit_size,plevi_nu)])
+			end
+		end
+
+	end
+	return types
+end
+
+function group_types_no_data(G::FiniteCoxeterGroup)
+	# This is only intended for quick inspection of GTypes
 	G_dual = rootdatum(simplecoroots(G),simpleroots(G))
 	types = []
 	for plevi in plorbit_reps(G_dual)
@@ -36,7 +69,7 @@ function group_types(G::FiniteCoxeterGroup)
 		for i in 1:length(plevi_uc)
 			# Check if unipotent character is principal
 			if Int(plevi_uc_degs[i](1))!=0
-				append!(types,[GType(plevi,plevi_uc_names[i],plevi_uc_degs[i])])
+				append!(types,[GType(plevi,plevi_uc_names[i],plevi_uc_degs[i],"???","???")])
 			end
 		end
 	end
@@ -44,18 +77,18 @@ function group_types(G::FiniteCoxeterGroup)
 end
 
 function group_type_data(G::FiniteCoxeterGroup)
+	# Packing GTypes and their data into an array for epolys.jl and tables.jl
 	d = Array{Any}(nothing,0,8)
-	G_dual = rootdatum(simplecoroots(G),simpleroots(G))
 	for type in group_types(G)
 		type_row = Array{Any}(nothing,1,0)
-		type_row = hcat(type_row,[type])
-		type_row = hcat(type_row,[Int64(length(roots(type.endoscopy))/2)])
-		type_row = hcat(type_row,[orderpol(type.endoscopy)])
-		type_row = hcat(type_row,[type.degree])
-		type_row = hcat(type_row,[Int64(type.degree(1))])
-		type_row = hcat(type_row,[length(type.endoscopy)])
-		type_row = hcat(type_row,[length(myorbit(type.endoscopy))])
-		type_row = hcat(type_row,[nu(type.endoscopy,iplevis(G_dual),plevis(G_dual))])		
+		type_row = hcat(type_row,[type])									# Type
+		type_row = hcat(type_row,[Int64(length(roots(type.endoscopy))/2)])	# |Phi(L)+|
+		type_row = hcat(type_row,[orderpol(type.endoscopy)])				# |L(Fq)|
+		type_row = hcat(type_row,[type.degree])								# rho(1)
+		type_row = hcat(type_row,[Int64(type.degree(1))])					# phi(1)
+		type_row = hcat(type_row,[length(type.endoscopy)])					# |W(L)|
+		type_row = hcat(type_row,[type.orbit_size])							# |[L]|
+		type_row = hcat(type_row,[type.nu])									# nu(L)
 		d = vcat(d,type_row)
 	end
 	return sortslices(d,dims=1,by = x -> x[2],rev=true)

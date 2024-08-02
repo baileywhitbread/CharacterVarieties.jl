@@ -90,6 +90,21 @@ julia> @time group_types(rootdatum(:F4))
 julia> @time EX(rootdatum(:F4),1,1)
 61.184813 seconds (227.91 M allocations: 18.563 GiB, 8.07% gc time, 88.52% compilation time)
 ```
+
+
+- There is a large, unexplained leap in computation time between $\mathrm{SO}_9$ and $\mathrm{SO}_{11}$:
+```julia
+julia> @time EX(rootdatum(:so,7),0,3)
+  0.622608 seconds (1.15 M allocations: 88.349 MiB, 96.49% compilation time)
+
+julia> @time EX(rootdatum(:so,9),0,3)
+  0.580247 seconds (7.36 M allocations: 715.632 MiB, 12.29% gc time, 28.14% compilation time)
+
+julia> @time EX(rootdatum(:so,11),0,3)
+127.007951 seconds (2.15 G allocations: 218.391 GiB, 17.85% gc time, 0.44% compilation time)
+```
+
+
 - Add real-time calculations of $E$-polynomials to [baileywhitbread.com](https://www.baileywhitbread.com).
 
 

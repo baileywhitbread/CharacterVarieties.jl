@@ -31,7 +31,7 @@ Base.show(io::IO, tau::GType) = print(io,
 ## G-type functions
 function group_types(G::FiniteCoxeterGroup)
 	# Returns a vector of GTypes, ie. the G-types of G
-	types = []
+	types = GType[]
 	G_dual = rootdatum(simplecoroots(G),simpleroots(G))
 	G_dual_iplevis = iplevis(G_dual)
 	G_dual_plevis = plevis(G_dual)
@@ -58,7 +58,7 @@ end
 function group_types_no_data(G::FiniteCoxeterGroup)
 	# This is only intended for quick inspection of GTypes
 	G_dual = rootdatum(simplecoroots(G),simpleroots(G))
-	types = []
+	types = GType[]
 	for plevi in plorbit_reps(G_dual)
 		# I am grabbing pseudo-Levis of G rather than endoscopies of G...
 		# So far this has not caused a problem because I only need data
@@ -80,6 +80,23 @@ function group_type_data(G::FiniteCoxeterGroup)
 	# Packing GTypes and their data into an array for epolys.jl and tables.jl
 	d = Array{Any}(nothing,0,8)
 	for type in group_types(G)
+		type_row = Array{Any}(nothing,1,0)
+		type_row = hcat(type_row,[type])									# Type
+		type_row = hcat(type_row,[Int64(length(roots(type.endoscopy))/2)])	# |Phi(L)+|
+		type_row = hcat(type_row,[orderpol(type.endoscopy)])				# |L(Fq)|
+		type_row = hcat(type_row,[type.degree])								# rho(1)
+		type_row = hcat(type_row,[Int64(type.degree(1))])					# phi(1)
+		type_row = hcat(type_row,[length(type.endoscopy)])					# |W(L)|
+		type_row = hcat(type_row,[type.orbit_size])							# |[L]|
+		type_row = hcat(type_row,[type.nu])									# nu(L)
+		d = vcat(d,type_row)
+	end
+	return sortslices(d,dims=1,by = x -> x[2],rev=true)
+end
+
+function fast_group_type_data(G::FiniteCoxeterGroup,type_data::Any)
+	d = Array{Any}(nothing,0,6)
+	for type in type_data
 		type_row = Array{Any}(nothing,1,0)
 		type_row = hcat(type_row,[type])									# Type
 		type_row = hcat(type_row,[Int64(length(roots(type.endoscopy))/2)])	# |Phi(L)+|

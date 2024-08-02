@@ -1,5 +1,5 @@
 ## Testing E-polynomials
-function palindrome_X(G,genus,puncture_min,puncture_max)
+function palindrome_X(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int64,puncture_max::Int64)
 	# Checks palindromicity of X with g=genus and n=puncture_min,...,puncture_max
 	d=group_type_data(G)
 	for n in puncture_min:puncture_max
@@ -27,7 +27,7 @@ end
 
 
 
-function euler_X(G,genus,puncture_min,puncture_max)
+function euler_X(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int64,puncture_max::Int64)
 	# Checks Euler characteristic of X with g=genus and n=puncture_min,...,puncture_max
 	d=group_type_data(G)
 	for n in puncture_min:puncture_max
@@ -53,7 +53,7 @@ function euler_X(G,genus,puncture_min,puncture_max)
 	end
 end
 
-function nonnegative_Y(G,genus,puncture_min,puncture_max)
+function nonnegative_Y(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int64,puncture_max::Int64)
 	# Checks negativity of coefficients of E(Y;q) with g=genus and n=puncture_min,...,puncture_max
 	d=algebra_type_data(G)
 	for n in puncture_min:puncture_max
@@ -80,7 +80,7 @@ function nonnegative_Y(G,genus,puncture_min,puncture_max)
 end
 
 
-function nonnegative_X(G,genus,puncture_min,puncture_max)
+function nonnegative_X(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int64,puncture_max::Int64)
 	# Checks negativity of coefficients of E(X;q) with g=genus and n=puncture_min,...,puncture_max
 	d=group_type_data(G)
 	for n in puncture_min:puncture_max

@@ -151,11 +151,11 @@ end
 function EX(G::FiniteCoxeterGroup,g::Int64,n::Int64)
 	# Returns the E-polynomial E(X;q) associated to the group G and a genus g surface with n punctures
 	d = group_type_data(G)
-	Z_size = orderpol(torus(rank(G)-semisimplerank(G)))
+	Z_size = orderpol(torus((rank(G)-semisimplerank(G))::Int))
 	T_size = orderpol(torus(rank(G)))
 	type_sum = 0
 	for i in 1:size(d)[1]
-		type_sum += fast_Mtau(G,i,d)^(2g-2+n)*fast_Stau(G,n,i,d)
+		type_sum += fast_Mtau(G,i::Int,d)^(2g-2+n)*fast_Stau(G,n::Int,i::Int,d)
 	end
 	return Pol{Int64}((Z_size//T_size^n)*type_sum)
 end

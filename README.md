@@ -22,15 +22,8 @@ using CharacterVarieties
 
 
 
-## Background
-### Counting points
-We say an algebraic variety $\mathbf{A}$ defined by polynomials in $\mathbb{Z}[t]$ is polynomial count if there exists $p_\mathbf{A}\in \mathbb{C}[t]$ with 
-```math
-\#\mathbf{A}(\mathbf{F}_{q^m})=p_\mathbf{A}(q^m)
-```
-for all $m\geq 1$. We call $p_\mathbf{A}$ the $E$-polynomial of $\mathbf{A}$ and write $`E(\mathbf{A};q):=p_\mathbf{A}(q)=\#\mathbf{A}(\mathbf{F}_q)`$ (c.f. [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)).
 
-### Multiplicative and additive character varieties
+## Multiplicative and additive character varieties
 Fix integers $g\geq 0$ and $n\geq 1$ and let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. 
 
 Select strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic' and let $C_1,\ldots,C_n$ be their conjugacy classes.
@@ -52,12 +45,17 @@ The additive character variety is the GIT quotient
 where the action is simultaneous conjugation (i.e., the adjoint action). 
 
 ## Calculating E-polynomials
-This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ via our formulas for $`\#\mathbf{X}(\mathbb{F}_q)`$ and $`\#\mathbf{Y}(\mathbb{F}_q)`$. 
+This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ (see [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x) for the definition of $E$-polynomials). 
+
+This is done using our formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$.
 
 We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. 
 
-To select this group, we use the command `G=rootdatum(:G2)`. One can instead choose `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, `rootdatum(:F4)`, etc.
+The command `G=rootdatum(:G2)` selects the group. 
 
+(One can instead choose `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, `rootdatum(:F4)`, etc.)
+
+Then 
 - `EX(G,g,n)` returns $E(\mathbf{X};q)$, and
 - `EY(G,g,n)` returns $E(\mathbf{Y};q)$.
 
@@ -85,14 +83,13 @@ Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 ## To do
 - Speed up $E$-polynomial calculations:
 ```julia
-julia> @time group_types(rootdatum(:F4))
- 38.772694 seconds (91.92 M allocations: 6.047 GiB, 5.86% gc time, 99.80% compilation time)
 julia> @time EX(rootdatum(:F4),1,1)
 61.184813 seconds (227.91 M allocations: 18.563 GiB, 8.07% gc time, 88.52% compilation time)
 ```
 
 
-- There is a large, unexplained leap in computation time between $\mathrm{SO}_9$ and $\mathrm{SO}_{11}$:
+
+- There is a large, unexplained leap in computation time between $`\mathrm{SO}_9`$ and $`\mathrm{SO}_{11}`$:
 ```julia
 julia> @time EX(rootdatum(:so,7),0,3)
   0.622608 seconds (1.15 M allocations: 88.349 MiB, 96.49% compilation time)
@@ -104,6 +101,7 @@ julia> @time EX(rootdatum(:so,11),0,3)
 127.007951 seconds (2.15 G allocations: 218.391 GiB, 17.85% gc time, 0.44% compilation time)
 ```
 
+- People who understand Julia tell me I should reduce the allocation sizes...
 
 - Add real-time calculations of $E$-polynomials to [baileywhitbread.com](https://www.baileywhitbread.com).
 
@@ -112,7 +110,6 @@ julia> @time EX(rootdatum(:so,11),0,3)
 
 ## Further directions
 
-### Mixed Hodge polynomials
 Associated to $\mathbf{X}$ is the (compactly supported) mixed Hodge polynomial
 ```math
 H(\mathbf{X};x,y,t) = \sum_{i,j,k} h^{i,j,k} x^i y^j t^k.
@@ -129,16 +126,15 @@ It is conjectured the polynomials $H(\mathbf{X};q,t)$ and $E(\mathbf{Y};u)$ are 
 ```math
 PH(\mathbf{X};q) = E(\mathbf{Y};q).
 ```
-The conjecture has been proven in one narrow case: $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$. This was possible because $H(\mathbf{X};q,t)$ is explicitly known. When $G=\mathrm{GL}_d$ and the $C_i$ are semisimple, an unproven formula for $H(\mathbf{X};q,t)$ was given in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
+This is known in one case (because $H(\mathbf{X};q,t)$ is explicitly known): $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$.
+
+When $G=\mathrm{GL}_d$ and the $C_i$ are semisimple, an unproven formula for $H(\mathbf{X};q,t)$ was given in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
 
 
-#### Idea: Use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$ for general reductive $G$.
+#### Idea: Use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
 
 The formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) are very different to ours. 
 
-It would be interesting to implement their formulas, especially given their conjectural formula for the mixed Hodge polynomial, which involve symmetric functions and inner products of complete and monomial symmetric functions.  
-
-### Non-negative coefficients
 When $G=\mathrm{GL}_d$, the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative by the work of [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full).
 
-#### Idea: Use the `CharacterVarieties.jl` to search for $E(\mathbf{Y};q)$ with negative coefficients.
+#### Idea: Use `CharacterVarieties.jl` to search for $E(\mathbf{Y};q)$ with negative coefficients, or other interesting behavior.

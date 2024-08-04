@@ -112,7 +112,6 @@ julia> @time EX(rootdatum(:so,11),0,3)
 
 ## Further directions
 
-### Mixed Hodge polynomials
 Associated to $\mathbf{X}$ is the (compactly supported) mixed Hodge polynomial
 ```math
 H(\mathbf{X};x,y,t) = \sum_{i,j,k} h^{i,j,k} x^i y^j t^k.
@@ -129,16 +128,15 @@ It is conjectured the polynomials $H(\mathbf{X};q,t)$ and $E(\mathbf{Y};u)$ are 
 ```math
 PH(\mathbf{X};q) = E(\mathbf{Y};q).
 ```
-The conjecture has been proven in one narrow case: $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$. This was possible because $H(\mathbf{X};q,t)$ is explicitly known. When $G=\mathrm{GL}_d$ and the $C_i$ are semisimple, an unproven formula for $H(\mathbf{X};q,t)$ was given in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
+This is known in one case (because $H(\mathbf{X};q,t)$ is explicitly known): $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$.
+
+When $G=\mathrm{GL}_d$ and the $C_i$ are semisimple, an unproven formula for $H(\mathbf{X};q,t)$ was given in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
 
 
-#### Idea: Use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$ for general reductive $G$.
+#### Idea: Use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
 
 The formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) are very different to ours. 
 
-It would be interesting to implement their formulas, especially given their conjectural formula for the mixed Hodge polynomial, which involve symmetric functions and inner products of complete and monomial symmetric functions.  
-
-### Non-negative coefficients
 When $G=\mathrm{GL}_d$, the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative by the work of [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full).
 
-#### Idea: Use the `CharacterVarieties.jl` to search for $E(\mathbf{Y};q)$ with negative coefficients.
+#### Idea: Use `CharacterVarieties.jl` to search for $E(\mathbf{Y};q)$ with negative coefficients, or other interesting behavior.

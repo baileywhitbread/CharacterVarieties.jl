@@ -45,7 +45,7 @@ The additive character variety is the GIT quotient
 where the action is simultaneous conjugation (i.e., the adjoint action). 
 
 ## Calculating E-polynomials
-This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ via our formulas for $`\#\mathbf{X}(\mathbb{F}_q)`$ and $`\#\mathbf{Y}(\mathbb{F}_q)`$ (c.f. [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)). 
+This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ via our formulas for $`\#\mathbf{X}(\mathbb{F}_q)`$ and $`\#\mathbf{Y}(\mathbb{F}_q)`$ (see [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x) for the definition of $E$-polynomials). 
 
 We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. 
 

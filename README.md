@@ -55,6 +55,7 @@ The command `G=rootdatum(:G2)` selects the group.
 
 (One can instead choose `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, `rootdatum(:F4)`, etc.)
 
+Then 
 - `EX(G,g,n)` returns $E(\mathbf{X};q)$, and
 - `EY(G,g,n)` returns $E(\mathbf{Y};q)$.
 

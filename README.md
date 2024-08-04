@@ -83,8 +83,6 @@ Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 ## To do
 - Speed up $E$-polynomial calculations:
 ```julia
-julia> @time group_types(rootdatum(:F4))
- 38.772694 seconds (91.92 M allocations: 6.047 GiB, 5.86% gc time, 99.80% compilation time)
 julia> @time EX(rootdatum(:F4),1,1)
 61.184813 seconds (227.91 M allocations: 18.563 GiB, 8.07% gc time, 88.52% compilation time)
 ```

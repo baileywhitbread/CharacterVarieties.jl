@@ -90,7 +90,7 @@ julia> @time EX(rootdatum(:F4),1,1)
 ```
 
 
-- There is a large, unexplained leap in computation time between $\mathrm{SO}_9$ and $\mathrm{SO}_{11}$:
+- There is a large, unexplained leap in computation time between $\rm{SO}_9$ and $\rm{SO}_{11}$:
 ```julia
 julia> @time EX(rootdatum(:so,7),0,3)
   0.622608 seconds (1.15 M allocations: 88.349 MiB, 96.49% compilation time)

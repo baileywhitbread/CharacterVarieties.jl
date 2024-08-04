@@ -90,7 +90,8 @@ julia> @time EX(rootdatum(:F4),1,1)
 ```
 
 
-- There is a large, unexplained leap in computation time between $\rm{SO}_9$ and $\rm{SO}_{11}$:
+
+- There is a large, unexplained leap in computation time between $`\mathrm{SO}_9`$ and $`\mathrm{SO}_{11}`$:
 ```julia
 julia> @time EX(rootdatum(:so,7),0,3)
   0.622608 seconds (1.15 M allocations: 88.349 MiB, 96.49% compilation time)
@@ -102,6 +103,7 @@ julia> @time EX(rootdatum(:so,11),0,3)
 127.007951 seconds (2.15 G allocations: 218.391 GiB, 17.85% gc time, 0.44% compilation time)
 ```
 
+- People who understand Julia tell me I should reduce the allocation sizes...
 
 - Add real-time calculations of $E$-polynomials to [baileywhitbread.com](https://www.baileywhitbread.com).
 

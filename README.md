@@ -51,7 +51,7 @@ This is done using our formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$.
 
 We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. 
 
-To select this group, we use the command `G=rootdatum(:G2)`. One can instead choose `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, `rootdatum(:F4)`, etc.
+The command `G=rootdatum(:G2)` selects the group. One can instead choose `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, `rootdatum(:F4)`, etc.
 
 - `EX(G,g,n)` returns $E(\mathbf{X};q)$, and
 - `EY(G,g,n)` returns $E(\mathbf{Y};q)$.

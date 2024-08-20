@@ -9,6 +9,7 @@ using Reexport
 
 
 
+
 # Export structs
 export GType, gType
 
@@ -17,7 +18,24 @@ export GType, gType
 export group_type_table, algebra_type_table
 export group_types, algebra_types
 export EX, EY
-export bigint_EX, bigint_EY
+export ESp4
+
+## These are for me
+export plorbit_reps
+export plorbits
+export plevis
+
+export iplorbit_reps
+export iplorbits
+export iplevis
+
+export lorbit_reps
+export lorbits
+export levis
+
+
+
+
 
 ## These are for testing
 export palindrome_X, euler_X, nonnegative_Y, nonnegative_X
@@ -33,6 +51,7 @@ include("grouptypes.jl")
 include("algebratypes.jl")
 
 include("epolys.jl")
+include("cambo.jl")
 include("tables.jl")
 
 include("testing.jl")

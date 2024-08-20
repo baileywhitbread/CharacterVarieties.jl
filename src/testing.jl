@@ -5,7 +5,7 @@ function palindrome_X(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int64,pun
 	for n in puncture_min:puncture_max
 		try 
 			print("Checking E(X;q) palindromic when G=",G,", g=",genus," and n=",n,": ")
-			if ispalindromic(bigint_EX(G,genus,n,d))
+			if ispalindromic(fast_EX(G,genus,n,d))
 				println("Yes")
 			else
 				println("No")
@@ -33,10 +33,10 @@ function euler_X(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int64,puncture
 	for n in puncture_min:puncture_max
 		try 
 			print("Computing χ(X) when G=",G,", g=",genus," and n=",n,": ")
-			if fast_bigint_EX(G,genus,n,d)(1)==0
+			if fast_EX(G,genus,n,d)(1)==0
 				println("χ(X)=0")
 			else
-				println("χ(X)=",fast_bigint_EX(G,genus,n,d)(1))
+				println("χ(X)=",fast_EX(G,genus,n,d)(1))
 			end
 		catch err
 			if isa(err,OverflowError)
@@ -59,7 +59,7 @@ function nonnegative_Y(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int64,pu
 	for n in puncture_min:puncture_max
 		try 
 			print("Checking coefficients of E(Y;q) when G=",G,", g=",genus," and n=",n,": ")
-			if isnonnegative(fast_bigint_EY(G,genus,n,d))
+			if isnonnegative(fast_EY(G,genus,n,d))
 				println("All non-negative")
 			else
 				println("Negative coefficients found")
@@ -88,7 +88,7 @@ function nonnegative_X(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int64,pu
 	for n in puncture_min:puncture_max
 		try 
 			print("Checking coefficients of E(X;q) when G=",G,", g=",genus," and n=",n,": ")
-			if isnonnegative(fast_bigint_EX(G,genus,n,d))
+			if isnonnegative(fast_EX(G,genus,n,d))
 				println("All non-negative")
 			else
 				println("Negative coefficients found")
@@ -112,18 +112,17 @@ end
 
 function log_nonnegative_Y(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int64,puncture_max::Int64)
 	# Checks negativity of coefficients of E(Y;q) with g=genus and n=puncture_min,...,puncture_max
-	random_string = randstring(12)
-	log_name = "EY_coefficients_G_"*string(G)*"_"*random_string*".txt"
+	log_name = "EY_nonnegative_coeff_"*xrepr(rio(),G)*"_g="*string(genus)*"_n="*string(puncture_min)*"..."*string(puncture_max)*"_"*randstring(12)*".txt"
 	io = open(log_name, "w+")
-	global_logger(SimpleLogger(io))
+	logger = SimpleLogger(io)
+	global_logger(logger)
 	d=algebra_type_data(G)
 	for n in puncture_min:puncture_max
 		try 
-			@info("Checking coefficients of E(Y;q) when G=",G,", g=",genus," and n=",n,": ")
-			if isnonnegative(fast_bigint_EY(G,genus,n,d))
-				@info("All non-negative")
+			if isnonnegative(fast_EY(G,genus,n,d))
+				@info("Coefficients all non-negative when",n)
 			else
-				@info("Negative coefficients found")
+				@info("Negative coefficients found when",n)
 			end
 		catch err
 			if isa(err,OverflowError)
@@ -138,4 +137,5 @@ function log_nonnegative_Y(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int6
 			end
 		end
 	end
+	close(io)
 end

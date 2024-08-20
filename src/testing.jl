@@ -118,11 +118,10 @@ function log_nonnegative_Y(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int6
 	d=algebra_type_data(G)
 	for n in puncture_min:puncture_max
 		try 
-			@info("Checking coefficients of E(Y;q) when G=",G,", g=",genus," and n=",n,": ")
 			if isnonnegative(fast_bigint_EY(G,genus,n,d))
-				@info("All non-negative")
+				@info("Coefficients all non-negative when",n)
 			else
-				@info("Negative coefficients found")
+				@info("Negative coefficients when",n)
 			end
 		catch err
 			if isa(err,OverflowError)

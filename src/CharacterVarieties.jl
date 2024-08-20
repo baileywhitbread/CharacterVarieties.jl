@@ -2,8 +2,7 @@ module CharacterVarieties
 
 using Reexport
 @reexport using Chevie
-@reexport using Logging
-@reexport using Random
+
 
 
 

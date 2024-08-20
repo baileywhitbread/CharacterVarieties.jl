@@ -138,4 +138,5 @@ function log_nonnegative_Y(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int6
 			end
 		end
 	end
+	close(io)
 end

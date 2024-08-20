@@ -112,7 +112,8 @@ end
 
 function log_nonnegative_Y(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int64,puncture_max::Int64)
 	# Checks negativity of coefficients of E(Y;q) with g=genus and n=puncture_min,...,puncture_max
-	io = open(xrepr(rio(),G)*"_"*"g="*string(genus)*"_"*"nmin="*string(puncture_min)*"_"*"nmax="*string(puncture_max)*"_"*randstring(12)*".txt", "w+")
+	log_name = "EY_nonnegative_coeff_"*xrepr(rio(),G)*"_g="*string(genus)*"_n="*string(puncture_min)*"..."*string(puncture_max)*"_"*randstring(12)*".txt"
+	io = open(log_name, "w+")
 	logger = SimpleLogger(io)
 	global_logger(logger)
 	d=algebra_type_data(G)

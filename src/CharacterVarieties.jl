@@ -19,6 +19,7 @@ export bigint_EX, bigint_EY
 
 ## These are for testing
 export palindrome_X, euler_X, nonnegative_Y, nonnegative_X
+export log_nonnegative_Y
 
 
 

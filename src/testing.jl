@@ -122,7 +122,7 @@ function log_nonnegative_Y(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int6
 			if isnonnegative(fast_bigint_EY(G,genus,n,d))
 				@info("Coefficients all non-negative when",n)
 			else
-				@info("Negative coefficients when",n)
+				@info("Negative coefficients found when",n)
 			end
 		catch err
 			if isa(err,OverflowError)

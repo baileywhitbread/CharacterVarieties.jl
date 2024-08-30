@@ -18,7 +18,6 @@ export GType, gType
 export group_type_table, algebra_type_table
 export group_types, algebra_types
 export EX, EY
-export bigint_EX, bigint_EY
 
 ## These are for testing
 export palindrome_X, euler_X, nonnegative_Y, nonnegative_X

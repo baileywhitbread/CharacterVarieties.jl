@@ -19,6 +19,20 @@ export group_type_table, algebra_type_table
 export group_types, algebra_types
 export EX, EY
 
+## These are for me
+export plorbit_reps
+export plorbits
+export plevis
+
+export iplorbit_reps
+export iplorbits
+export iplevis
+
+export lorbit_reps
+export lorbits
+export levis
+
+
 ## These are for testing
 export palindrome_X, euler_X, nonnegative_Y, nonnegative_X
 export log_nonnegative_Y

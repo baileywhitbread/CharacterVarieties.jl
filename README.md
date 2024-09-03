@@ -53,6 +53,8 @@ Then
 - `EX(G,g,n)` returns $E(\mathbf{X};q)$, and
 - `EY(G,g,n)` returns $E(\mathbf{Y};q)$.
 
+For example:
+
 ```julia
 julia> EX(G,0,3)
 Pol{BigInt}: q⁸+6q⁷+20q⁶+58q⁵+180q⁴+58q³+20q²+6q+1
@@ -112,15 +114,6 @@ It is conjectured the polynomials $H(\mathbf{X};q,t)$ and $E(\mathbf{Y};u)$ are 
 ```math
 PH(\mathbf{X};q) = E(\mathbf{Y};q).
 ```
-This is known in one case (because $H(\mathbf{X};q,t)$ is explicitly known): $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$.
+This is known in one case (because $H(\mathbf{X};q,t)$ is explicitly known): $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$. When $G=\mathrm{GL}_d$ and the $C_i$ are semisimple, an unproven formula for $H(\mathbf{X};q,t)$ was given in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). One could use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
 
-When $G=\mathrm{GL}_d$ and the $C_i$ are semisimple, an unproven formula for $H(\mathbf{X};q,t)$ was given in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
-
-
-One could use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
-
-The formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) are very different to ours. 
-
-When $G=\mathrm{GL}_d$, the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative by the work of [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full).
-
-One could use `CharacterVarieties.jl` to search for $E(\mathbf{Y};q)$ with negative coefficients, or other interesting behavior.
+The formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) are very different to ours. When $G=\mathrm{GL}_d$, the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative by the work of [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). One could use `CharacterVarieties.jl` to search for $E(\mathbf{Y};q)$ with negative coefficients, or other interesting behavior.

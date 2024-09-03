@@ -18,6 +18,7 @@ export GType, gType
 export group_type_table, algebra_type_table
 export group_types, algebra_types
 export EX, EY
+export ESp4
 
 ## These are for me
 export plorbit_reps
@@ -31,6 +32,9 @@ export iplevis
 export lorbit_reps
 export lorbits
 export levis
+
+
+
 
 
 ## These are for testing
@@ -47,6 +51,7 @@ include("grouptypes.jl")
 include("algebratypes.jl")
 
 include("epolys.jl")
+include("cambo.jl")
 include("tables.jl")
 
 include("testing.jl")

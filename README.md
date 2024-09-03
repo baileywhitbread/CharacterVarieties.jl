@@ -32,7 +32,7 @@ The multiplicative character variety is the GIT quotient
 ```math
 \mathbf{X} = \bigg\{(A_1,B_1,\ldots,A_g,B_g,Y_1,\ldots,Y_n)\in G^{2g}\times C_1\times \cdots\times C_n\ \bigg|\ [A_1,B_1]\cdots[A_g,B_g]Y_1\cdots Y_n = 1\bigg\}\bigg/\!\!\!\!\!\bigg/G
 ```
-where the action is simultaneous conjugation. 
+where the action is simultaneous conjugation. This is an affine scheme of finite type over the finite field of size $q$.
 
 Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. 
 
@@ -42,10 +42,10 @@ The additive character variety is the GIT quotient
 ```math
 \mathbf{Y} = \bigg\{(A_1,B_1,\ldots,A_g,B_g,Y_1,\ldots,Y_n)\in \mathfrak{g}^{2g}\times O_1\times \cdots\times O_n\ \bigg|\ [A_1,B_1]+\cdots+[A_g,B_g] + Y_1+ \cdots + Y_n = 0\bigg\}\bigg/\!\!\!\!\!\bigg/G
 ```
-where the action is simultaneous conjugation (i.e., the adjoint action). 
+where the action is simultaneous conjugation (i.e., the adjoint action). This is an affine scheme of finite type over the finite field of size $q$.
 
 ## Calculating E-polynomials
-This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ (see [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x) for the definition of $E$-polynomials). 
+This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ (see [LRV](https://aif.centre-mersenne.org/articles/10.5802/aif.3540/) for the definition of $E$-polynomials of varieties over finite fields or [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x)for the complex analogue). 
 
 This is done using our formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$.
 

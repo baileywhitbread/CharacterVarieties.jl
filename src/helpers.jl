@@ -48,3 +48,7 @@ function nu(L::FiniteCoxeterGroup,iso_plevis::Vector,all_plevis::Vector)
 	end
 	return nu_value
 end
+
+function dimension_XY(G::FiniteCoxeterGroup,genus::Int64,puncture::Int64)
+	return (2*genus-2+puncture)*dimension(G) + 2*(rank(G)-semisimplerank(G)) - puncture*rank(G)
+end

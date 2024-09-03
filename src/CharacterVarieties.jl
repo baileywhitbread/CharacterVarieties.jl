@@ -40,6 +40,7 @@ export levis
 ## These are for testing
 export palindrome_X, euler_X, nonnegative_Y, nonnegative_X
 export log_nonnegative_Y
+export check_dim_X, check_dim_Y
 
 
 

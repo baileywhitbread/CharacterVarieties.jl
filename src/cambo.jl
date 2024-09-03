@@ -1,4 +1,4 @@
-# I am hard-coding some polynomials of Sp_{2n}-character varieties found in
+# Hard-coding some E-polynomials of multiplicative Sp_{2n}-character varieties found in
 #
 # \bib{Cambo17}{thesis}{
 #    author={Camb\`{o}, V.},
@@ -18,8 +18,8 @@ Phi4 = q^2+1
 
 
 
-# E-polynomial when G=Sp4 and n=1
-function ESP4(g::Int)
+# E-polynomial of mult. char. var. X when G = Sp4 and n = 1
+function ESp4(g::Int)
     return Phi1^(4g-4)*(
         (8-2^(2g+2))*(q^4)^(2g-1)
         +(2^(2g+1)-8)*(q^4*Phi2)^(2g-1)

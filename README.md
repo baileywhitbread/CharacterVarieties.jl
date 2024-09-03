@@ -49,29 +49,23 @@ This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)
 
 This is done using our formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$.
 
-We will use the group $G=G_2$ (i.e., the semisimple group of adjoint type $G_2$) as an example. 
+We will use the semisimple group of adjoint type $G_2$ as an example. 
 
-The command `G=rootdatum(:G2)` selects the group. 
+The command `G=coxgroup(:G,2)` selects this group. 
 
-(One can instead choose `rootdatum(:gl,2)`, `rootdatum(:so,5)`, `rootdatum(:pgl,3)`, `rootdatum(:F4)`, etc.)
+One can instead choose `coxgroup(:A,2)`, `coxgroup(:B,2)`, and so on. 
+
+Alternatively, one can select these groups using `rootdatum(:pgl,3)` or `rootdatum(:so,5)`, or non-semisimple groups such as `rootdatum(:gl,2)`.
 
 Then 
 - `EX(G,g,n)` returns $E(\mathbf{X};q)$, and
 - `EY(G,g,n)` returns $E(\mathbf{Y};q)$.
 
-When $g=0$, the `Int64` data type produces rounding errors; we use `bigint_EX` and `bigint_EY` instead:
-
 ```julia
 julia> EX(G,0,3)
-Pol{Int64}: q⁸+6q⁷+20q⁶+58q⁵+180q⁴+58q³+20q²+6q+1
-
-julia> bigint_EX(G,0,3)
 Pol{BigInt}: q⁸+6q⁷+20q⁶+58q⁵+180q⁴+58q³+20q²+6q+1
 
 julia> EY(G,0,3)
-ERROR: cannot convert Frac(Pol(BigFloat[2.77555756156289135105907917022705078125e-17, 0.0, 3.3306690738754696212708950042724609375e-16, 5.5511151231257827021181583404541015625e-16, -99.0, -45.000000000000000610622663543836097232997417449951171875, 80.0, 39.0, 18.0, 6.0, 1.0]),Pol(BigFloat[-1.0, 0.0, 1.0])) to Pol
-
-julia> bigint_EY(G,0,3)
 Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 ```
 
@@ -83,7 +77,7 @@ Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 ## To do
 - Speed up $E$-polynomial calculations:
 ```julia
-julia> @time EX(rootdatum(:F4),1,1)
+julia> @time EX(coxgroup(:F,4),1,1)
 61.184813 seconds (227.91 M allocations: 18.563 GiB, 8.07% gc time, 88.52% compilation time)
 ```
 
@@ -91,13 +85,13 @@ julia> @time EX(rootdatum(:F4),1,1)
 
 - There is a large, unexplained leap in computation time between $`\mathrm{SO}_9`$ and $`\mathrm{SO}_{11}`$:
 ```julia
-julia> @time EX(rootdatum(:so,7),0,3)
+julia> @time EX(coxgroup(:B,3),0,3)
   0.622608 seconds (1.15 M allocations: 88.349 MiB, 96.49% compilation time)
 
-julia> @time EX(rootdatum(:so,9),0,3)
+julia> @time EX(coxgroup(:B,4),0,3)
   0.580247 seconds (7.36 M allocations: 715.632 MiB, 12.29% gc time, 28.14% compilation time)
 
-julia> @time EX(rootdatum(:so,11),0,3)
+julia> @time EX(coxgroup(:B,5),0,3)
 127.007951 seconds (2.15 G allocations: 218.391 GiB, 17.85% gc time, 0.44% compilation time)
 ```
 
@@ -131,10 +125,10 @@ This is known in one case (because $H(\mathbf{X};q,t)$ is explicitly known): $G=
 When $G=\mathrm{GL}_d$ and the $C_i$ are semisimple, an unproven formula for $H(\mathbf{X};q,t)$ was given in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). 
 
 
-#### Idea: Use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
+One could use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
 
 The formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) are very different to ours. 
 
 When $G=\mathrm{GL}_d$, the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative by the work of [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full).
 
-#### Idea: Use `CharacterVarieties.jl` to search for $E(\mathbf{Y};q)$ with negative coefficients, or other interesting behavior.
+One could use `CharacterVarieties.jl` to search for $E(\mathbf{Y};q)$ with negative coefficients, or other interesting behavior.

@@ -144,7 +144,7 @@ function check_dim_X(G::FiniteCoxeterGroup,genus_min::Int64,genus_max::Int64,pun
 	d=group_type_data(G)
 	for n in puncture_min:puncture_max
 		for g in genus_min:genus_max
-			if dimension_XY(G,g,n) == fast_EX(G,g,n,d)
+			if dimension_XY(G,g,n) == degree(fast_EX(G,g,n,d))
 				println("Dimension correct when (g,n) is ","(",g,",",n,")")
 			else
 				println("Dimension wrong when (g,n) is ","(",g,",",n,")")
@@ -157,7 +157,7 @@ function check_dim_Y(G::FiniteCoxeterGroup,genus_min::Int64,genus_max::Int64,pun
 	d=group_type_data(G)
 	for n in puncture_min:puncture_max
 		for g in genus_min:genus_max
-			if dimension_XY(G,g,n) == fast_EY(G,g,n,d)
+			if dimension_XY(G,g,n) == degree(fast_EY(G,g,n,d))
 				println("Dimension correct when (g,n) is ","(",g,",",n,")")
 			else
 				println("Dimension wrong when (g,n) is ","(",g,",",n,")")

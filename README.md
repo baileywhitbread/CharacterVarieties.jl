@@ -24,21 +24,11 @@ using CharacterVarieties
 
 
 ## Multiplicative and additive character varieties
-Fix integers $g\geq 0$ and $n\geq 1$ and let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. 
-
-Select strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic' and let $C_1,\ldots,C_n$ be their conjugacy classes.
-
-The multiplicative character variety is the GIT quotient
+Fix integers $g\geq 0$ and $n\geq 1$ and let $G$ be a connected split reductive group over $\mathbb{F}_q$ with connected centre $Z$ and split maximal torus $T$. Select strongly regular elements $S_1,\ldots,S_n$ in $T$ that are 'generic' and let $C_1,\ldots,C_n$ be their conjugacy classes. The multiplicative character variety is the GIT quotient
 ```math
 \mathbf{X} = \bigg\{(A_1,B_1,\ldots,A_g,B_g,Y_1,\ldots,Y_n)\in G^{2g}\times C_1\times \cdots\times C_n\ \bigg|\ [A_1,B_1]\cdots[A_g,B_g]Y_1\cdots Y_n = 1\bigg\}\bigg/\!\!\!\!\!\bigg/G
 ```
-where the action is simultaneous conjugation. This is an affine scheme of finite type over the finite field of size $q$.
-
-Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. 
-
-Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic' and let $O_1,\ldots,O_n$ be their adjoint orbits. 
-
-The additive character variety is the GIT quotient
+where the action is simultaneous conjugation. This is an affine scheme of finite type over the finite field of size $q$. Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic' and let $O_1,\ldots,O_n$ be their adjoint orbits. The additive character variety is the GIT quotient
 ```math
 \mathbf{Y} = \bigg\{(A_1,B_1,\ldots,A_g,B_g,Y_1,\ldots,Y_n)\in \mathfrak{g}^{2g}\times O_1\times \cdots\times O_n\ \bigg|\ [A_1,B_1]+\cdots+[A_g,B_g] + Y_1+ \cdots + Y_n = 0\bigg\}\bigg/\!\!\!\!\!\bigg/G
 ```
@@ -114,6 +104,10 @@ It is conjectured the polynomials $H(\mathbf{X};q,t)$ and $E(\mathbf{Y};u)$ are 
 ```math
 PH(\mathbf{X};q) = E(\mathbf{Y};q).
 ```
-This is known in one case (because $H(\mathbf{X};q,t)$ is explicitly known): $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of $`\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right)`$. When $G=\mathrm{GL}_d$ and the $C_i$ are semisimple, an unproven formula for $H(\mathbf{X};q,t)$ was given in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). One could use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
+This is known in one case (because $H(\mathbf{X};q,t)$ is explicitly known): $G=\mathrm{GL}_2$, $n=1$ and $C_1$ is the conjugacy class of 
+```math
+\left(\begin{smallmatrix}-1 & \\ & -1 \end{smallmatrix}\right).
+```
+When $G=\mathrm{GL}_d$ and the $C_i$ are semisimple, an unproven formula for $H(\mathbf{X};q,t)$ was given in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). One could use the specialisations $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ to try and understand the mixed Hodge polynomial $H(\mathbf{X};q,t)$.
 
 The formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ in [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full) are very different to ours. When $G=\mathrm{GL}_d$, the coefficients of $`\#\mathbf{Y}(\mathbb{F}_q)`$ are non-negative by the work of [HLRV](https://projecteuclid.org/journals/duke-mathematical-journal/volume-160/issue-2/Arithmetic-harmonic-analysis-on-character-and-quiver-varieties/10.1215/00127094-1444258.full). One could use `CharacterVarieties.jl` to search for $E(\mathbf{Y};q)$ with negative coefficients, or other interesting behavior.

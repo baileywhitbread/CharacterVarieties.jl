@@ -154,7 +154,7 @@ function check_dim_X(G::FiniteCoxeterGroup,genus_min::Int64,genus_max::Int64,pun
 end
 
 function check_dim_Y(G::FiniteCoxeterGroup,genus_min::Int64,genus_max::Int64,puncture_min::Int64,puncture_max::Int64)
-	d=group_type_data(G)
+	d=algebra_type_data(G)
 	for n in puncture_min:puncture_max
 		for g in genus_min:genus_max
 			if dimension_XY(G,g,n) == degree(fast_EY(G,g,n,d))

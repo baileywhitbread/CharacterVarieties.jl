@@ -1,49 +1,3 @@
-# I don't think these are called anywhere...
-function Mtau(G::FiniteCoxeterGroup,i::Int64)
-	# Returns Mτ(q) = q^(|Φ(G)+|-|Φ(L)+|) |L(Fq)|/ρ(1) 
-	# where τ = [L,ρ] is the ith GType
-	type_data = group_type_data(G)
-	L_pos_root_size = BigInt(type_data[i,:][2])
-	L_size = Pol{Rational{BigInt}}(type_data[i,:][3])
-	rho_deg = Pol{Rational{BigInt}}(type_data[i,:][4])
-	return Pol{Rational{BigInt}}(Pol(:q)^(BigInt(length(roots(G))/2)-L_pos_root_size)*Pol{Rational{BigInt}}(L_size//rho_deg))
-end
-
-function Stau(G::FiniteCoxeterGroup,n::Int64,i::Int64)
-	# Returns Sτ(q) = |Z(Fq)| * χᵨ(1)^n * |[L]| * (|W|/|W(L)|)^(n-1) * ν(L)
-	# where τ = [L,ρ] is the ith GType and n is the number of punctures
-	type_data = group_type_data(G)
-	Z_size = Pol{Rational{BigInt}}(orderpol(torus(rank(G)-semisimplerank(G))))
-	chi_rho_deg = BigInt(type_data[i,:][5])
-	G_weyl_size = BigInt(length(G))
-	L_weyl_size = BigInt(type_data[i,:][6])
-	orbit_size = BigInt(type_data[i,:][7])
-	nu_L = BigInt(type_data[i,:][8])
-	return Pol{Rational{BigInt}}(Z_size * chi_rho_deg^n * orbit_size * (BigInt(G_weyl_size//L_weyl_size))^(n-1) * BigInt(nu_L))
-end
-
-function qdtau(G::FiniteCoxeterGroup,i::Int64)
-	# Returns q^(d(τ)) where τ = [L,ρ] is the ith GType
-	type_data = group_type_data(G)
-	return Pol{BigInt}(Pol(:q)^(type_data[i,:][2]))
-end
-
-function Htau(G::FiniteCoxeterGroup,n::Int64,i::Int64)
-	# Returns Hτ(q) = q^(n|Φ(G)+| + dim(Z)) * (|G(Fq)|/|L(Fq)|) * |N| * Q_L^T(N)^n * |[L]| * (|W|/|W(L)|)^(n-1) * µ(L,G)
-	# where τ = [L,ρ] is the ith GType and n is the number of punctures
-	type_data = group_type_data(G)
-	G_weyl_size = BigInt(length(G))
-	G_pos_root_size = BigInt(length(G)/2)
-	Z_dim = BigInt(rank(G)-semisimplerank(G))
-	L_size = Pol{Rational{BigInt}}(orderpol(type_data[i,:][1].levi))
-	N_size = Pol{Rational{BigInt}}(type_data[i,:][1].size)
-	L_green = Pol{Rational{BigInt}}(type_data[i,:][1].green)
-	orbit_size = BigInt(type_data[i,:][5])
-	L_weyl_size = BigInt(length(type_data[i,:][1].levi))
-	mu_L = BigInt(type_data[i,:][6])
-	return Pol(:q)^(BigInt(n*G_pos_root_size + Z_dim)) * (orderpol(G)//L_size) * N_size * L_green^n * BigInt(orbit_size) * BigInt((BigInt(G_weyl_size)/BigInt(L_weyl_size))^(n-1)) * BigInt(mu_L)
-end
-
 ### "Fast" = no group_type_data(G) or algebra_type_data(G) calls
 # Not for users
 function fast_Mtau(G::FiniteCoxeterGroup,i::Int64,type_data::Any)
@@ -76,7 +30,7 @@ function fast_Htau(G::FiniteCoxeterGroup,n::Int64,i::Int64,type_data::Any)
 	# Returns Hτ(q) = q^(n|Φ(G)+| + dim(Z)) * (|G(Fq)|/|L(Fq)|) * |N| * Q_L^T(N)^n * |[L]| * (|W|/|W(L)|)^(n-1) * µ(L,G)
 	# where τ = [L,ρ] is the ith GType and n is the number of punctures
 	G_weyl_size = BigInt(length(G))
-	G_pos_root_size = BigInt(length(G)/2)
+	G_pos_root_size = BigInt(length(roots(G))/2)
 	Z_dim = BigInt(rank(G)-semisimplerank(G))
 	L_size = Pol{Rational{BigInt}}(orderpol(type_data[i,:][1].levi))
 	N_size = Pol{Rational{BigInt}}(type_data[i,:][1].size)
@@ -84,7 +38,7 @@ function fast_Htau(G::FiniteCoxeterGroup,n::Int64,i::Int64,type_data::Any)
 	orbit_size = BigInt(type_data[i,:][5])
 	L_weyl_size = BigInt(length(type_data[i,:][1].levi))
 	mu_L = BigInt(type_data[i,:][6])
-	return Pol(:q)^(BigInt(n*G_pos_root_size + Z_dim)) * (orderpol(G)//L_size) * N_size * L_green^n * BigInt(orbit_size) * BigInt((BigInt(G_weyl_size)/BigInt(L_weyl_size))^(n-1)) * BigInt(mu_L)
+	return Pol(:q)^(BigInt(n*G_pos_root_size + Z_dim)) * (orderpol(G)//L_size) * N_size * (L_green)^n * BigInt(orbit_size) * BigInt((BigInt(G_weyl_size)/BigInt(L_weyl_size))^(n-1)) * BigInt(mu_L)
 end
 
 ### E-polynomials for users
@@ -136,4 +90,76 @@ function fast_EY(G::FiniteCoxeterGroup,g::Int64,n::Int64,type_data::Any)
 		type_sum += fast_qdtau(G,i,type_data)^(g)*fast_Htau(G,n,i,type_data)
 	end
 	return Pol{BigInt}((Z_size//G_size) * (g_size^(g)//g_size) * type_sum)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# I don't think these are called anywhere...
+function Mtau(G::FiniteCoxeterGroup,i::Int64)
+	# Returns Mτ(q) = q^(|Φ(G)+|-|Φ(L)+|) |L(Fq)|/ρ(1) 
+	# where τ = [L,ρ] is the ith GType
+	type_data = group_type_data(G)
+	L_pos_root_size = BigInt(type_data[i,:][2])
+	L_size = Pol{Rational{BigInt}}(type_data[i,:][3])
+	rho_deg = Pol{Rational{BigInt}}(type_data[i,:][4])
+	return Pol{Rational{BigInt}}(Pol(:q)^(BigInt(length(roots(G))/2)-L_pos_root_size)*Pol{Rational{BigInt}}(L_size//rho_deg))
+end
+
+function Stau(G::FiniteCoxeterGroup,n::Int64,i::Int64)
+	# Returns Sτ(q) = |Z(Fq)| * χᵨ(1)^n * |[L]| * (|W|/|W(L)|)^(n-1) * ν(L)
+	# where τ = [L,ρ] is the ith GType and n is the number of punctures
+	type_data = group_type_data(G)
+	Z_size = Pol{Rational{BigInt}}(orderpol(torus(rank(G)-semisimplerank(G))))
+	chi_rho_deg = BigInt(type_data[i,:][5])
+	G_weyl_size = BigInt(length(G))
+	L_weyl_size = BigInt(type_data[i,:][6])
+	orbit_size = BigInt(type_data[i,:][7])
+	nu_L = BigInt(type_data[i,:][8])
+	return Pol{Rational{BigInt}}(Z_size * chi_rho_deg^n * orbit_size * (BigInt(G_weyl_size//L_weyl_size))^(n-1) * BigInt(nu_L))
+end
+
+function qdtau(G::FiniteCoxeterGroup,i::Int64)
+	# Returns q^(d(τ)) where τ = [L,ρ] is the ith GType
+	type_data = group_type_data(G)
+	return Pol{BigInt}(Pol(:q)^(type_data[i,:][2]))
+end
+
+function Htau(G::FiniteCoxeterGroup,n::Int64,i::Int64)
+	# Returns Hτ(q) = q^(n|Φ(G)+| + dim(Z)) * (|G(Fq)|/|L(Fq)|) * |N| * Q_L^T(N)^n * |[L]| * (|W|/|W(L)|)^(n-1) * µ(L,G)
+	# where τ = [L,ρ] is the ith GType and n is the number of punctures
+	type_data = group_type_data(G)
+	G_weyl_size = BigInt(length(G))
+	G_pos_root_size = BigInt(length(G)/2)
+	Z_dim = BigInt(rank(G)-semisimplerank(G))
+	L_size = Pol{Rational{BigInt}}(orderpol(type_data[i,:][1].levi))
+	N_size = Pol{Rational{BigInt}}(type_data[i,:][1].size)
+	L_green = Pol{Rational{BigInt}}(type_data[i,:][1].green)
+	orbit_size = BigInt(type_data[i,:][5])
+	L_weyl_size = BigInt(length(type_data[i,:][1].levi))
+	mu_L = BigInt(type_data[i,:][6])
+	return Pol(:q)^(BigInt(n*G_pos_root_size + Z_dim)) * (orderpol(G)//L_size) * N_size * L_green^n * BigInt(orbit_size) * BigInt((BigInt(G_weyl_size)/BigInt(L_weyl_size))^(n-1)) * BigInt(mu_L)
 end

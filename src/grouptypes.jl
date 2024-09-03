@@ -93,20 +93,3 @@ function group_type_data(G::FiniteCoxeterGroup)
 	end
 	return sortslices(d,dims=1,by = x -> x[2],rev=true)
 end
-
-function fast_group_type_data(G::FiniteCoxeterGroup,type_data::Any)
-	d = Array{Any}(nothing,0,6)
-	for type in type_data
-		type_row = Array{Any}(nothing,1,0)
-		type_row = hcat(type_row,[type])									# Type
-		type_row = hcat(type_row,[Int64(length(roots(type.endoscopy))/2)])	# |Phi(L)+|
-		type_row = hcat(type_row,[orderpol(type.endoscopy)])				# |L(Fq)|
-		type_row = hcat(type_row,[type.degree])								# rho(1)
-		type_row = hcat(type_row,[Int64(type.degree(1))])					# phi(1)
-		type_row = hcat(type_row,[length(type.endoscopy)])					# |W(L)|
-		type_row = hcat(type_row,[type.orbit_size])							# |[L]|
-		type_row = hcat(type_row,[type.nu])									# nu(L)
-		d = vcat(d,type_row)
-	end
-	return sortslices(d,dims=1,by = x -> x[2],rev=true)
-end

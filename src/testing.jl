@@ -139,3 +139,29 @@ function log_nonnegative_Y(G::FiniteCoxeterGroup,genus::Int64,puncture_min::Int6
 	end
 	close(io)
 end
+
+function check_dim_X(G::FiniteCoxeterGroup,genus_min::Int64,genus_max::Int64,puncture_min::Int64,puncture_max::Int64)
+	d=group_type_data(G)
+	for n in puncture_min:puncture_max
+		for g in genus_min:genus_max
+			if dimension_XY(G,g,n) == degree(fast_EX(G,g,n,d))
+				println("Dimension correct when (g,n) is ","(",g,",",n,")")
+			else
+				println("Dimension wrong when (g,n) is ","(",g,",",n,")")
+			end
+		end
+	end
+end
+
+function check_dim_Y(G::FiniteCoxeterGroup,genus_min::Int64,genus_max::Int64,puncture_min::Int64,puncture_max::Int64)
+	d=algebra_type_data(G)
+	for n in puncture_min:puncture_max
+		for g in genus_min:genus_max
+			if dimension_XY(G,g,n) == degree(fast_EY(G,g,n,d))
+				println("Dimension correct when (g,n) is ","(",g,",",n,")")
+			else
+				println("Dimension wrong when (g,n) is ","(",g,",",n,")")
+			end
+		end
+	end
+end

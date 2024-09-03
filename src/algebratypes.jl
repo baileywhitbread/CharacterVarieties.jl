@@ -60,19 +60,3 @@ function algebra_type_data(G::FiniteCoxeterGroup)
 	end
 	return d
 end
-
-
-function fast_algebra_type_data(G::FiniteCoxeterGroup,type_data::Any)
-	d = Array{Any}(nothing,0,6)
-	for type in type_data
-		type_row = Array{Any}(nothing,1,0)
-		type_row = hcat(type_row,[type]) # type_row[1] = type
-		type_row = hcat(type_row,[degree(orderpol(type.levi))-degree(type.size)]) # type_row[2] = d(tau)
-		type_row = hcat(type_row,[Pol{Rational{Int64}}(Pol{Rational{Int64}}((type.size))*(orderpol(G)//orderpol(type.levi)))]) # type_row[3] = N size
-		type_row = hcat(type_row,[type.green]) # type_row[4] = green
-		type_row = hcat(type_row,[length(myorbit(type.levi))]) # type_row[5] = |[L]|
-		type_row = hcat(type_row,[mobius(type.levi,type.levi.parent,levis(G))])	# type_row[6] = µ(L,G)
-		d = vcat(d,type_row)
-	end
-	return d
-end

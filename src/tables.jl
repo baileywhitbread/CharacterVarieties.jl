@@ -31,8 +31,8 @@ function group_type_table(G::FiniteCoxeterGroup;summands=false,n=1::Int64)
 		Mtau_column = Array{Any}(nothing,num_of_types,1)
 		Stau_column = Array{Any}(nothing,num_of_types,1)
 		for i in 1:num_of_types
-			Mtau_column[i] = Pol{BigInt}(fast_Mtau(G,i,d))
-			Stau_column[i] = Pol{BigInt}(fast_Stau(G,n,i,d))
+			Mtau_column[i] = Pol{Rational{BigInt}}(fast_Mtau(G,i,d))
+			Stau_column[i] = Pol{Rational{BigInt}}(fast_Stau(G,n,i,d))
 		end
 		d = hcat(d,Mtau_column)
 		d = hcat(d,Stau_column)
@@ -98,7 +98,7 @@ function algebra_type_table(G::FiniteCoxeterGroup;summands=false,g=1::Int64,n=1:
 		Htau_column = Array{Any}(nothing,num_of_types,1)
 		for i in 1:num_of_types
 			qdtau_column[i] = Pol{BigInt}(fast_qdtau(G,i,d))
-			Htau_column[i] = Pol{BigInt}(fast_Htau(G,n,i,d))
+			Htau_column[i] = Pol{Rational{BigInt}}(fast_Htau(G,n,i,d))
 		end
 		d = hcat(d,qdtau_column)
 		d = hcat(d,Htau_column)

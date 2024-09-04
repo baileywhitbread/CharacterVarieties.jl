@@ -20,7 +20,6 @@ export group_types, algebra_types
 export EX, EY
 export ESp4
 
-## These are for me
 export plorbit_reps
 export plorbits
 export plevis
@@ -33,15 +32,15 @@ export lorbit_reps
 export lorbits
 export levis
 
-
-
-
-
 ## These are for testing
 export palindrome_X, euler_X, nonnegative_Y, nonnegative_X
 export log_nonnegative_Y
 export check_dim_X, check_dim_Y
+
+## Eventually stop exporting these
 export dimension_XY
+export group_type_data
+export algebra_type_data
 
 
 

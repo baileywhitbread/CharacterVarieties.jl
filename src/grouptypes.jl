@@ -13,9 +13,9 @@ struct GType
 	
 	endoscopy::FiniteCoxeterGroup
 	character::String
-	degree::Pol{Rational{Int64}}
-	orbit_size::Union{Int64,String}
-	nu::Union{Int64,String}
+	degree::Pol{Rational{Number}}
+	orbit_size::Union{Number,String}
+	nu::Union{Number,String}
 
 	
 end # End of struct GType
@@ -46,7 +46,7 @@ function group_types(G::FiniteCoxeterGroup)
 		plevi_nu = nu(plevi,G_dual_iplevis,G_dual_plevis)
 		for i in 1:length(plevi_uc)
 			# Check if unipotent character is principal
-			if Int(plevi_uc_degs[i](1))!=0
+			if BigInt(plevi_uc_degs[i](1))!=0
 				append!(types,[GType(plevi,plevi_uc_names[i],plevi_uc_degs[i],plevi_orbit_size,plevi_nu)])
 			end
 		end
@@ -68,7 +68,7 @@ function group_types_no_data(G::FiniteCoxeterGroup)
 		plevi_uc_degs = degrees(plevi_uc)
 		for i in 1:length(plevi_uc)
 			# Check if unipotent character is principal
-			if Int(plevi_uc_degs[i](1))!=0
+			if BigInt(plevi_uc_degs[i](1))!=0
 				append!(types,[GType(plevi,plevi_uc_names[i],plevi_uc_degs[i],"???","???")])
 			end
 		end
@@ -82,10 +82,10 @@ function group_type_data(G::FiniteCoxeterGroup)
 	for type in group_types(G)
 		type_row = Array{Any}(nothing,1,0)
 		type_row = hcat(type_row,[type])									# Type
-		type_row = hcat(type_row,[Int64(length(roots(type.endoscopy))/2)])	# |Phi(L)+|
+		type_row = hcat(type_row,[BigInt(length(roots(type.endoscopy))/2)])	# |Phi(L)+|
 		type_row = hcat(type_row,[orderpol(type.endoscopy)])				# |L(Fq)|
 		type_row = hcat(type_row,[type.degree])								# rho(1)
-		type_row = hcat(type_row,[Int64(type.degree(1))])					# phi(1)
+		type_row = hcat(type_row,[BigInt(type.degree(1))])					# phi(1)
 		type_row = hcat(type_row,[length(type.endoscopy)])					# |W(L)|
 		type_row = hcat(type_row,[type.orbit_size])							# |[L]|
 		type_row = hcat(type_row,[type.nu])									# nu(L)

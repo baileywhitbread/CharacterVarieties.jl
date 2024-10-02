@@ -1,5 +1,5 @@
 ## Display human-readable tables
-function group_type_table(G::FiniteCoxeterGroup;summands=false,n=1::Int64)
+function group_type_table(G::FiniteCoxeterGroup;summands=false,n=1::BigInt)
 	if summands == false
 		d = group_type_data(G)
 		num_of_types = size(d)[1]
@@ -68,7 +68,7 @@ end
 
 
 
-function algebra_type_table(G::FiniteCoxeterGroup;summands=false,g=1::Int64,n=1::Int64)
+function algebra_type_table(G::FiniteCoxeterGroup;summands=false,g=1::BigInt,n=1::BigInt)
 	if summands == false
 		d = algebra_type_data(G)
 		num_of_types = size(d)[1]

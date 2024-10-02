@@ -1,5 +1,5 @@
 ## Testing E-polynomials
-function palindrome_X(G::FiniteCoxeterGroup,genus::BigInt,puncture_min::BigInt,puncture_max::BigInt)
+function palindrome_X(G::FiniteCoxeterGroup,genus,puncture_min,puncture_max)
 	# Checks palindromicity of X with g=genus and n=puncture_min,...,puncture_max
 	d=group_type_data(G)
 	for n in puncture_min:puncture_max
@@ -18,7 +18,7 @@ end
 
 
 
-function euler_X(G::FiniteCoxeterGroup,genus::BigInt,puncture_min::BigInt,puncture_max::BigInt)
+function euler_X(G::FiniteCoxeterGroup,genus,puncture_min,puncture_max)
 	# Checks Euler characteristic of X with g=genus and n=puncture_min,...,puncture_max
 	d=group_type_data(G)
 	for n in puncture_min:puncture_max
@@ -35,7 +35,7 @@ function euler_X(G::FiniteCoxeterGroup,genus::BigInt,puncture_min::BigInt,punctu
 	end
 end
 
-function nonnegative_Y(G::FiniteCoxeterGroup,genus::BigInt,puncture_min::BigInt,puncture_max::BigInt)
+function nonnegative_Y(G::FiniteCoxeterGroup,genus,puncture_min,puncture_max)
 	# Checks negativity of coefficients of E(Y;q) with g=genus and n=puncture_min,...,puncture_max
 	d=algebra_type_data(G)
 	for n in puncture_min:puncture_max
@@ -55,7 +55,7 @@ end
 
 
 
-function nonnegative_X(G::FiniteCoxeterGroup,genus::BigInt,puncture_min::BigInt,puncture_max::BigInt)
+function nonnegative_X(G::FiniteCoxeterGroup,genus,puncture_min,puncture_max)
 	# Checks negativity of coefficients of E(X;q) with g=genus and n=puncture_min,...,puncture_max
 	d=group_type_data(G)
 	for n in puncture_min:puncture_max
@@ -74,7 +74,7 @@ end
 
 
 
-function log_nonnegative_Y(G::FiniteCoxeterGroup,genus::BigInt,puncture_min::BigInt,puncture_max::BigInt)
+function log_nonnegative_Y(G::FiniteCoxeterGroup,genus,puncture_min,puncture_max)
 	# Checks negativity of coefficients of E(Y;q) with g=genus and n=puncture_min,...,puncture_max
 	log_name = "EY_nonnegative_coeff_"*xrepr(rio(),G)*"_g="*string(genus)*"_n="*string(puncture_min)*"..."*string(puncture_max)*"_"*randstring(12)*".txt"
 	io = open(log_name, "w+")
@@ -95,7 +95,7 @@ function log_nonnegative_Y(G::FiniteCoxeterGroup,genus::BigInt,puncture_min::Big
 	close(io)
 end
 
-function check_dim_X(G::FiniteCoxeterGroup,genus_min::BigInt,genus_max::BigInt,puncture_min::BigInt,puncture_max::BigInt)
+function check_dim_X(G::FiniteCoxeterGroup,genus_min,genus_max,puncture_min,puncture_max)
 	d=group_type_data(G)
 	for n in puncture_min:puncture_max
 		for g in genus_min:genus_max
@@ -108,7 +108,7 @@ function check_dim_X(G::FiniteCoxeterGroup,genus_min::BigInt,genus_max::BigInt,p
 	end
 end
 
-function check_dim_Y(G::FiniteCoxeterGroup,genus_min::BigInt,genus_max::BigInt,puncture_min::BigInt,puncture_max::BigInt)
+function check_dim_Y(G::FiniteCoxeterGroup,genus_min,genus_max,puncture_min,puncture_max)
 	d=algebra_type_data(G)
 	for n in puncture_min:puncture_max
 		for g in genus_min:genus_max

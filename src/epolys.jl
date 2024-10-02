@@ -1,6 +1,6 @@
 ### "Fast" = no group_type_data(G) or algebra_type_data(G) calls
 # Not for users
-function fast_Mtau(G::FiniteCoxeterGroup,i::BigInt,type_data::Any)
+function fast_Mtau(G::FiniteCoxeterGroup,i::Union{BigInt,Integer},type_data::Any)
 	# Returns Mτ(q) = q^(|Φ(G)+|-|Φ(L)+|) |L(Fq)|/ρ(1) 
 	# where τ = [L,ρ] is the ith GType
 	L_pos_root_size = BigInt(type_data[i,:][2])
@@ -9,7 +9,7 @@ function fast_Mtau(G::FiniteCoxeterGroup,i::BigInt,type_data::Any)
 	return Pol{Rational{BigInt}}(Pol(:q)^(BigInt(length(roots(G))/2)-L_pos_root_size)*Pol{Rational{BigInt}}(L_size//rho_deg))
 end
 
-function fast_Stau(G::FiniteCoxeterGroup,n::BigInt,i::BigInt,type_data::Any)
+function fast_Stau(G::FiniteCoxeterGroup,n::Union{BigInt,Integer},i::Union{BigInt,Integer},type_data::Any)
 	# Returns Sτ(q) = |Z(Fq)| * χᵨ(1)^n * |[L]| * (|W|/|W(L)|)^(n-1) * ν(L)
 	# where τ = [L,ρ] is the ith GType and n is the number of punctures
 	Z_size = Pol{Rational{BigInt}}(orderpol(torus(rank(G)-semisimplerank(G))))
@@ -21,12 +21,12 @@ function fast_Stau(G::FiniteCoxeterGroup,n::BigInt,i::BigInt,type_data::Any)
 	return Pol{Rational{BigInt}}(Z_size * chi_rho_deg^n * orbit_size * (BigInt(G_weyl_size//L_weyl_size))^(n-1) * BigInt(nu_L))
 end
 
-function fast_qdtau(G::FiniteCoxeterGroup,i::BigInt,type_data::Any)
+function fast_qdtau(G::FiniteCoxeterGroup,i::Union{BigInt,Integer},type_data::Any)
 	# Returns q^(d(τ)) where τ = [L,ρ] is the ith GType
 	return Pol{BigInt}(Pol(:q)^(type_data[i,:][2]))
 end
 
-function fast_Htau(G::FiniteCoxeterGroup,n::BigInt,i::BigInt,type_data::Any)
+function fast_Htau(G::FiniteCoxeterGroup,n::Union{BigInt,Integer},i::Union{BigInt,Integer},type_data::Any)
 	# Returns Hτ(q) = q^(n|Φ(G)+| + dim(Z)) * (|G(Fq)|/|L(Fq)|) * |N| * Q_L^T(N)^n * |[L]| * (|W|/|W(L)|)^(n-1) * µ(L,G)
 	# where τ = [L,ρ] is the ith GType and n is the number of punctures
 	G_weyl_size = BigInt(length(G))
@@ -42,7 +42,7 @@ function fast_Htau(G::FiniteCoxeterGroup,n::BigInt,i::BigInt,type_data::Any)
 end
 
 ### E-polynomials for users
-function EX(G::FiniteCoxeterGroup,g::BigInt,n::BigInt)
+function EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer})
 	# Returns the E-polynomial E(X;q) associated to the group G and a genus g surface with n punctures
 	type_data = group_type_data(G)
 	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
@@ -54,7 +54,7 @@ function EX(G::FiniteCoxeterGroup,g::BigInt,n::BigInt)
 	return Pol{BigInt}(((Z_size//T_size^n))*type_sum)
 end
 
-function EY(G::FiniteCoxeterGroup,g::BigInt,n::BigInt)
+function EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer})
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
 	type_data = algebra_type_data(G)
 	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
@@ -69,7 +69,7 @@ function EY(G::FiniteCoxeterGroup,g::BigInt,n::BigInt)
 end
 
 ### Used only in testing.jl for coefficient/Euler characteristic checks
-function fast_EX(G::FiniteCoxeterGroup,g::BigInt,n::BigInt,type_data::Any)
+function fast_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer},type_data::Any)
 	# Returns the E-polynomial E(X;q) associated to the group G and a genus g surface with n punctures
 	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
 	T_size = Pol{BigInt}(orderpol(torus(rank(G))))
@@ -80,7 +80,7 @@ function fast_EX(G::FiniteCoxeterGroup,g::BigInt,n::BigInt,type_data::Any)
 	return Pol{BigInt}((Z_size//T_size^n)*type_sum)
 end
 
-function fast_EY(G::FiniteCoxeterGroup,g::BigInt,n::BigInt,type_data::Any)
+function fast_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer},type_data::Any)
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
 	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
 	G_size = Pol{BigInt}(orderpol(G))

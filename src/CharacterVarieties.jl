@@ -1,62 +1,38 @@
 module CharacterVarieties
 
 using Reexport
-@reexport using Chevie
-@reexport using Logging
-@reexport using Random
-
-
-
-
-
+@reexport using Chevie, Logging, Random
 
 # Export structs
 export GType, gType
 
-# Export functions
-## These are for users
+# Export user functions
 export group_type_table, algebra_type_table
 export group_types, algebra_types
-export EX, EY
-export ESp4
+export EX, EY, ESp4
+export plorbit_reps, plorbits, plevis
+export iplorbit_reps, iplorbits, iplevis
+export lorbit_reps, lorbits, levis
 
-export plorbit_reps
-export plorbits
-export plevis
-
-export iplorbit_reps
-export iplorbits
-export iplevis
-
-export lorbit_reps
-export lorbits
-export levis
-
-## These are for testing
+# Export functions for testing
 export palindrome_X, euler_X, nonnegative_Y, nonnegative_X
 export log_nonnegative_Y
 export check_dim_X, check_dim_Y
 
-## Eventually stop exporting these
+# These may eventually stop being exported
 export dimension_XY
 export group_type_data
 export algebra_type_data
 
-
-
+# Include additional files
 include("checks.jl")
 include("helpers.jl")
 include("plevis.jl")
-
 include("grouptypes.jl")
 include("algebratypes.jl")
-
 include("epolys.jl")
 include("cambo.jl")
 include("tables.jl")
-
 include("testing.jl")
-
-
 
 end # End of module CharacterVarieties

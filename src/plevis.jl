@@ -1,63 +1,62 @@
-## Calculating Levi orbit representatives
-function plorbit_reps(G::FiniteCoxeterGroup)
-	# Returns pseudo-Levi orbit representatives as a vector of FiniteCoxeterSubGroup's
-	return reflection_subgroup.(Ref(G),sscentralizer_reps(G))
+# Types of Levi subgroups
+@enum LeviType begin
+    Standard
+    Pseudo
+    IsolatedPseudo
 end
 
-function iplorbit_reps(G::FiniteCoxeterGroup)
-	# Returns isolated pseudo-Levi orbit representatives as a vector of FiniteCoxeterSubGroup's
-	return filter(isisolated,plorbit_reps(G))
+"""
+    orbit_representatives(G::FiniteCoxeterGroup, levi_type::LeviType=Pseudo)
+
+Returns orbit representatives for the specified Levi type.
+"""
+function orbit_representatives(G::FiniteCoxeterGroup, levi_type::LeviType=Pseudo)
+    all_reps = reflection_subgroup.(Ref(G), sscentralizer_reps(G))
+    
+    return filter(all_reps) do rep
+        if levi_type == Standard
+            return islevi(rep)
+        elseif levi_type == IsolatedPseudo
+            return isisolated(rep)
+        else
+            return true
+        end
+    end
 end
 
-function lorbit_reps(G::FiniteCoxeterGroup)
-	# Returns Levi orbit representatives as a vector of FiniteCoxeterSubGroup's
-	return filter(islevi,plorbit_reps(G))
+"""
+    calculate_orbits(G::FiniteCoxeterGroup, levi_type::LeviType=Pseudo)
+
+Calculates orbits for the specified Levi type.
+"""
+function calculate_orbits(G::FiniteCoxeterGroup, levi_type::LeviType=Pseudo)
+    reps = orbit_representatives(G, levi_type)
+    raw_orbits = orbits(G, reps)
+    
+    return map(raw_orbits) do orbit
+        unique_inclusions = collect(Set(sort.(inclusion.(orbit))))
+        return reflection_subgroup.(Ref(G), unique_inclusions)
+    end
 end
 
+"""
+    get_all_levis(G::FiniteCoxeterGroup, levi_type::LeviType=Pseudo)
 
-
-
-
-## Calculating Levi orbits
-function plorbits(G::FiniteCoxeterGroup)
-	# Returns pseudo-Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
-	# orbits(G,plorbit_reps(G)) is obvious solution but creates duplicates for some reason
-	# Kill dupes by converting vector to set and back to vector
-	map(orbits(G,plorbit_reps(G))) do x
-		return reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(x)))))
-	end
+Returns all Levi subgroups of the specified type.
+"""
+function get_all_levis(G::FiniteCoxeterGroup, levi_type::LeviType=Pseudo)
+    return reduce(vcat, calculate_orbits(G, levi_type))
 end
 
-function iplorbits(G::FiniteCoxeterGroup)
-	# Returns isolated pseudo-Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
-	map(orbits(G,iplorbit_reps(G))) do x
-		return reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(x)))))
-	end
-end
+# Functions to maintain compatibility
+plorbit_reps(G::FiniteCoxeterGroup) = orbit_representatives(G, Pseudo)
+iplorbit_reps(G::FiniteCoxeterGroup) = orbit_representatives(G, IsolatedPseudo)
+lorbit_reps(G::FiniteCoxeterGroup) = orbit_representatives(G, Standard)
 
-function lorbits(G::FiniteCoxeterGroup)
-	# Returns Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
-	map(orbits(G,lorbit_reps(G))) do x
-		return reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(x)))))
-	end
-end
+plorbits(G::FiniteCoxeterGroup) = calculate_orbits(G, Pseudo)
+iplorbits(G::FiniteCoxeterGroup) = calculate_orbits(G, IsolatedPseudo)
+lorbits(G::FiniteCoxeterGroup) = calculate_orbits(G, Standard)
 
-
-
-
-
-## Calculating all Levis
-function plevis(G::FiniteCoxeterGroup)
-	# Returns all pseudo-Levis as a vector of FiniteCoxeterSubGroup's
-	return reduce(vcat,plorbits(G))
-end
-
-function iplevis(G::FiniteCoxeterGroup)
-	# Returns all isolated pseudo-Levis as a vector of FiniteCoxeterSubGroup's
-	return reduce(vcat,iplorbits(G))
-end	
-
-function levis(G::FiniteCoxeterGroup)
-	# Returns all Levis as a vector of FiniteCoxeterSubGroup's
-	return reduce(vcat,lorbits(G))
-end	
+plevis(G::FiniteCoxeterGroup) = get_all_levis(G, Pseudo)
+iplevis(G::FiniteCoxeterGroup) = get_all_levis(G, IsolatedPseudo)
+levis(G::FiniteCoxeterGroup) = get_all_levis(G, Standard)

@@ -9,8 +9,8 @@ struct gType
 	
 	levi::FiniteCoxeterGroup
 	orbit::String
-	size::Pol{Rational{Int64}}
-	green::Pol{Rational{Int64}}
+	size::Pol{Rational{BigInt}}
+	green::Pol{Rational{BigInt}}
 	
 end # End of struct GType
 
@@ -52,7 +52,7 @@ function algebra_type_data(G::FiniteCoxeterGroup)
 		type_row = Array{Any}(nothing,1,0)
 		type_row = hcat(type_row,[type]) # type_row[1] = type
 		type_row = hcat(type_row,[degree(orderpol(type.levi))-degree(type.size)]) # type_row[2] = d(tau)
-		type_row = hcat(type_row,[Pol{Rational{Int64}}(Pol{Rational{Int64}}((type.size)))]) # type_row[3] = N size
+		type_row = hcat(type_row,[Pol{Rational{Int64}}(Pol{Rational{BigInt}}((type.size)))]) # type_row[3] = N size
 		type_row = hcat(type_row,[type.green]) # type_row[4] = green
 		type_row = hcat(type_row,[length(myorbit(type.levi))]) # type_row[5] = |[L]|
 		type_row = hcat(type_row,[mobius(type.levi,type.levi.parent,levis(G))])	# type_row[6] = µ(L,G)

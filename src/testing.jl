@@ -96,6 +96,7 @@ function log_nonnegative_Y(G::FiniteCoxeterGroup,g,puncture_min,puncture_max)
 end
 
 function check_dim_X(G::FiniteCoxeterGroup,genus_min,genus_max,puncture_min,puncture_max)
+	d=group_type_data(G)
 	for n in puncture_min:puncture_max
 		for g in genus_min:genus_max
 			if dimension_XY(G,g,n) == degree(fast_EX(G,g,n,d))

@@ -9,8 +9,8 @@ struct gType
 	
 	levi::FiniteCoxeterGroup
 	orbit::String
-	size::Pol{Rational{BigInt}}
-	green::Pol{Rational{BigInt}}
+	size::Pol{Rational{Number}}
+	green::Pol{Rational{Number}}
 	
 end # End of struct GType
 

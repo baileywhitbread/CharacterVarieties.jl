@@ -13,9 +13,9 @@ struct GType
 	
 	endoscopy::FiniteCoxeterGroup
 	character::String
-	degree::Pol{Rational{BigInt}}
-	orbit_size::Union{BigInt,String}
-	nu::Union{BigInt,String}
+	degree::Pol{Rational{Number}}
+	orbit_size::Union{Number,String}
+	nu::Union{Number,String}
 
 	
 end # End of struct GType

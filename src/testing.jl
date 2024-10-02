@@ -40,7 +40,7 @@ function nonnegative_Y(G::FiniteCoxeterGroup,g,puncture_min,puncture_max)
 	d=algebra_type_data(G)
 	for n in puncture_min:puncture_max
 		try 
-			print("Checking coefficients of E(X;q) when (G,g,n)=("*xrepr(rio(),G)*",$g,$n): ")
+			print("Checking coefficients of E(Y;q) when (G,g,n)=("*xrepr(rio(),G)*",$g,$n): ")
 			if isnonnegative(fast_EY(G,g,n,d))
 				println("All non-negative")
 			else

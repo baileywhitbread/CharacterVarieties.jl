@@ -46,7 +46,7 @@ function group_types(G::FiniteCoxeterGroup)
 		plevi_nu = nu(plevi,G_dual_iplevis,G_dual_plevis)
 		for i in 1:length(plevi_uc)
 			# Check if unipotent character is principal
-			if Int(plevi_uc_degs[i](1))!=0
+			if BigInt(plevi_uc_degs[i](1))!=0
 				append!(types,[GType(plevi,plevi_uc_names[i],plevi_uc_degs[i],plevi_orbit_size,plevi_nu)])
 			end
 		end
@@ -68,7 +68,7 @@ function group_types_no_data(G::FiniteCoxeterGroup)
 		plevi_uc_degs = degrees(plevi_uc)
 		for i in 1:length(plevi_uc)
 			# Check if unipotent character is principal
-			if Int(plevi_uc_degs[i](1))!=0
+			if BigInt(plevi_uc_degs[i](1))!=0
 				append!(types,[GType(plevi,plevi_uc_names[i],plevi_uc_degs[i],"???","???")])
 			end
 		end

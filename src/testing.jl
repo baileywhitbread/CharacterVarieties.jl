@@ -72,7 +72,26 @@ function nonnegative_X(G::FiniteCoxeterGroup,g,puncture_min,puncture_max)
 	end
 end
 
-
+function log_nonnegative_X(G::FiniteCoxeterGroup,g,puncture_min,puncture_max)
+	# Checks negativity of coefficients of E(X;q) with g=genus and n=puncture_min,...,puncture_max
+	log_name = "EX_nonnegative_coeff_"*xrepr(rio(),G)*"_g="*string(g)*"_n="*string(puncture_min)*"..."*string(puncture_max)*"_"*randstring(12)*".txt"
+	io = open(log_name, "w+")
+	logger = SimpleLogger(io)
+	global_logger(logger)
+	d=group_type_data(G)
+	for n in puncture_min:puncture_max
+		try 
+			if isnonnegative(fast_EX(G,g,n,d))
+				@info("Coefficients of EX all non-negative when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)")
+			else
+				@info("Negative coefficients of EX found when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)")
+			end
+		catch err 
+			println("$err")
+		end
+	end
+	close(io)
+end
 
 function log_nonnegative_Y(G::FiniteCoxeterGroup,g,puncture_min,puncture_max)
 	# Checks negativity of coefficients of E(Y;q) with g=genus and n=puncture_min,...,puncture_max
@@ -84,9 +103,9 @@ function log_nonnegative_Y(G::FiniteCoxeterGroup,g,puncture_min,puncture_max)
 	for n in puncture_min:puncture_max
 		try 
 			if isnonnegative(fast_EY(G,g,n,d))
-				@info("Coefficients all non-negative when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)")
+				@info("Coefficients of EY all non-negative when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)")
 			else
-				@info("Negative coefficients found when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)")
+				@info("Negative coefficients of EY found when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)")
 			end
 		catch err 
 			println("$err")

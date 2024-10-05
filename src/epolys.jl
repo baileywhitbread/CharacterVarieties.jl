@@ -29,6 +29,7 @@ end
 function fast_Htau(G::FiniteCoxeterGroup,n::Union{BigInt,Integer},i::Union{BigInt,Integer},type_data::Any)
 	# Returns Hτ(q) = q^(n|Φ(G)+| + dim(Z)) * (|G(Fq)|/|L(Fq)|) * |N| * Q_L^T(N)^n * |[L]| * (|W|/|W(L)|)^(n-1) * µ(L,G)
 	# where τ = [L,ρ] is the ith GType and n is the number of punctures
+	n =  BigInt(n)
 	G_weyl_size = BigInt(length(G))
 	G_pos_root_size = BigInt(length(roots(G))/2)
 	Z_dim = BigInt(rank(G)-semisimplerank(G))
@@ -38,7 +39,7 @@ function fast_Htau(G::FiniteCoxeterGroup,n::Union{BigInt,Integer},i::Union{BigIn
 	orbit_size = BigInt(type_data[i,:][5])
 	L_weyl_size = BigInt(length(type_data[i,:][1].levi))
 	mu_L = BigInt(type_data[i,:][6])
-	return Pol(:q)^(BigInt(n*G_pos_root_size + Z_dim)) * (orderpol(G)//L_size) * N_size * (L_green)^n * BigInt(orbit_size) * BigInt((BigInt(G_weyl_size)/BigInt(L_weyl_size))^(n-1)) * BigInt(mu_L)
+	return Pol(:q)^(BigInt(BigInt(n)*G_pos_root_size + Z_dim)) * (orderpol(G)//L_size) * N_size * (L_green)^BigInt(n) * BigInt(orbit_size) * BigInt((BigInt(G_weyl_size)/BigInt(L_weyl_size))^BigInt(n-1)) * BigInt(mu_L)
 end
 
 ### E-polynomials for users

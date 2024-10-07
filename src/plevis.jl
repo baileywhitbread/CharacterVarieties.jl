@@ -14,10 +14,6 @@ function lorbit_reps(G::FiniteCoxeterGroup)
 	return filter(islevi,plorbit_reps(G))
 end
 
-
-
-
-
 ## Calculating Levi orbits
 function plorbits(G::FiniteCoxeterGroup)
 	# Returns pseudo-Levi orbits as a vector of vectors of FiniteCoxeterSubGroup's
@@ -41,10 +37,6 @@ function lorbits(G::FiniteCoxeterGroup)
 		return reflection_subgroup.(Ref(G),collect(Set(sort.(inclusion.(x)))))
 	end
 end
-
-
-
-
 
 ## Calculating all Levis
 function plevis(G::FiniteCoxeterGroup)

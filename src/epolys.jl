@@ -21,6 +21,9 @@ function fast_Stau(G::FiniteCoxeterGroup,n::Union{BigInt,Integer},i::Union{BigIn
 	return Pol{Rational{BigInt}}(Z_size * chi_rho_deg^n * orbit_size * (BigInt(G_weyl_size//L_weyl_size))^(n-1) * BigInt(nu_L))
 end
 
+
+
+
 function fast_qdtau(G::FiniteCoxeterGroup,i::Union{BigInt,Integer},type_data::Any)
 	# Returns q^(d(τ)) where τ = [L,ρ] is the ith GType
 	return Pol{BigInt}(Pol(:q)^(type_data[i,:][2]))

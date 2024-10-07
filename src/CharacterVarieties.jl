@@ -34,6 +34,10 @@ export check_dim_X, check_dim_Y
 export dimension_XY
 export group_type_data
 export algebra_type_data
+export fast_Stau
+export fast_Mtau
+export fast_qdtau
+export fast_Htau
 
 include("checks.jl")
 include("helpers.jl")

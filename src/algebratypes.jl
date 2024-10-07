@@ -19,7 +19,6 @@ Base.show(io::IO, tau::gType) = print(io,
 "[",tau.levi,",",tau.orbit,"]"
 )
 
-
 ## g-type functions
 function algebra_types(G::FiniteCoxeterGroup)
 	# Returns a vector of gTypes, ie. the g-types of G

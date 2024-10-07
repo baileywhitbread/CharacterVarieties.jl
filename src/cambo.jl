@@ -15,9 +15,6 @@ Phi1 = q-1
 Phi2 = q+1
 Phi4 = q^2+1
 
-
-
-
 # E-polynomial of mult. char. var. X when G = Sp4 and n = 1
 function ESp4(g::Union{BigInt,Integer})
     return Phi1^(4g-4)*(

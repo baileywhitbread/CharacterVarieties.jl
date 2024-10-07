@@ -52,6 +52,7 @@ function new_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,I
 		term = Pol{BigInt}(1)
 		term *= Pol(:q)^(BigInt(length(roots(G))/2-length(roots(row[1].endoscopy))/2)) # q^(|Phi(G)+|-|Phi(L)+|)
 		term *= Pol{Rational{BigInt}}(orderpol(row[1].endoscopy)//row[1].degree) # |L(Fq)|/rho(q)
+		term ^= BigInt(2*g-2+n)
 		term *= (Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G)) # |Z(Fq)|
 		term *= BigInt(row[5])^BigInt(n) # dim(rho)^n
 		term *= BigInt(length(G)//row[6])^BigInt(n-1) # (|W|/|W(L)|)^(n-1)
@@ -59,9 +60,15 @@ function new_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,I
 		term *= row[8] # nu(L)
 		sum += term
 	end
-	sum *= (Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G))//((sizeofT)^BigInt(n)) # |Z(Fq)|/|T(Fq)|^n
+	sum *= (Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G))//(BigInt(rank(G))^BigInt(n)) # |Z(Fq)|/|T(Fq)|^n
 	return Pol{BigInt}(sum)
 end
+
+
+
+
+
+
 
 function fast_qdtau(G::FiniteCoxeterGroup,i::Union{BigInt,Integer},type_data::Any)
 	# Returns q^(d(τ)) where τ = [L,ρ] is the ith GType
@@ -89,7 +96,7 @@ function EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integ
 	for i in 1:size(type_data)[1]
 		row = type_data[i,:] # type_data[i,:] is the ith row
 		term = Pol{BigInt}(1)
-		term *= Pol(:q)^(BigInt(g*row[2]))
+		term *= Pol(:q)^(BigInt(g*row[2])) # q^(g*d(tau))
 		term *= Pol(:q)^(BigInt(n*(length(roots(G))/2)+(rank(G)-semisimplerank(G))))
 		term *= Frac{Pol{BigInt}}(orderpol(G)//orderpol(row[1].levi))
 		term *= Pol{Rational{BigInt}}(row[1].size)

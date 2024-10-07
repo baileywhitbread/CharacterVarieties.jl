@@ -74,53 +74,6 @@ end
 function EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer})
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
 	type_data = algebra_type_data(G)
-	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
-	G_size = Pol{BigInt}(orderpol(G))
-	g_size = Pol{BigInt}(Pol(:q)^(BigInt(degree(G_size))))
-
-	type_sum = Pol{BigInt}(0)
-	for i in 1:size(type_data)[1]
-		type_sum += fast_qdtau(G,i,type_data)^(g)*fast_Htau(G,n,i,type_data)
-	end
-	return (Z_size//G_size) * (g_size^(g)//g_size) * type_sum
-end
-
-function fast_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer},type_data::Any)
-	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
-	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
-	G_size = Pol{BigInt}(orderpol(G))
-	g_size = Pol{BigInt}(Pol(:q)^(BigInt(degree(G_size))))
-	type_sum = Pol{BigInt}(0)
-	for i in 1:size(type_data)[1]
-		type_sum += fast_qdtau(G,i,type_data)^(g)*fast_Htau(G,n,i,type_data)
-	end
-	return Pol{BigInt}((Z_size//G_size) * (g_size^(g)//g_size) * type_sum)
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# New EY
-
-function new_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer})
-	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
-	type_data = algebra_type_data(G)
 	sum = Pol{BigInt}(0)
 	for i in 1:size(type_data)[1]
 		row = type_data[i,:] # type_data[i,:] is the ith row
@@ -139,6 +92,48 @@ function new_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,I
 	sum *= ((Pol(:q)^(BigInt(g)*BigInt(degree(orderpol(G)))))//(Pol(:q)^(BigInt(1)*BigInt(degree(orderpol(G))))))
 	return Pol{BigInt}(sum)
 end
+
+function fast_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer},data::Any)
+	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
+	type_data = data
+	sum = Pol{BigInt}(0)
+	for i in 1:size(type_data)[1]
+		row = type_data[i,:] # type_data[i,:] is the ith row
+		term = Pol{BigInt}(1)
+		term *= Pol(:q)^(BigInt(g*row[2]))
+		term *= Pol(:q)^(BigInt(n*(length(roots(G))/2)+(rank(G)-semisimplerank(G))))
+		term *= Frac{Pol{BigInt}}(orderpol(G)//orderpol(row[1].levi))
+		term *= Pol{Rational{BigInt}}(row[1].size)
+		term *= (Pol{BigInt}(row[1].green))^BigInt(n)
+		term *= (BigInt(BigInt(length(G))//BigInt(length(row[1].levi))))^BigInt(n-1)
+		term *= BigInt(length(myorbit(row[1].levi)))
+		term *= BigInt(mobius(row[1].levi,row[1].levi.parent,levis(G)))
+		sum += term
+	end
+	sum *= (((Pol(:q)-1)^(rank(G)-semisimplerank(G)))//(orderpol(G)))
+	sum *= ((Pol(:q)^(BigInt(g)*BigInt(degree(orderpol(G)))))//(Pol(:q)^(BigInt(1)*BigInt(degree(orderpol(G))))))
+	return Pol{BigInt}(sum)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

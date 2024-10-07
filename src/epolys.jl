@@ -69,7 +69,22 @@ function EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integ
 	for i in 1:size(type_data)[1]
 		type_sum += fast_qdtau(G,i,type_data)^(g)*fast_Htau(G,n,i,type_data)
 	end
-	return Pol{BigInt}((Z_size//G_size) * (g_size^(g)//g_size) * type_sum)
+	
+	result_frac = (Z_size//G_size) * (g_size^(g)//g_size) * type_sum
+    
+    # Extract numerator and denominator
+    num = numerator(result_frac)
+    den = denominator(result_frac)
+    
+    # Perform polynomial division
+    quotient, remainder = divrem(num, den)
+    
+    # If remainder is non-zero, there's an actual error
+    if !iszero(remainder)
+        error("Expected a polynomial result, but got a genuine rational function")
+    end
+    
+    return quotient
 end
 
 ### Used only in testing.jl for coefficient/Euler characteristic checks

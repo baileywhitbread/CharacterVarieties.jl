@@ -126,7 +126,7 @@ function new_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,I
 		row = type_data[i,:] # type_data[i,:] is the ith row
 		term = Pol{BigInt}(1)
 		term *= Pol(:q)^(BigInt(g*row[2]))
-		term *= Pol(:q)^(BigInt(n*(roots(G)/2)+(rank(G)-semisimplerank(G))))
+		term *= Pol(:q)^(BigInt(n*(length(roots(G))/2)+(rank(G)-semisimplerank(G))))
 		term *= Rational{Pol{BigInt}}(orderpol(G)//orderpol(row[1].levi))
 		term *= Pol{Rational{BigInt}}(row[1].size)
 		term *= (Pol{BigInt}(row[1].green))^BigInt(n)

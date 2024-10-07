@@ -60,7 +60,7 @@ function new_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,I
 		term *= row[8] # nu(L)
 		sum += term
 	end
-	sum *= ((Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G))//(BigInt(rank(G))^BigInt(n))) # |Z(Fq)|/|T(Fq)|^n
+	sum *= ((Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G))//(((Pol(:q)-1)^(BigInt(rank(G))))^BigInt(n))) # |Z(Fq)|/|T(Fq)|^n
 	return Pol{BigInt}(sum)
 end
 

@@ -77,8 +77,8 @@ function EY(G::FiniteCoxeterGroup, g::Union{BigInt,Integer}, n::Union{BigInt,Int
     result = Z_size * g_size^g * type_sum
     
     # Divide by G_size and g_size separately
-    result = divexact(result, G_size)
-    result = divexact(result, g_size)
+    result = result//G_size
+    result = result//g_size
     
     # Convert the final result to BigInt coefficients if possible
     return Pol{BigInt}(result)

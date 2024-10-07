@@ -104,9 +104,9 @@ function log_nonnegative_Y(G::FiniteCoxeterGroup,g,puncture_min,puncture_max)
 	for n in puncture_min:puncture_max
 		try 
 			if isnonnegative(fast_EY(G,g,n,d))
-				log_text *= "\nCoefficients of EY all non-negative when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)"
+				log_text *= "\nCoeffs of EY all non-neg when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)"
 			else
-				log_text *= "\nNegative coefficients of EY found when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)"
+				log_text *= "\nNegative coeffs found when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)"
 			end
 		catch err 
 			println("$err")

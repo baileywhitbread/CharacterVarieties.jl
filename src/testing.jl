@@ -100,17 +100,19 @@ function log_nonnegative_Y(G::FiniteCoxeterGroup,g,puncture_min,puncture_max)
 	logger = SimpleLogger(io)
 	global_logger(logger)
 	d=algebra_type_data(G)
+	log_text = ""
 	for n in puncture_min:puncture_max
 		try 
 			if isnonnegative(fast_EY(G,g,n,d))
-				@info("Coefficients of EY all non-negative when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)")
+				log_text *= "\nCoefficients of EY all non-negative when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)"
 			else
-				@info("Negative coefficients of EY found when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)")
+				log_text *= "\nNegative coefficients of EY found when (G,g,n)=("*xrepr(rio(),G)*",$g,$n)"
 			end
 		catch err 
 			println("$err")
 		end
 	end
+	@info(log_text)
 	close(io)
 end
 

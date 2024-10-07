@@ -1,5 +1,4 @@
 ### "Fast" = no group_type_data(G) or algebra_type_data(G) calls
-# Not for users
 function fast_Mtau(G::FiniteCoxeterGroup,i::Union{BigInt,Integer},type_data::Any)
 	# Returns Mτ(q) = q^(|Φ(G)+|-|Φ(L)+|) |L(Fq)|/ρ(1) 
 	# where τ = [L,ρ] is the ith GType
@@ -20,6 +19,33 @@ function fast_Stau(G::FiniteCoxeterGroup,n::Union{BigInt,Integer},i::Union{BigIn
 	nu_L = BigInt(type_data[i,:][8])
 	return Pol{Rational{BigInt}}(Z_size * chi_rho_deg^n * orbit_size * (BigInt(G_weyl_size//L_weyl_size))^(n-1) * BigInt(nu_L))
 end
+
+function EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer})
+	# Returns the E-polynomial E(X;q) associated to the group G and a genus g surface with n punctures
+	type_data = group_type_data(G)
+	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
+	T_size = Pol{BigInt}(orderpol(torus(rank(G))))
+	type_sum = BigInt(0)
+	for i in 1:size(type_data)[1]
+		type_sum += fast_Mtau(G,i,type_data)^(2g-2+n)*fast_Stau(G,n,i,type_data)
+	end
+	return Pol{BigInt}(((Z_size//T_size^n))*type_sum)
+end
+
+function fast_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer},type_data::Any)
+	# Returns the E-polynomial E(X;q) associated to the group G and a genus g surface with n punctures
+	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
+	T_size = Pol{BigInt}(orderpol(torus(rank(G))))
+	type_sum = BigInt(0)
+	for i in 1:size(type_data)[1]
+		type_sum += fast_Mtau(G,i,type_data)^(2g-2+n)*fast_Stau(G,n,i,type_data)
+	end
+	return Pol{BigInt}((Z_size//T_size^n)*type_sum)
+end
+
+
+
+
 
 
 
@@ -42,59 +68,55 @@ function fast_Htau(G::FiniteCoxeterGroup,n::Union{BigInt,Integer},i::Union{BigIn
 	orbit_size = BigInt(type_data[i,:][5])
 	L_weyl_size = BigInt(length(type_data[i,:][1].levi))
 	mu_L = BigInt(type_data[i,:][6])
-	return Pol(:q)^(BigInt(BigInt(n)*G_pos_root_size + Z_dim)) * (orderpol(G)//L_size) * N_size * (L_green)^BigInt(n) * BigInt(orbit_size) * BigInt((BigInt(G_weyl_size)/BigInt(L_weyl_size))^BigInt(n-1)) * BigInt(mu_L)
-end
-
-### E-polynomials for users
-function EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer})
-	# Returns the E-polynomial E(X;q) associated to the group G and a genus g surface with n punctures
-	type_data = group_type_data(G)
-	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
-	T_size = Pol{BigInt}(orderpol(torus(rank(G))))
-	type_sum = BigInt(0)
-	for i in 1:size(type_data)[1]
-		type_sum += fast_Mtau(G,i,type_data)^(2g-2+n)*fast_Stau(G,n,i,type_data)
-	end
-	return Pol{BigInt}(((Z_size//T_size^n))*type_sum)
+	return Pol(:q)^(BigInt(BigInt(n)*G_pos_root_size + Z_dim)) * (orderpol(G)//L_size) * N_size * (L_green)^BigInt(n) * BigInt(orbit_size) * BigInt((BigInt(G_weyl_size)//BigInt(L_weyl_size))^BigInt(n-1)) * BigInt(mu_L)
 end
 
 function EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer})
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
 	type_data = algebra_type_data(G)
-	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
-	G_size = Pol{BigInt}(orderpol(G))
-	g_size = Pol{BigInt}(Pol(:q)^(BigInt(degree(G_size))))
-
-	type_sum = Pol{BigInt}(0)
+	sum = Pol{BigInt}(0)
 	for i in 1:size(type_data)[1]
-		type_sum += fast_qdtau(G,i,type_data)^(g)*fast_Htau(G,n,i,type_data)
+		row = type_data[i,:] # type_data[i,:] is the ith row
+		term = Pol{BigInt}(1)
+		term *= Pol(:q)^(BigInt(g*row[2]))
+		term *= Pol(:q)^(BigInt(n*(length(roots(G))/2)+(rank(G)-semisimplerank(G))))
+		term *= Frac{Pol{BigInt}}(orderpol(G)//orderpol(row[1].levi))
+		term *= Pol{Rational{BigInt}}(row[1].size)
+		term *= (Pol{BigInt}(row[1].green))^BigInt(n)
+		term *= (BigInt(BigInt(length(G))//BigInt(length(row[1].levi))))^BigInt(n-1)
+		term *= BigInt(length(myorbit(row[1].levi)))
+		term *= BigInt(mobius(row[1].levi,row[1].levi.parent,levis(G)))
+		sum += term
 	end
-	return Pol{BigInt}((Z_size//G_size) * (g_size^(g)//g_size) * type_sum)
-end
-
-### Used only in testing.jl for coefficient/Euler characteristic checks
-function fast_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer},type_data::Any)
-	# Returns the E-polynomial E(X;q) associated to the group G and a genus g surface with n punctures
-	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
-	T_size = Pol{BigInt}(orderpol(torus(rank(G))))
-	type_sum = BigInt(0)
-	for i in 1:size(type_data)[1]
-		type_sum += fast_Mtau(G,i,type_data)^(2g-2+n)*fast_Stau(G,n,i,type_data)
-	end
-	return Pol{BigInt}((Z_size//T_size^n)*type_sum)
+	sum *= (((Pol(:q)-1)^(rank(G)-semisimplerank(G)))//(orderpol(G)))
+	sum *= ((Pol(:q)^(BigInt(g)*BigInt(degree(orderpol(G)))))//(Pol(:q)^(BigInt(1)*BigInt(degree(orderpol(G))))))
+	return Pol{BigInt}(sum)
 end
 
 function fast_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer},type_data::Any)
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
-	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
-	G_size = Pol{BigInt}(orderpol(G))
-	g_size = Pol{BigInt}(Pol(:q)^(BigInt(degree(G_size))))
-	type_sum = Pol{BigInt}(0)
+	sum = Pol{BigInt}(0)
 	for i in 1:size(type_data)[1]
-		type_sum += fast_qdtau(G,i,type_data)^(g)*fast_Htau(G,n,i,type_data)
+		row = type_data[i,:] # type_data[i,:] is the ith row
+		term = Pol{BigInt}(1)
+		term *= Pol(:q)^(BigInt(g*row[2]))
+		term *= Pol(:q)^(BigInt(n*(length(roots(G))/2)+(rank(G)-semisimplerank(G))))
+		term *= Frac{Pol{BigInt}}(orderpol(G)//orderpol(row[1].levi))
+		term *= Pol{Rational{BigInt}}(row[1].size)
+		term *= (Pol{BigInt}(row[1].green))^BigInt(n)
+		term *= (BigInt(BigInt(length(G))//BigInt(length(row[1].levi))))^BigInt(n-1)
+		term *= BigInt(length(myorbit(row[1].levi)))
+		term *= BigInt(mobius(row[1].levi,row[1].levi.parent,levis(G)))
+		sum += term
 	end
-	return Pol{BigInt}((Z_size//G_size) * (g_size^(g)//g_size) * type_sum)
+	sum *= (((Pol(:q)-1)^(rank(G)-semisimplerank(G)))//(orderpol(G)))
+	sum *= ((Pol(:q)^(BigInt(g)*BigInt(degree(orderpol(G)))))//(Pol(:q)^(BigInt(1)*BigInt(degree(orderpol(G))))))
+	return Pol{BigInt}(sum)
 end
+
+
+
+
 
 
 

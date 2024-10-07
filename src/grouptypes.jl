@@ -25,9 +25,6 @@ Base.show(io::IO, tau::GType) = print(io,
 "[",tau.endoscopy,",",tau.character,"]"
 )
 
-
-
-
 ## G-type functions
 function group_types(G::FiniteCoxeterGroup)
 	# Returns a vector of GTypes, ie. the G-types of G
@@ -51,27 +48,6 @@ function group_types(G::FiniteCoxeterGroup)
 			end
 		end
 
-	end
-	return types
-end
-
-function group_types_no_data(G::FiniteCoxeterGroup)
-	# This is only intended for quick inspection of GTypes
-	G_dual = rootdatum(simplecoroots(G),simpleroots(G))
-	types = GType[]
-	for plevi in plorbit_reps(G_dual)
-		# I am grabbing pseudo-Levis of G rather than endoscopies of G...
-		# So far this has not caused a problem because I only need data
-		# preserved by Langlands duality, eg. unipotent character degrees
-		plevi_uc = UnipotentCharacters(plevi)
-		plevi_uc_names = charnames(plevi_uc,limit=true)
-		plevi_uc_degs = degrees(plevi_uc)
-		for i in 1:length(plevi_uc)
-			# Check if unipotent character is principal
-			if BigInt(plevi_uc_degs[i](1))!=0
-				append!(types,[GType(plevi,plevi_uc_names[i],plevi_uc_degs[i],"???","???")])
-			end
-		end
 	end
 	return types
 end

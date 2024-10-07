@@ -31,14 +31,8 @@ export log_nonnegative_X, log_nonnegative_Y
 export check_dim_X, check_dim_Y
 
 ## Eventually stop exporting these
-export dimension_XY
 export group_type_data
 export algebra_type_data
-export fast_Stau
-export fast_Mtau
-export fast_qdtau
-export fast_Htau
-export new_EY
 
 include("checks.jl")
 include("helpers.jl")

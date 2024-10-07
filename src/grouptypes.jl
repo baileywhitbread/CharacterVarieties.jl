@@ -81,14 +81,14 @@ function group_type_data(G::FiniteCoxeterGroup)
 	d = Array{Any}(nothing,0,8)
 	for type in group_types(G)
 		type_row = Array{Any}(nothing,1,0)
-		type_row = hcat(type_row,[type])									# Type
-		type_row = hcat(type_row,[BigInt(length(roots(type.endoscopy))/2)])	# |Phi(L)+|
-		type_row = hcat(type_row,[orderpol(type.endoscopy)])				# |L(Fq)|
-		type_row = hcat(type_row,[type.degree])								# rho(1)
-		type_row = hcat(type_row,[BigInt(type.degree(1))])					# phi(1)
-		type_row = hcat(type_row,[length(type.endoscopy)])					# |W(L)|
-		type_row = hcat(type_row,[type.orbit_size])							# |[L]|
-		type_row = hcat(type_row,[type.nu])									# nu(L)
+		type_row = hcat(type_row,[type])											# Type
+		type_row = hcat(type_row,[BigInt(length(roots(type.endoscopy))/2)])			# |Phi(L)+|
+		type_row = hcat(type_row,[orderpol(type.endoscopy)])						# |L(Fq)|
+		type_row = hcat(type_row,[type.degree])										# rho(1)
+		type_row = hcat(type_row,[BigInt(type.degree(1))])							# phi(1)
+		type_row = hcat(type_row,[BigInt(length(type.endoscopy))])					# |W(L)|
+		type_row = hcat(type_row,[BigInt(type.orbit_size)])							# |[L]|
+		type_row = hcat(type_row,[BigInt(type.nu)])									# nu(L)
 		d = vcat(d,type_row)
 	end
 	return sortslices(d,dims=1,by = x -> x[2],rev=true)

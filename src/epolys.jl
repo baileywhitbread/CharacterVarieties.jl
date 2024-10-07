@@ -68,7 +68,7 @@ function fast_Htau(G::FiniteCoxeterGroup,n::Union{BigInt,Integer},i::Union{BigIn
 	orbit_size = BigInt(type_data[i,:][5])
 	L_weyl_size = BigInt(length(type_data[i,:][1].levi))
 	mu_L = BigInt(type_data[i,:][6])
-	return Pol(:q)^(BigInt(BigInt(n)*G_pos_root_size + Z_dim)) * (orderpol(G)//L_size) * N_size * (L_green)^BigInt(n) * BigInt(orbit_size) * BigInt((BigInt(G_weyl_size)/BigInt(L_weyl_size))^BigInt(n-1)) * BigInt(mu_L)
+	return Pol(:q)^(BigInt(BigInt(n)*G_pos_root_size + Z_dim)) * (orderpol(G)//L_size) * N_size * (L_green)^BigInt(n) * BigInt(orbit_size) * BigInt((BigInt(G_weyl_size)//BigInt(L_weyl_size))^BigInt(n-1)) * BigInt(mu_L)
 end
 
 function EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer})
@@ -112,6 +112,33 @@ end
 
 
 
+
+
+
+
+# New EY
+
+function new_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer})
+	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
+	type_data = algebra_type_data(G)
+	sum = Pol{BigInt}(0)
+	for i in 1:size(type_data)[1]
+		row = type_data[i,:] # type_data[i,:] is the ith row
+		term = Pol{BigInt}(1)
+		term *= Pol(:q)^(BigInt(g*row[2]))
+		term *= Pol(:q)^(BigInt(n*(roots(G)/2)+(rank(G)-semisimplerank(G))))
+		term *= Rational{Pol{BigInt}}(orderpol(G)//orderpol(row[1].levi))
+		term *= Pol{Rational{BigInt}}(row[1].size)
+		term *= (Pol{BigInt}(row[1].green))^BigInt(n)
+		term *= (BigInt(BigInt(length(G))//BigInt(length(row[1].levi))))^BigInt(n-1)
+		term *= BigInt(length(myorbit(row[1].levi)))
+		term *= BigInt(mobius(row[1].levi,row[1].levi.parent,levis(G)))
+		sum += term
+	end
+	sum *= (((Pol(:q)-1)^(rank(G)-semisimplerank(G)))//(orderpol(G)))
+	sum *= ((Pol(:q)^(BigInt(g)*BigInt(degree(orderpol(G)))))//(Pol(:q)^(BigInt(1)*BigInt(degree(orderpol(G))))))
+	return Pol{BigInt}(sum)
+end
 
 
 

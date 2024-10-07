@@ -63,10 +63,6 @@ function new_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,I
 	return Pol{BigInt}(sum)
 end
 
-
-
-
-
 function fast_qdtau(G::FiniteCoxeterGroup,i::Union{BigInt,Integer},type_data::Any)
 	# Returns q^(d(τ)) where τ = [L,ρ] is the ith GType
 	row = type_data[i,:] # type_data[i,:] is the ith row

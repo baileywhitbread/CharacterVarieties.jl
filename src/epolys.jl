@@ -93,9 +93,8 @@ function EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integ
 	return Pol{BigInt}(sum)
 end
 
-function fast_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer},data::Any)
+function fast_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer},type_data::Any)
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
-	type_data = data
 	sum = Pol{BigInt}(0)
 	for i in 1:size(type_data)[1]
 		row = type_data[i,:] # type_data[i,:] is the ith row

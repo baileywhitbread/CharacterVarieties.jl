@@ -51,7 +51,7 @@ function new_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,I
 		row = type_data[i,:] # type_data[i,:] is the ith row
 		term = Pol{BigInt}(1)
 		term *= Pol(:q)^(BigInt((length(roots(G))/2)-(length(roots(row[1].endoscopy))/2))) # q^(|Phi(G)+|-|Phi(L)+|)
-		term *= Pol{Rational{BigInt}}(orderpol(row[1].endoscopy)//row[1].degree) # |L(Fq)|/rho(q)
+		term *= Pol{BigInt}(orderpol(row[1].endoscopy)//row[1].degree) # |L(Fq)|/rho(q)
 		term ^= BigInt(2*g-2+n)
 		term *= (Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G)) # |Z(Fq)|
 		term *= BigInt(row[5])^BigInt(n) # dim(rho)^n
@@ -61,8 +61,11 @@ function new_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,I
 		sum += term
 	end
 	sum *= ((Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G))//(BigInt(rank(G))^BigInt(n))) # |Z(Fq)|/|T(Fq)|^n
-	return Pol{Rational{BigInt}}(sum)
+	return Pol{BigInt}(sum)
 end
+
+
+
 
 
 
@@ -93,7 +96,6 @@ function fast_EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
 	sum = Pol{BigInt}(0)
 	for i in 1:size(type_data)[1]
-		row = type_data[i,:] # type_data[i,:] is the ith row
 		term = Pol{BigInt}(1)
 		term *= fast_qdtau(G,i,type_data)^BigInt(g)
 		term *= fast_Htau(G,n,i,type_data)

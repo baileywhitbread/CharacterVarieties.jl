@@ -58,33 +58,30 @@ function EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integ
 	return Pol{BigInt}(((Z_size//T_size^n))*type_sum)
 end
 
-function EY(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer})
-	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
-	type_data = algebra_type_data(G)
-	Z_size = Pol{BigInt}(orderpol(torus(rank(G)-semisimplerank(G))))
-	G_size = Pol{BigInt}(orderpol(G))
-	g_size = Pol{BigInt}(Pol(:q)^(BigInt(degree(G_size))))
-
-	type_sum = Pol{BigInt}(0)
-	for i in 1:size(type_data)[1]
-		type_sum += fast_qdtau(G,i,type_data)^(g)*fast_Htau(G,n,i,type_data)
-	end
-	
-	result_frac = (Z_size//G_size) * (g_size^(g)//g_size) * type_sum
+function EY(G::FiniteCoxeterGroup, g::Union{BigInt,Integer}, n::Union{BigInt,Integer})
+    type_data = algebra_type_data(G)
+    Z_size = orderpol(torus(rank(G)-semisimplerank(G)))
+    G_size = orderpol(G)
+    g_size = Pol(:q)^(BigInt(degree(G_size)))
     
-    # Extract numerator and denominator
-    num = numerator(result_frac)
-    den = denominator(result_frac)
+    # Initialize type_sum as a polynomial
+    type_sum = Pol{Rational{BigInt}}(0)
     
-    # Perform polynomial division
-    quotient, remainder = divrem(num, den)
-    
-    # If remainder is non-zero, there's an actual error
-    if !iszero(remainder)
-        error("Expected a polynomial result, but got a genuine rational function")
+    # Calculate the sum first
+    for i in 1:size(type_data)[1]
+        term = fast_qdtau(G,i,type_data)^(g) * fast_Htau(G,n,i,type_data)
+        type_sum += term
     end
     
-    return quotient
+    # Now perform the divisions step by step
+    result = Z_size * g_size^g * type_sum
+    
+    # Divide by G_size and g_size separately
+    result = divexact(result, G_size)
+    result = divexact(result, g_size)
+    
+    # Convert the final result to BigInt coefficients if possible
+    return Pol{BigInt}(result)
 end
 
 ### Used only in testing.jl for coefficient/Euler characteristic checks

@@ -33,6 +33,10 @@ export check_dim_X, check_dim_Y
 ## Eventually stop exporting these
 export group_type_data
 export algebra_type_data
+export fast_EX
+export Stau_EX
+export Mtau_EX
+export orderpol
 
 include("checks.jl")
 include("helpers.jl")

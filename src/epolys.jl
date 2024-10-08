@@ -1,33 +1,33 @@
 ### "Fast" = no group_type_data(G) or algebra_type_data(G) calls
 function fast_Mtau(G::FiniteCoxeterGroup,i::Union{BigInt,Integer},type_data::Any)
 	row = type_data[i,:] # type_data[i,:] is the ith row
+	pos_roots_G = BigInt(length(roots(G))/2)
+	pos_roots_L = BigInt(length(roots(row[1].endoscopy))/2)
 	term = Pol{BigInt}(1)
-	term *= Pol(:q)^(BigInt((length(roots(G))/2)-(length(roots(row[1].endoscopy))/2))) # q^(|Phi(G)+|-|Phi(L)+|)
+	term *= Pol{BigInt}(Pol(:q)^(pos_roots_G-pos_roots_L)) # q^(|Phi(G)+|-|Phi(L)+|)
 	term *= Pol{BigInt}(orderpol(row[1].endoscopy)//row[1].degree) # |L(Fq)|/rho(q)
 	return Pol{BigInt}(term)
 end
 
 function fast_Stau(G::FiniteCoxeterGroup,n::Union{BigInt,Integer},i::Union{BigInt,Integer},type_data::Any)
 	row = type_data[i,:] # type_data[i,:] is the ith row
-	term = Pol{BigInt}(1)
-	term *= (Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G)) # |Z(Fq)|
-	term *= BigInt(row[5])^BigInt(n) # dim(rho)^n
-	term *= BigInt(length(G)//row[6])^BigInt(n-1) # (|W|/|W(L)|)^(n-1)
-	term *= row[7] # |[L]|
-	term *= row[8] # nu(L)
-	return Pol{BigInt}(term)
+	Z_size = Pol{BigInt}((Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G))) # |Z(Fq)|
+	dim_rho = BigInt(row[5]) # rho(1)
+	weyl_ratio = BigInt(length(G)//row[6]) # |W|/|W(L)|
+	orbit_size = row[7] # |[L]|
+	nu = row[8] # nu(L)
+	return Pol{BigInt}(Z_size * dim_rho^BigInt(n) * weyl_ratio^BigInt(n-1) * orbit_size * nu) # Stau(q) = |Z(Fq)| rho(1)^n (|W|/|W(L)|)^(n-1) |[L]| nu(L)
 end
 
 function fast_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,Integer},type_data::Any)
 	# Returns the E-polynomial E(Y;q) associated to the group G and a genus g surface with n punctures
 	sum = Pol{BigInt}(0)
 	for i in 1:size(type_data)[1]
-		term = Pol{BigInt}(1)
-		term *= fast_Mtau(G,i,type_data)^BigInt(2*g-2+n)
-		term *= fast_Stau(G,n,i,type_data)
-		sum += term
+		sum += fast_Mtau(G,i,type_data)^BigInt(2g-2+n)*fast_Stau(G,n,i,type_data)
 	end
-	sum *= ((Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G))//(((Pol(:q)-1)^(BigInt(rank(G))))^BigInt(n))) # |Z(Fq)|/|T(Fq)|^n
+	Z_size = Pol{BigInt}((Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G)))
+	T_size = Pol{BigInt}((Pol(:q)-1)^(BigInt(rank(G))))
+	sum *= (Z_size)//(T_size^BigInt(n)) # |Z(Fq)|/|T(Fq)|^n
 	return Pol{BigInt}(sum)
 end
 

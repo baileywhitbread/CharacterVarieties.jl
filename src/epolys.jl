@@ -27,7 +27,7 @@ function fast_EX(G::FiniteCoxeterGroup,g::Union{BigInt,Integer},n::Union{BigInt,
 		term *= fast_Stau(G,n,i,type_data)
 		sum += term
 	end
-	sum *= ((Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G))//(((Pol(:q)-1)^(BigInt(rank(G))))^BigInt(n))) # |Z(Fq)|/|T(Fq)|^n
+	sum *= ((Pol(:q)-1)^BigInt(rank(G)-semisimplerank(G)))//((Pol(:q)-1)^(BigInt(n)*BigInt(rank(G)))) # |Z(Fq)|/|T(Fq)|^n
 	return Pol{BigInt}(sum)
 end
 

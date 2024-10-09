@@ -36,6 +36,8 @@ export algebra_type_data
 export fast_EX
 export Stau_EX
 export Mtau_EX
+export fast_EX
+export orderpol
 
 include("checks.jl")
 include("helpers.jl")

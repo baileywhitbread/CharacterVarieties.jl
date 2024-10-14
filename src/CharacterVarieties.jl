@@ -29,12 +29,14 @@ export levis
 export palindrome_X, euler_X
 export nonnegative_Y, nonnegative_X
 export log_nonnegative_X, log_nonnegative_Y
+export fast_log_nonnegative_Y
 export check_dim_X, check_dim_Y
 
 ## Eventually stop exporting these
 export group_type_data
 export algebra_type_data
 export fast_EX
+export fast_EY
 export Stau_EX
 export Mtau_EX
 export orderpol
@@ -54,5 +56,7 @@ include("cambo.jl")
 include("tables.jl")
 include("testing.jl")
 include("logging.jl")
+
+# file = dirname(dirname(pathof(CharacterVarieties)))*"\\data\\E6_algebra_type_data.jld2"
 
 end # End of module CharacterVarieties

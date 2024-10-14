@@ -3,6 +3,7 @@ module CharacterVarieties
 using Reexport
 @reexport using Chevie
 @reexport using Logging
+@reexport using JLD2
 @reexport using Random
 
 # Export structs
@@ -38,14 +39,20 @@ export Stau_EX
 export Mtau_EX
 export orderpol
 
+# Needed for main files
 include("checks.jl")
 include("helpers.jl")
 include("plevis.jl")
+
+# Main files
 include("grouptypes.jl")
 include("algebratypes.jl")
 include("epolys.jl")
+
+# Extras
 include("cambo.jl")
 include("tables.jl")
 include("testing.jl")
+include("logging.jl")
 
 end # End of module CharacterVarieties

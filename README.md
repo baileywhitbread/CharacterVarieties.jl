@@ -38,8 +38,6 @@ where the action is simultaneous conjugation (i.e., the adjoint action). This is
 This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ (see [LRV](https://aif.centre-mersenne.org/articles/10.5802/aif.3540/) for the definition of $E$-polynomials of varieties over finite fields or [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x) for the complex analogue). This is done using our formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$.
 
 
-![](https://github.com/baileywhitbread/CharacterVarieties.jl/blob/main/animation.gif)
-
 
 
 We will use the semisimple group of adjoint type $G_2$ as an example. The command `G=coxgroup(:G,2)` selects this group. One can instead choose `coxgroup(:A,2)`, `coxgroup(:B,2)`, and so on. Alternatively, one can select these groups using `rootdatum(:pgl,3)` or `rootdatum(:so,5)`, or non-semisimple groups such as `rootdatum(:gl,2)`.
@@ -55,6 +53,14 @@ Pol{BigInt}: q⁸+6q⁷+20q⁶+58q⁵+180q⁴+58q³+20q²+6q+1
 julia> EY(G,0,3)
 Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 ```
+
+
+
+
+![](https://github.com/baileywhitbread/CharacterVarieties.jl/blob/main/animation.gif)
+
+
+
 
 
 

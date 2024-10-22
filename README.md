@@ -51,7 +51,7 @@ julia> EY(G,0,3)
 Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 ```
 
-
+![](https://github.com/baileywhitbread/CharacterVarieties.jl/blob/main/animation.gif)
 
 
 

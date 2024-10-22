@@ -1,6 +1,6 @@
 # CharacterVarieties.jl
 
-This package computes $E$-polynomials of character varieties associated to general reductive groups in Julia. This was written for the paper [arXiv:2409.04735](https://arxiv.org/abs/2409.04735). We heavily rely on Jean Michel's port of the [Chevie package](https://github.com/jmichel7/Chevie.jl) from GAP to Julia. 
+This package computes $E$-polynomials of character varieties in Julia. This was written for the paper [arXiv:2409.04735](https://arxiv.org/abs/2409.04735). We heavily rely on Jean Michel's port of the [Chevie package](https://github.com/jmichel7/Chevie.jl) from GAP to Julia. 
 
 
 

@@ -6,7 +6,7 @@ This package computes $E$-polynomials of character varieties associated to gener
 
 
 
-## Getting started
+## Installing
 Download and install [Julia](https://julialang.org/downloads/). In the REPL (Julia's interactive command-line), copy-paste and run the below:
 
 ```julia

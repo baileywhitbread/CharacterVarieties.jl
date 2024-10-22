@@ -13,7 +13,7 @@ Download and install [Julia](https://julialang.org/downloads/). In the REPL (Jul
 using Pkg; Pkg.add(url="https://github.com/baileywhitbread/CharacterVarieties.jl")
 ```
 
-This will install the `CharacterVarieties.jl` package and its dependencies. To load the package, copy-paste and run the below:
+This installs `CharacterVarieties.jl` and its dependencies. To load the package, copy-paste and run the below:
 
 ```julia
 using CharacterVarieties

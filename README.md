@@ -35,7 +35,7 @@ where the action is simultaneous conjugation. This is an affine scheme of finite
 where the action is simultaneous conjugation (i.e., the adjoint action). This is an affine scheme of finite type over $\mathbb{F}_q$.
 
 ## Calculating E-polynomials
-This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ (see [LRV](https://aif.centre-mersenne.org/articles/10.5802/aif.3540/) for the definition, or [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x) for the complex analogue). This is done using our formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$.
+This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ (see [LRV](https://aif.centre-mersenne.org/articles/10.5802/aif.3540/) for the definition, or [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x) for the complex analogue). This is done using our formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ found in [arXiv:2409.04735](https://arxiv.org/abs/2409.04735).
 
 
 

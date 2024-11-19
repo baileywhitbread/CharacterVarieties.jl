@@ -38,7 +38,7 @@ export fast_Stau
 export fast_Mtau
 export fast_qdtau
 export fast_Htau
-export new_EY
+export new_EX
 
 include("checks.jl")
 include("helpers.jl")

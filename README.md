@@ -28,7 +28,9 @@ Fix integers $g\geq 0$ and $n\geq 1$ and let $G$ be a connected split reductive 
 ```math
 \mathbf{X} = \bigg\{(A_1,B_1,\ldots,A_g,B_g,Y_1,\ldots,Y_n)\in G^{2g}\times C_1\times \cdots\times C_n\ \bigg|\ [A_1,B_1]\cdots[A_g,B_g]Y_1\cdots Y_n = 1\bigg\}\bigg/\!\!\!\!\!\bigg/G
 ```
-where the action is simultaneous conjugation. This is an affine scheme of finite type over the finite field of size $q$. Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic' and let $O_1,\ldots,O_n$ be their adjoint orbits. The additive character variety is the GIT quotient
+where the action is simultaneous conjugation. This is an affine scheme of finite type over the finite field of size $q$. 
+
+Let $\mathfrak{g}$ be the Lie algebra of $G$ and let $\mathfrak{t}$ be the Lie algebra of $T$. Select regular semisimple elements $s_1,\ldots,s_n$ in $\mathfrak{t}$ that are 'generic' and let $O_1,\ldots,O_n$ be their adjoint orbits. The additive character variety is the GIT quotient
 ```math
 \mathbf{Y} = \bigg\{(A_1,B_1,\ldots,A_g,B_g,Y_1,\ldots,Y_n)\in \mathfrak{g}^{2g}\times O_1\times \cdots\times O_n\ \bigg|\ [A_1,B_1]+\cdots+[A_g,B_g] + Y_1+ \cdots + Y_n = 0\bigg\}\bigg/\!\!\!\!\!\bigg/G
 ```
@@ -37,7 +39,9 @@ where the action is simultaneous conjugation (i.e., the adjoint action). This is
 ## Calculating E-polynomials
 This package computes the $E$-polynomials $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$ (see [LRV](https://aif.centre-mersenne.org/articles/10.5802/aif.3540/) for the definition of $E$-polynomials of varieties over finite fields or [HRV](https://link.springer.com/article/10.1007/s00222-008-0142-x) for the complex analogue). This is done using our formulas for $E(\mathbf{X};q)$ and $E(\mathbf{Y};q)$.
 
-We will use the semisimple group of adjoint type $G_2$ as an example. The command `G=coxgroup(:G,2)` selects this group. One can instead choose `coxgroup(:A,2)`, `coxgroup(:B,2)`, and so on. Alternatively, one can select these groups using `rootdatum(:pgl,3)` or `rootdatum(:so,5)`, or non-semisimple groups such as `rootdatum(:gl,2)`.
+We will use the semisimple group of adjoint type $G_2$ as an example. The command `G=coxgroup(:G,2)` selects this group. 
+
+One can instead choose `coxgroup(:A,2)`, `coxgroup(:B,2)`, and so on. Alternatively, one can select these groups using `rootdatum(:pgl,3)` or `rootdatum(:so,5)`, or non-semisimple groups such as `rootdatum(:gl,2)`.
 
 Then `EX(G,g,n)` returns $E(\mathbf{X};q)$, and `EY(G,g,n)` returns $E(\mathbf{Y};q)$.
 
@@ -53,7 +57,7 @@ Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 
 
 
-
+![](https://github.com/baileywhitbread/CharacterVarieties.jl/blob/main/animation.gif)
 
 
 ## To do

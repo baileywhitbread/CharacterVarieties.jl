@@ -3,6 +3,7 @@
 This package computes $E$-polynomials of character varieties associated to general reductive groups in Julia. This was written for the paper [arXiv:2409.04735](https://arxiv.org/abs/2409.04735). We heavily rely on Jean Michel's port of the computer algebra system [Chevie](https://github.com/jmichel7/Chevie.jl). 
 
 
+![](https://github.com/baileywhitbread/CharacterVarieties.jl/blob/main/animation.gif)
 
 
 
@@ -57,7 +58,6 @@ Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 
 
 
-![](https://github.com/baileywhitbread/CharacterVarieties.jl/blob/main/animation.gif)
 
 
 ## To do

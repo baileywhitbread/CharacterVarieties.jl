@@ -5,7 +5,7 @@ This package computes $E$-polynomials of character varieties associated to gener
 
 ![](https://github.com/baileywhitbread/CharacterVarieties.jl/blob/main/EXEYanimation.gif)
 
-![](https://github.com/baileywhitbread/CharacterVarieties.jl/blob/main/EYanimation.gif)
+
 
 
 

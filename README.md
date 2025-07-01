@@ -62,34 +62,6 @@ Pol{BigInt}: q⁸+6q⁷+19q⁶+45q⁵+99q⁴
 
 
 
-## To do
-- Speed up $E$-polynomial calculations:
-```julia
-julia> @time EX(coxgroup(:F,4),1,1)
-61.184813 seconds (227.91 M allocations: 18.563 GiB, 8.07% gc time, 88.52% compilation time)
-```
-
-
-
-- There is a large, unexplained leap in computation time between $`\mathrm{SO}_9`$ and $`\mathrm{SO}_{11}`$:
-```julia
-julia> @time EX(coxgroup(:B,3),0,3)
-  0.622608 seconds (1.15 M allocations: 88.349 MiB, 96.49% compilation time)
-
-julia> @time EX(coxgroup(:B,4),0,3)
-  0.580247 seconds (7.36 M allocations: 715.632 MiB, 12.29% gc time, 28.14% compilation time)
-
-julia> @time EX(coxgroup(:B,5),0,3)
-127.007951 seconds (2.15 G allocations: 218.391 GiB, 17.85% gc time, 0.44% compilation time)
-```
-
-- People who understand Julia tell me I should reduce the allocation sizes...
-
-- Add real-time calculations of $E$-polynomials to [baileywhitbread.com](https://www.baileywhitbread.com).
-
-
-
-
 ## Further directions
 
 Associated to $\mathbf{X}$ is the (compactly supported) mixed Hodge polynomial

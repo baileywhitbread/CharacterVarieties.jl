@@ -28,6 +28,7 @@ export levis
 export palindrome_X, euler_X
 export nonnegative_Y, nonnegative_X
 export log_nonnegative_X, log_nonnegative_Y
+export fast_log_nonnegative_X, fast_log_nonnegative_Y
 export check_dim_X, check_dim_Y
 
 ## Eventually stop exporting these

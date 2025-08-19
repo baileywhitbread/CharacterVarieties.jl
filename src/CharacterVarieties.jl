@@ -41,13 +41,14 @@ export fast_qdtau
 export fast_Htau
 export new_EX
 
-include("checks.jl")
-include("helpers.jl")
-include("plevis.jl")
-include("grouptypes.jl")
 include("algebratypes.jl")
-include("epolys.jl")
 include("cambo.jl")
+include("checks.jl")
+include("epolys.jl")
+include("grouptypes.jl")
+include("helpers.jl")
+include("logging.jl")
+include("plevis.jl")
 include("tables.jl")
 include("testing.jl")
 
